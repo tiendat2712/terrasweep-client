@@ -59,14 +59,14 @@ const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
         transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
         transitionDelay: isVisible ? `${staggerDelay}ms` : '0ms',
       }}
-      className={`group rounded-[28px] bg-white border border-zinc-200 p-4 hover:border-zinc-400 hover:shadow-xl hover:-translate-y-2 transition-all flex flex-col justify-between cursor-pointer will-change-transform ${
+      className={`group gloss-sweep-card rounded-[28px] bg-white border border-sky-100/90 p-4 hover:border-sky-400 hover:shadow-xl hover:shadow-sky-500/10 hover:-translate-y-2 transition-all flex flex-col justify-between cursor-pointer will-change-transform ${
         isVisible
           ? 'opacity-100 translate-y-0 scale-100'
           : 'opacity-0 translate-y-9 scale-[0.96]'
       }`}
     >
       {/* Image Container with Ambient Subtle Tone & Zoom */}
-      <div className="relative aspect-square w-full rounded-[24px] bg-[#F4F4F5] group-hover:bg-[#ECECED] overflow-hidden flex items-center justify-center p-6 transition-colors duration-500">
+      <div className="relative aspect-square w-full rounded-[24px] bg-slate-50 group-hover:bg-sky-50/40 overflow-hidden flex items-center justify-center p-6 transition-colors duration-500">
         <img
           src={product.image}
           alt={product.name}
@@ -75,7 +75,7 @@ const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
 
         {/* Top Drop Badge */}
         {product.isFlashSale && (
-          <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-[#0C0C0C]/90 backdrop-blur-md text-[9.5px] font-sans font-bold uppercase tracking-wider text-white shadow-xs">
+          <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-sky-600 text-[9.5px] font-sans font-bold uppercase tracking-wider text-white shadow-xs shadow-sky-500/25">
             ⚡ Drop
           </div>
         )}
@@ -90,7 +90,7 @@ const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
             className={`w-4 h-4 transition-colors ${
               isFavorited
                 ? 'fill-red-500 text-red-500'
-                : 'text-zinc-600 hover:text-black'
+                : 'text-slate-500 hover:text-sky-600'
             }`}
           />
         </button>
@@ -99,21 +99,21 @@ const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
       {/* Product Metadata & CTA */}
       <div className="mt-4 space-y-3">
         <div>
-          <h3 className="text-sm font-bold text-[#0C0C0C] truncate font-sans group-hover:text-black transition-colors">
+          <h3 className="text-sm font-bold text-[#0F172A] truncate font-sans group-hover:text-sky-600 transition-colors">
             {product.name}
           </h3>
           <div className="flex items-baseline justify-between mt-1">
             <div className="flex items-baseline gap-2">
-              <span className="text-sm font-bold text-[#0C0C0C] font-mono">
+              <span className="text-sm font-bold text-[#0F172A] font-mono">
                 ${priceUSD}
               </span>
               {product.originalPrice > product.flashPrice && (
-                <span className="text-xs text-zinc-400 line-through font-mono">
+                <span className="text-xs text-slate-400 line-through font-mono">
                   ${originalPriceUSD}
                 </span>
               )}
             </div>
-            <span className="text-[10px] text-zinc-400 font-mono">
+            <span className="text-[10px] text-slate-400 font-mono">
               {product.flashPrice.toLocaleString('vi-VN')}₫
             </span>
           </div>
@@ -125,7 +125,7 @@ const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
             e.stopPropagation();
             onAddToCart(product);
           }}
-          className="w-full py-2.5 rounded-full bg-[#0C0C0C] hover:bg-zinc-800 text-white text-xs font-bold transition-all duration-300 shadow-xs hover:shadow-md flex items-center justify-center cursor-pointer active:scale-95 group-hover:bg-zinc-900"
+          className="w-full py-2.5 rounded-full btn-ocean-primary text-xs font-bold flex items-center justify-center cursor-pointer"
         >
           {t('catalog.addToCart')}
         </button>
@@ -226,23 +226,23 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   return (
     <section id="collection-section" className="mt-10 sm:mt-14 mb-24">
       {/* 1. HORIZONTAL EDITORIAL FILTER & CONTROL TOOLBAR */}
-      <div className="rounded-[28px] bg-white border border-zinc-200/80 p-5 sm:p-7 shadow-2xs space-y-5 mb-8">
+      <div className="rounded-[32px] bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 p-5 sm:p-7 shadow-sm space-y-5 mb-8 ambient-glow-sky overflow-hidden relative">
         
         {/* TOP ROW: Title, Item Counter, Price & Sort Controls */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-zinc-100">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#0C0C0C] text-white flex items-center justify-center shrink-0 shadow-2xs">
+            <div className="w-8 h-8 rounded-full bg-sky-600 text-white flex items-center justify-center shrink-0 shadow-xs shadow-sky-500/20">
               <SlidersHorizontal className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-2.5">
-                <h2 className="text-xl sm:text-2xl font-black text-[#0C0C0C] tracking-tight font-sans">
+                <h2 className="text-xl sm:text-2xl font-black text-[#0F172A] tracking-tight font-sans">
                   {language === 'vi' ? 'Bộ Sưu Tập ' : 'Curated '}
-                  <span className="font-serif italic font-normal text-zinc-600">
+                  <span className="font-serif italic font-normal text-sky-800">
                     {language === 'vi' ? 'Sản Phẩm' : 'Collection'}
                   </span>
                 </h2>
-                <span className="px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-600 text-[11px] font-mono font-bold">
+                <span className="px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-800 border border-sky-200 text-[11px] font-mono font-bold">
                   {filteredProducts.length}
                 </span>
               </div>
@@ -257,8 +257,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                 onClick={() => setShowPricePopover(!showPricePopover)}
                 className={`px-3.5 py-2 rounded-full border text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer select-none ${
                   priceTier !== 'all' || maxPrice < 500
-                    ? 'bg-[#0C0C0C] text-white border-[#0C0C0C] shadow-2xs'
-                    : 'bg-white text-zinc-700 border-zinc-200 hover:border-black'
+                    ? 'btn-ocean-primary shadow-xs'
+                    : 'bg-white text-slate-700 border-slate-200 hover:border-sky-500'
                 }`}
               >
                 <span>
@@ -281,9 +281,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 
               {/* Price Filter Floating Popover */}
               {showPricePopover && (
-                <div className="absolute right-0 top-full mt-2 w-72 p-5 rounded-2xl bg-white border border-zinc-200 shadow-xl z-30 space-y-4 animate-in fade-in zoom-in-95">
+                <div className="absolute right-0 top-full mt-2 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-xl z-30 space-y-4 animate-in fade-in zoom-in-95">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#0C0C0C] uppercase tracking-wider font-mono">
+                    <span className="text-xs font-bold text-[#0F172A] uppercase tracking-wider font-mono">
                       {language === 'vi' ? 'LỌC THEO GIÁ' : 'PRICE FILTER'}
                     </span>
                     {(priceTier !== 'all' || maxPrice < 500) && (
@@ -292,7 +292,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                           setPriceTier('all');
                           setMaxPrice(500);
                         }}
-                        className="text-[11px] text-zinc-500 hover:text-black font-semibold cursor-pointer underline"
+                        className="text-[11px] text-sky-600 hover:text-sky-800 font-semibold cursor-pointer underline"
                       >
                         {language === 'vi' ? 'Đặt lại' : 'Reset'}
                       </button>
@@ -316,8 +316,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                         }}
                         className={`px-2.5 py-1.5 rounded-lg border text-left font-medium transition-all cursor-pointer ${
                           priceTier === tier.id
-                            ? 'bg-[#0C0C0C] text-white border-[#0C0C0C]'
-                            : 'bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-400'
+                            ? 'bg-sky-600 text-white border-sky-600 shadow-2xs'
+                            : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-sky-300'
                         }`}
                       >
                         {language === 'vi' ? tier.labelVi : tier.labelEn}
@@ -326,10 +326,10 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   </div>
 
                   {/* Slider */}
-                  <div className="space-y-2 pt-2 border-t border-zinc-100">
-                    <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
+                  <div className="space-y-2 pt-2 border-t border-slate-100">
+                    <div className="flex items-center justify-between text-xs text-slate-500 font-mono">
                       <span>{language === 'vi' ? 'Mức tối đa:' : 'Max:'}</span>
-                      <span className="font-bold text-[#0C0C0C]">${maxPrice}</span>
+                      <span className="font-bold text-sky-600">${maxPrice}</span>
                     </div>
                     <input
                       type="range"
@@ -338,7 +338,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                       step="10"
                       value={maxPrice}
                       onChange={(e) => setMaxPrice(Number(e.target.value))}
-                      className="w-full h-1.5 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-[#0C0C0C]"
+                      className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600"
                     />
                   </div>
                 </div>
@@ -350,13 +350,13 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="appearance-none bg-white border border-zinc-200 hover:border-black pl-3.5 pr-8 py-2 rounded-full text-xs font-semibold text-[#0C0C0C] cursor-pointer focus:outline-none transition-all shadow-2xs"
+                className="appearance-none bg-white border border-slate-200 hover:border-sky-500 pl-3.5 pr-8 py-2 rounded-full text-xs font-semibold text-[#0F172A] cursor-pointer focus:outline-none transition-all shadow-2xs"
               >
                 <option value="popularity">{t('catalog.sortPopularity')}</option>
                 <option value="price-asc">{t('catalog.sortPriceAsc')}</option>
                 <option value="price-desc">{t('catalog.sortPriceDesc')}</option>
               </select>
-              <ChevronDown className="w-3.5 h-3.5 text-zinc-500 absolute right-3 pointer-events-none" />
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-3 pointer-events-none" />
             </div>
 
             {/* Reset All Filters Button */}
@@ -368,7 +368,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   setMaxPrice(500);
                   onSelectCategory?.('All');
                 }}
-                className="px-3 py-1.5 text-xs text-zinc-500 hover:text-black font-semibold underline cursor-pointer transition-colors"
+                className="px-3 py-1.5 text-xs text-slate-500 hover:text-sky-600 font-semibold underline cursor-pointer transition-colors"
               >
                 {language === 'vi' ? 'Xóa lọc' : 'Reset'}
               </button>
@@ -387,8 +387,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   onClick={() => handleCategoryChange(cat.id)}
                   className={`px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer select-none whitespace-nowrap ${
                     isChecked
-                      ? 'bg-[#0C0C0C] text-white shadow-2xs font-bold scale-102'
-                      : 'bg-[#F8F8F8] text-zinc-600 border border-zinc-200/70 hover:border-zinc-400 hover:text-[#0C0C0C] hover:bg-zinc-100'
+                      ? 'btn-ocean-primary font-bold scale-102'
+                      : 'bg-white/80 text-slate-600 border border-sky-100 hover:border-sky-300 hover:text-sky-600 hover:bg-sky-50/50'
                   }`}
                 >
                   {cat.label}
@@ -417,9 +417,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 
       {/* Empty State */}
       {filteredProducts.length === 0 && (
-        <div className="text-center py-20 bg-white rounded-[28px] border border-zinc-200 shadow-2xs">
-          <SlidersHorizontal className="w-10 h-10 text-zinc-400 mx-auto mb-3" />
-          <p className="text-sm font-bold text-zinc-800">{t('catalog.noProductsFound')}</p>
+        <div className="text-center py-20 bg-white rounded-[28px] border border-slate-200 shadow-2xs">
+          <SlidersHorizontal className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+          <p className="text-sm font-bold text-slate-800">{t('catalog.noProductsFound')}</p>
           <button
             onClick={() => {
               setSelectedCategory('All');
@@ -427,7 +427,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               setMaxPrice(500);
               onSelectCategory?.('All');
             }}
-            className="mt-4 px-6 py-2.5 rounded-full bg-[#0C0C0C] text-white text-xs font-bold shadow-xs hover:bg-zinc-800 transition-all cursor-pointer"
+            className="mt-4 px-6 py-2.5 rounded-full bg-sky-600 text-white text-xs font-bold shadow-xs hover:bg-sky-700 transition-all cursor-pointer shadow-sky-500/25"
           >
             {t('catalog.resetFilters')}
           </button>

@@ -24,8 +24,8 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 
   const logoSize = size === 'sm' ? 'w-7 h-7' : size === 'lg' ? 'w-12 h-12' : 'w-10 h-10 sm:w-11 sm:h-11';
 
-  const textColor = theme === 'dark' ? 'text-white' : 'text-[#0C0C0C]';
-  const subtitleColor = theme === 'dark' ? 'text-zinc-400' : 'text-zinc-500';
+  const textColor = theme === 'dark' ? 'text-white' : 'text-[#0F172A]';
+  const subtitleColor = theme === 'dark' ? 'text-sky-300' : 'text-sky-700';
 
   return (
     <div className={`flex items-center gap-2.5 select-none ${className}`}>

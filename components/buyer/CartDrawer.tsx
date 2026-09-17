@@ -77,16 +77,16 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
       <div className="absolute inset-0" onClick={onClose} />
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-white border-l border-zinc-200 shadow-2xl flex flex-col justify-between">
+        <div className="w-screen max-w-md bg-gradient-to-b from-white via-sky-50/20 to-white/95 border-l border-sky-100 shadow-2xl flex flex-col justify-between relative overflow-hidden ambient-glow-sky">
           {/* Drawer Header */}
-          <div className="p-6 border-b border-zinc-100 flex items-center justify-between">
+          <div className="p-6 border-b border-slate-100 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-zinc-100 flex items-center justify-center text-[#0C0C0C]">
+              <div className="w-9 h-9 rounded-full bg-sky-50 flex items-center justify-center text-sky-600 shadow-2xs">
                 <ShoppingBag className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-[#0C0C0C]">{t('cart.title')}</h3>
-                <span className="text-[11px] text-zinc-400 font-mono">
+                <h3 className="text-sm font-bold text-[#0F172A]">{t('cart.title')}</h3>
+                <span className="text-[11px] text-slate-400 font-mono">
                   {t('cart.itemsCount', { count: cartItems.length })}
                 </span>
               </div>
@@ -121,13 +121,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   />
 
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-xs font-bold text-[#0C0C0C] truncate">
+                    <h4 className="text-xs font-bold text-[#0F172A] truncate">
                       {item.product.name}
                     </h4>
-                    <span className="text-[10px] text-zinc-500 block mt-0.5">
+                    <span className="text-[10px] text-slate-500 block mt-0.5">
                       {t('cart.variant')}: {item.selectedColor || 'Standard'}
                     </span>
-                    <div className="text-xs font-mono font-bold text-[#0C0C0C] mt-1">
+                    <div className="text-xs font-mono font-bold text-sky-600 mt-1">
                       {item.product.flashPrice.toLocaleString('vi-VN')}₫
                     </div>
                   </div>
@@ -136,23 +136,23 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <div className="flex flex-col items-end gap-2.5">
                     <button
                       onClick={() => onRemoveItem(item.product.id)}
-                      className="text-zinc-400 hover:text-red-600 p-1 transition-colors cursor-pointer"
+                      className="text-slate-400 hover:text-red-600 p-1 transition-colors cursor-pointer"
                       title={t('common.delete')}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
 
-                    <div className="flex items-center rounded-full border border-zinc-200 bg-white text-xs px-2 py-0.5 font-mono">
+                    <div className="flex items-center rounded-full border border-slate-200 bg-white text-xs px-2 py-0.5 font-mono">
                       <button
                         onClick={() => onUpdateQuantity(item.product.id, item.quantity - 1)}
-                        className="px-1.5 text-zinc-600 hover:text-black font-bold cursor-pointer"
+                        className="px-1.5 text-slate-600 hover:text-sky-600 font-bold cursor-pointer"
                       >
                         −
                       </button>
-                      <span className="px-2 font-bold text-[#0C0C0C]">{item.quantity}</span>
+                      <span className="px-2 font-bold text-[#0F172A]">{item.quantity}</span>
                       <button
                         onClick={() => onUpdateQuantity(item.product.id, item.quantity + 1)}
-                        className="px-1.5 text-zinc-600 hover:text-black font-bold cursor-pointer"
+                        className="px-1.5 text-slate-600 hover:text-sky-600 font-bold cursor-pointer"
                       >
                         +
                       </button>
@@ -165,10 +165,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             {cartItems.length > 0 && (
               <>
                 {/* Minimal Voucher Box */}
-                <div className="p-4 rounded-2xl bg-zinc-50 border border-zinc-200 space-y-2.5">
+                <div className="p-4 rounded-2xl bg-sky-50/40 border border-sky-100 space-y-2.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-[#0C0C0C] flex items-center gap-1.5">
-                      <Tag className="w-3.5 h-3.5" />
+                    <span className="font-bold text-[#0F172A] flex items-center gap-1.5">
+                      <Tag className="w-3.5 h-3.5 text-sky-600" />
                       {t('cart.promoCode')}
                     </span>
                     <span className="text-[11px] text-emerald-700 font-mono font-bold">
@@ -181,11 +181,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       value={voucherCode}
                       onChange={(e) => setVoucherCode(e.target.value)}
                       placeholder={t('cart.promoPlaceholder')}
-                      className="flex-1 px-3.5 py-2 rounded-xl bg-white border border-zinc-200 text-xs text-zinc-900 uppercase font-mono focus:outline-none focus:border-black"
-                    />
+                      className="flex-1 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 uppercase font-mono focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+                    >
+                    </input>
                     <button
                       onClick={handleApplyVoucher}
-                      className="px-4 py-2 rounded-xl bg-[#0C0C0C] text-white text-xs font-bold hover:bg-zinc-800 transition-colors cursor-pointer"
+                      className="px-4 py-2 rounded-xl bg-sky-600 text-white text-xs font-bold hover:bg-sky-700 transition-colors cursor-pointer shadow-xs shadow-sky-500/25"
                     >
                       {t('common.apply')}
                     </button>
@@ -194,8 +195,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                 {/* Shipping Method Pills */}
                 <div className="space-y-2 text-xs">
-                  <label className="font-bold text-[#0C0C0C] flex items-center gap-1.5">
-                    <Truck className="w-3.5 h-3.5" />
+                  <label className="font-bold text-[#0F172A] flex items-center gap-1.5">
+                    <Truck className="w-3.5 h-3.5 text-sky-600" />
                     {t('cart.deliveryOption')}
                   </label>
                   <div className="grid grid-cols-2 gap-2">
@@ -203,43 +204,43 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       onClick={() => setShippingMethod('express')}
                       className={`p-3 rounded-2xl border text-left cursor-pointer transition-all ${
                         shippingMethod === 'express'
-                          ? 'border-[#0C0C0C] bg-white shadow-xs font-bold'
-                          : 'border-zinc-200 bg-zinc-50 text-zinc-600'
+                          ? 'border-sky-500 bg-sky-50/50 shadow-xs font-bold ring-1 ring-sky-500'
+                          : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-sky-200'
                       }`}
                     >
-                      <div className="font-bold text-xs text-[#0C0C0C]">{t('cart.expressDelivery')}</div>
-                      <div className="text-[10px] text-zinc-500 font-mono mt-0.5">25.000₫</div>
+                      <div className="font-bold text-xs text-[#0F172A]">{t('cart.expressDelivery')}</div>
+                      <div className="text-[10px] text-sky-700 font-mono mt-0.5">25.000₫</div>
                     </button>
                     <button
                       onClick={() => setShippingMethod('standard')}
                       className={`p-3 rounded-2xl border text-left cursor-pointer transition-all ${
                         shippingMethod === 'standard'
-                          ? 'border-[#0C0C0C] bg-white shadow-xs font-bold'
-                          : 'border-zinc-200 bg-zinc-50 text-zinc-600'
+                          ? 'border-sky-500 bg-sky-50/50 shadow-xs font-bold ring-1 ring-sky-500'
+                          : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-sky-200'
                       }`}
                     >
-                      <div className="font-bold text-xs text-[#0C0C0C]">{t('cart.standardDelivery')}</div>
+                      <div className="font-bold text-xs text-[#0F172A]">{t('cart.standardDelivery')}</div>
                       <div className="text-[10px] text-emerald-700 font-mono mt-0.5">{t('cart.standardFree')}</div>
                     </button>
                   </div>
                 </div>
 
                 {/* Shipping Details */}
-                <div className="space-y-2.5 pt-3 border-t border-zinc-100 text-xs">
-                  <label className="font-bold text-[#0C0C0C] block">{t('cart.shippingInfoTitle')}</label>
+                <div className="space-y-2.5 pt-3 border-t border-slate-100 text-xs">
+                  <label className="font-bold text-[#0F172A] block">{t('cart.shippingInfoTitle')}</label>
                   <input
                     type="text"
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
                     placeholder={t('cart.recipientName')}
-                    className="w-full px-3.5 py-2.5 rounded-2xl bg-zinc-50 border border-zinc-200 text-xs text-zinc-900 focus:outline-none focus:border-black"
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
                   />
                   <input
                     type="text"
                     value={shippingAddress}
                     onChange={(e) => setShippingAddress(e.target.value)}
                     placeholder={t('cart.shippingAddress')}
-                    className="w-full px-3.5 py-2.5 rounded-2xl bg-zinc-50 border border-zinc-200 text-xs text-zinc-900 focus:outline-none focus:border-black"
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
                   />
                 </div>
               </>
@@ -248,33 +249,33 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
           {/* Drawer Footer & Checkout Button */}
           {cartItems.length > 0 && (
-            <div className="p-6 border-t border-zinc-100 bg-zinc-50 space-y-4">
+            <div className="p-6 border-t border-slate-100 bg-slate-50 space-y-4">
               <div className="space-y-1.5 text-xs">
-                <div className="flex justify-between text-zinc-500">
+                <div className="flex justify-between text-slate-500">
                   <span>{t('cart.subtotal')}</span>
-                  <span className="font-mono text-zinc-800">{subtotal.toLocaleString('vi-VN')}₫</span>
+                  <span className="font-mono text-slate-800">{subtotal.toLocaleString('vi-VN')}₫</span>
                 </div>
-                <div className="flex justify-between text-zinc-500">
+                <div className="flex justify-between text-slate-500">
                   <span>{t('cart.discount')}</span>
                   <span className="font-mono text-emerald-700">-{appliedDiscount.toLocaleString('vi-VN')}₫</span>
                 </div>
-                <div className="flex justify-between text-zinc-500">
+                <div className="flex justify-between text-slate-500">
                   <span>{t('cart.shippingFee')}</span>
-                  <span className="font-mono text-zinc-800">+{shippingFee.toLocaleString('vi-VN')}₫</span>
+                  <span className="font-mono text-slate-800">+{shippingFee.toLocaleString('vi-VN')}₫</span>
                 </div>
-                <div className="flex justify-between text-sm font-bold text-[#0C0C0C] pt-2 border-t border-zinc-200">
+                <div className="flex justify-between text-sm font-bold text-[#0F172A] pt-2 border-t border-slate-200">
                   <span>{t('cart.total')}</span>
-                  <span className="text-lg font-mono font-black text-[#0C0C0C]">
+                  <span className="text-lg font-mono font-black text-sky-600">
                     {total.toLocaleString('vi-VN')}₫
                   </span>
                 </div>
               </div>
 
-              {/* Elongated Solid Black Pill Button */}
+              {/* Elongated Ocean Blue Pill Button */}
               <button
                 onClick={handlePlaceOrder}
                 disabled={isCheckingOut}
-                className="w-full py-3.5 rounded-full bg-[#0C0C0C] hover:bg-zinc-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer disabled:opacity-50"
+                className="w-full py-3.5 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-sky-500/25 transition-all cursor-pointer disabled:opacity-50 active:scale-95"
               >
                 {isCheckingOut ? (
                   <span className="animate-pulse">{t('cart.creatingOrder')}</span>

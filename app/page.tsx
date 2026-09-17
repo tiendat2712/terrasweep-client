@@ -394,7 +394,7 @@ export default function FlashCartHome() {
   ).length;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8F8F8] text-[#0C0C0C] selection:bg-[#0C0C0C] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-transparent text-[#0F172A] selection:bg-sky-500 selection:text-white">
       {/* 1. DISCREET COLLAPSIBLE DEV ROLE SWITCHER */}
       <RoleSwitcher
         currentRole={activeRole}
@@ -412,9 +412,9 @@ export default function FlashCartHome() {
       {/* Reactive Notification Toast */}
       {toastMessage && (
         <div className="fixed bottom-24 right-6 z-50 max-w-md animate-in slide-in-from-bottom-5">
-          <div className="p-4 rounded-full bg-[#0C0C0C] text-white shadow-2xl flex items-center justify-between gap-4 text-xs">
+          <div className="p-4 rounded-full bg-slate-900 text-white shadow-2xl shadow-sky-950/20 border border-slate-700/60 flex items-center justify-between gap-4 text-xs">
             <div className="flex items-center gap-3 pl-2">
-              <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-white shrink-0">
+              <div className="w-6 h-6 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
                 <Check className="w-3.5 h-3.5" />
               </div>
               <p className="font-semibold text-white truncate max-w-xs">{toastMessage.text}</p>
@@ -426,7 +426,7 @@ export default function FlashCartHome() {
                   toastMessage.onAction?.();
                   setToastMessage(null);
                 }}
-                className="px-4 py-1.5 rounded-full bg-white text-[#0C0C0C] font-bold text-[11px] hover:bg-zinc-200 transition-all flex items-center gap-1 shrink-0 cursor-pointer"
+                className="px-4 py-1.5 rounded-full bg-sky-600 text-white font-bold text-[11px] hover:bg-sky-500 transition-all flex items-center gap-1 shrink-0 cursor-pointer shadow-xs shadow-sky-500/25"
               >
                 {toastMessage.actionText}
                 <ArrowRight className="w-3 h-3" />

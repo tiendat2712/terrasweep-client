@@ -2,184 +2,420 @@
 
 import React, { useState } from 'react';
 import { useLanguage } from '@/i18n/LanguageContext';
-import { BarChart3, Globe, Zap, Clock } from 'lucide-react';
+import { BarChart3, Globe, Zap, Clock, Truck, Activity } from 'lucide-react';
 
 interface HourlyThroughput {
   hour: string;
   volume: number; // parcels
   isPeak?: boolean;
+  activeTrucks: number;
+  avgLatency: string;
 }
 
 const HOURLY_DATA: HourlyThroughput[] = [
-  { hour: '06:00', volume: 1800 },
-  { hour: '08:00', volume: 4200 },
-  { hour: '10:00', volume: 5800 },
-  { hour: '11:00', volume: 7400, isPeak: true },
-  { hour: '12:00', volume: 6100 },
-  { hour: '14:00', volume: 5200 },
-  { hour: '16:00', volume: 6800 },
-  { hour: '18:00', volume: 8200, isPeak: true },
-  { hour: '20:00', volume: 6400 },
-  { hour: '22:00', volume: 3100 },
+  { hour: '06:00', volume: 1800, activeTrucks: 8, avgLatency: '18 phút' },
+  { hour: '08:00', volume: 4200, activeTrucks: 14, avgLatency: '24 phút' },
+  { hour: '10:00', volume: 5800, activeTrucks: 19, avgLatency: '28 phút' },
+  { hour: '11:00', volume: 7400, isPeak: true, activeTrucks: 24, avgLatency: '35 phút' },
+  { hour: '12:00', volume: 6100, activeTrucks: 20, avgLatency: '31 phút' },
+  { hour: '14:00', volume: 5200, activeTrucks: 18, avgLatency: '26 phút' },
+  { hour: '16:00', volume: 6800, activeTrucks: 22, avgLatency: '32 phút' },
+  { hour: '18:00', volume: 8200, isPeak: true, activeTrucks: 26, avgLatency: '38 phút' },
+  { hour: '20:00', volume: 6400, activeTrucks: 21, avgLatency: '30 phút' },
+  { hour: '22:00', volume: 3100, activeTrucks: 12, avgLatency: '22 phút' },
 ];
 
 export const LogisticsThroughputChart: React.FC = () => {
   const { language } = useLanguage();
-  const [hoveredHour, setHoveredHour] = useState<HourlyThroughput | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const maxVolume = Math.max(...HOURLY_DATA.map((d) => d.volume));
+  // SVG Chart Geometry
+  const svgWidth = 720;
+  const svgHeight = 220;
+  const paddingTop = 28;
+  const paddingBottom = 32;
+  const paddingLeft = 45;
+  const paddingRight = 20;
+
+  const chartWidth = svgWidth - paddingLeft - paddingRight;
+  const chartHeight = svgHeight - paddingTop - paddingBottom;
+  const maxCapacity = 10000; // 10k max scale for Y-axis
+
+  // Y-axis grid increments
+  const yTicks = [
+    { value: 10000, label: '10k' },
+    { value: 7500, label: '7.5k' },
+    { value: 5000, label: '5.0k' },
+    { value: 2500, label: '2.5k' },
+    { value: 0, label: '0' },
+  ];
+
+  const slotWidth = chartWidth / HOURLY_DATA.length;
+  const barWidth = 22; // Sleek, elegant column width
+
+  const activeItem = hoveredIndex !== null ? HOURLY_DATA[hoveredIndex] : null;
 
   return (
-    <div className="rounded-[28px] bg-white border border-zinc-200/80 p-6 sm:p-7 shadow-xs space-y-6">
+    <div className="rounded-[32px] bg-gradient-to-b from-white via-sky-50/20 to-white/95 border border-sky-100/90 p-6 sm:p-8 shadow-sm space-y-7 relative overflow-hidden ambient-glow-sky">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-100">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-zinc-100 text-[#0C0C0C] flex items-center justify-center">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-sky-600 text-white flex items-center justify-center shadow-xs shadow-sky-500/20">
               <BarChart3 className="w-4 h-4" />
             </div>
-            <h3 className="text-base sm:text-lg font-black text-[#0C0C0C] tracking-tight font-sans">
-              {language === 'vi' ? 'Băng Thông Kho Vận Theo Giờ' : 'Hourly Logistics Throughput'}
+            <h3 className="text-base sm:text-lg font-black text-[#0F172A] tracking-tight font-sans">
+              {language === 'vi' ? 'Băng Thông Kho Vận & Lưu Lượng Điều Phối' : 'Logistics Throughput & Dispatch Flow'}
             </h3>
           </div>
-          <p className="text-xs text-zinc-500 font-sans">
+          <p className="text-xs text-slate-500 font-sans">
             {language === 'vi'
-              ? 'Tần suất luân chuyển bưu kiện trong ngày qua 3 Hub trung chuyển chính'
-              : 'Hourly package routing velocity across primary distribution centers'}
+              ? 'Tần suất luân chuyển bưu kiện theo giờ và khả năng đáp ứng tại 3 trung tâm phân phối chính'
+              : 'Hourly package routing velocity and processing capacity across primary distribution centers'}
           </p>
         </div>
 
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-50 border border-zinc-200 text-xs font-mono text-zinc-700 select-none self-start sm:self-auto">
-          <Zap className="w-3.5 h-3.5 text-[#0C0C0C]" />
-          <span>{language === 'vi' ? 'Đỉnh tải: 18:00 (8.2k kiện/h)' : 'Peak Hour: 18:00 (8.2k/h)'}</span>
+        {/* Live Telemetry Pills */}
+        <div className="flex items-center gap-2.5 select-none self-start sm:self-auto">
+          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-sky-50/60 border border-sky-200 text-xs font-mono text-sky-950">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-bold">Live Telemetry</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-sky-600 text-white text-xs font-mono shadow-xs shadow-sky-500/25">
+            <Zap className="w-3.5 h-3.5 text-amber-300" />
+            <span className="font-bold">{language === 'vi' ? 'Đỉnh tải 18h: 8.2k kiện' : 'Peak 18h: 8.2k'}</span>
+          </div>
         </div>
       </div>
 
-      {/* Bar Chart Area */}
+      {/* SVG Bar Chart Area */}
       <div className="space-y-3">
-        {/* Tooltip Info Banner */}
-        <div className="h-6 flex items-center justify-between text-xs font-mono">
-          {hoveredHour ? (
-            <div className="flex items-center gap-2 animate-in fade-in duration-200">
-              <span className="font-bold text-[#0C0C0C]">Khung giờ {hoveredHour.hour}:</span>
-              <span className="text-zinc-600 font-bold">{hoveredHour.volume.toLocaleString()} kiện/giờ</span>
-              {hoveredHour.isPeak && (
-                <span className="px-2 py-0.5 rounded-full bg-[#0C0C0C] text-white text-[9.5px] font-bold uppercase">
-                  PEAK HOUR
+        {/* Status Bar / Interactive Feedback Indicator */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 min-h-7 text-xs font-mono">
+          {activeItem ? (
+            <div className="flex items-center gap-2.5 animate-in fade-in duration-150">
+              <span className="px-2 py-0.5 rounded-md bg-sky-600 text-white font-bold text-[11px]">
+                {activeItem.hour}
+              </span>
+              <span className="text-[#0F172A] font-bold text-sm">
+                {activeItem.volume.toLocaleString()} <span className="text-slate-400 text-xs font-normal font-sans">{language === 'vi' ? 'kiện/giờ' : 'parcels/h'}</span>
+              </span>
+              <span className="text-slate-400 text-xs">•</span>
+              <span className="text-slate-600 text-xs">
+                {Math.round((activeItem.volume / maxCapacity) * 100)}% {language === 'vi' ? 'tải định mức' : 'capacity'}
+              </span>
+              <span className="text-slate-400 text-xs">•</span>
+              <span className="text-slate-600 text-xs flex items-center gap-1">
+                <Truck className="w-3 h-3 text-slate-400" /> {activeItem.activeTrucks} {language === 'vi' ? 'xe xuất bến' : 'trucks'}
+              </span>
+              {activeItem.isPeak && (
+                <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-bold uppercase tracking-wider">
+                  {language === 'vi' ? 'Đỉnh Tải' : 'Peak Hour'}
                 </span>
               )}
             </div>
           ) : (
-            <span className="text-zinc-400 text-[11px]">
-              {language === 'vi' ? 'Di chuột lên cột để xem chi tiết lưu lượng' : 'Hover over bars for hourly telemetry'}
-            </span>
+            <div className="flex items-center gap-2 text-slate-400 text-[11px]">
+              <Activity className="w-3.5 h-3.5 text-sky-600" />
+              <span>{language === 'vi' ? 'Rê chuột trên từng cột để xem chi tiết lưu lượng và số xe điều phối' : 'Hover over bars for hourly throughput telemetry'}</span>
+            </div>
           )}
 
-          <div className="flex items-center gap-3 text-[10px] text-zinc-400">
+          {/* Chart Legend */}
+          <div className="flex items-center gap-4 text-[11px] text-slate-500 font-sans select-none">
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-sm bg-[#0C0C0C]" />
-              {language === 'vi' ? 'Giờ cao điểm' : 'Peak Hours'}
+              <span className="w-3 h-3 rounded-xs bg-sky-600" />
+              <span className="font-medium text-slate-700">{language === 'vi' ? 'Giờ cao điểm' : 'Peak Hours'}</span>
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-sm bg-zinc-300" />
-              {language === 'vi' ? 'Tiêu chuẩn' : 'Normal'}
+              <span className="w-3 h-3 rounded-xs bg-sky-200" />
+              <span>{language === 'vi' ? 'Giờ thông thường' : 'Normal Hours'}</span>
             </span>
           </div>
         </div>
 
-        {/* Bar Chart Grid */}
-        <div className="h-44 sm:h-52 flex items-end gap-2 sm:gap-4 pt-4 border-b border-zinc-200/80">
-          {HOURLY_DATA.map((item) => {
-            const heightPercent = Math.round((item.volume / maxVolume) * 100);
-            const isHovered = hoveredHour?.hour === item.hour;
+        {/* Vector SVG Chart Canvas */}
+        <div className="w-full bg-sky-50/20 rounded-2xl border border-slate-100 p-2 sm:p-4 overflow-hidden relative">
+          <svg
+            viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+            className="w-full h-auto overflow-visible select-none"
+          >
+            <defs>
+              {/* Subtle Gradient for Standard Bars */}
+              <linearGradient id="normalBarGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#7DD3FC" />
+                <stop offset="100%" stopColor="#BAE6FD" />
+              </linearGradient>
 
-            return (
-              <div
-                key={item.hour}
-                onMouseEnter={() => setHoveredHour(item)}
-                onMouseLeave={() => setHoveredHour(null)}
-                className="flex-1 h-full flex flex-col justify-end items-center group cursor-pointer"
-              >
-                {/* Bar Column with Smooth Animation */}
-                <div className="w-full max-w-[38px] h-full flex items-end">
-                  <div
-                    style={{ height: `${heightPercent}%` }}
-                    className={`w-full rounded-t-xl transition-all duration-300 relative ${
-                      item.isPeak
-                        ? isHovered
-                          ? 'bg-zinc-800 scale-105 shadow-md'
-                          : 'bg-[#0C0C0C]'
-                        : isHovered
-                        ? 'bg-zinc-500 scale-105 shadow-sm'
-                        : 'bg-zinc-200 group-hover:bg-zinc-400'
+              {/* Gradient for Peak Bars */}
+              <linearGradient id="peakBarGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#0284C7" />
+                <stop offset="100%" stopColor="#0369A1" />
+              </linearGradient>
+
+              {/* Active Hover Glow */}
+              <filter id="barShadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.25" floodColor="#0284C7" />
+              </filter>
+            </defs>
+
+            {/* Horizontal Gridlines & Y-Axis Scale */}
+            {yTicks.map((tick) => {
+              const y = paddingTop + chartHeight - (tick.value / maxCapacity) * chartHeight;
+              return (
+                <g key={tick.value} className="text-zinc-400">
+                  <line
+                    x1={paddingLeft}
+                    y1={y}
+                    x2={svgWidth - paddingRight}
+                    y2={y}
+                    stroke={tick.value === 0 ? '#D4D4D8' : '#E4E4E7'}
+                    strokeWidth={tick.value === 0 ? 1.5 : 1}
+                    strokeDasharray={tick.value === 0 ? '' : '3 3'}
+                  />
+                  <text
+                    x={paddingLeft - 8}
+                    y={y + 3.5}
+                    textAnchor="end"
+                    className="text-[10px] fill-zinc-400 font-mono font-medium select-none"
+                  >
+                    {tick.label}
+                  </text>
+                </g>
+              );
+            })}
+
+            {/* Column Bars & Capacities */}
+            {HOURLY_DATA.map((item, idx) => {
+              const isHovered = hoveredIndex === idx;
+              const hasHover = hoveredIndex !== null;
+              const isOther = hasHover && !isHovered;
+
+              const barX = paddingLeft + idx * slotWidth + (slotWidth - barWidth) / 2;
+              const barH = (item.volume / maxCapacity) * chartHeight;
+              const barY = paddingTop + chartHeight - barH;
+
+              // Track background
+              const trackH = chartHeight;
+              const trackY = paddingTop;
+
+              return (
+                <g
+                  key={item.hour}
+                  className="cursor-pointer transition-opacity duration-200"
+                  style={{ opacity: isOther ? 0.35 : 1 }}
+                  onMouseEnter={() => setHoveredIndex(idx)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                >
+                  {/* Invisible broad hitbox for effortless mouse interaction */}
+                  <rect
+                    x={paddingLeft + idx * slotWidth}
+                    y={paddingTop - 15}
+                    width={slotWidth}
+                    height={chartHeight + 40}
+                    fill="transparent"
+                  />
+
+                  {/* Subtle Background Track (100% capacity guide) */}
+                  <rect
+                    x={barX}
+                    y={trackY}
+                    width={barWidth}
+                    height={trackH}
+                    rx="4"
+                    fill="#F4F4F5"
+                  />
+
+                  {/* Volume Column Bar */}
+                  <rect
+                    x={barX}
+                    y={barY}
+                    width={barWidth}
+                    height={barH}
+                    rx="4"
+                    fill={item.isPeak ? 'url(#peakBarGrad)' : isHovered ? '#0284C7' : 'url(#normalBarGrad)'}
+                    filter={isHovered ? 'url(#barShadow)' : undefined}
+                    className="transition-all duration-200"
+                  />
+
+                  {/* Peak Hour Sleek Pill Tag on Top of Bar (No clumsy loops) */}
+                  {item.isPeak && (
+                    <g transform={`translate(${barX + barWidth / 2}, ${barY - 14})`}>
+                      <rect
+                        x="-14"
+                        y="0"
+                        width="28"
+                        height="11"
+                        rx="3"
+                        fill="#0284C7"
+                      />
+                      <text
+                        x="0"
+                        y="8"
+                        textAnchor="middle"
+                        fill="#FFFFFF"
+                        className="text-[7.5px] font-mono font-bold tracking-widest"
+                      >
+                        PEAK
+                      </text>
+                    </g>
+                  )}
+
+                  {/* Floating Hover Indicator on Bar */}
+                  {isHovered && !item.isPeak && (
+                    <circle
+                      cx={barX + barWidth / 2}
+                      cy={barY}
+                      r="2.5"
+                      fill="#0284C7"
+                    />
+                  )}
+
+                  {/* X-Axis Hour Label */}
+                  <text
+                    x={barX + barWidth / 2}
+                    y={svgHeight - 10}
+                    textAnchor="middle"
+                    className={`text-[10px] sm:text-[11px] font-mono select-none transition-colors ${
+                      isHovered || item.isPeak
+                        ? 'fill-[#0F172A] font-bold'
+                        : 'fill-slate-400 font-normal'
                     }`}
                   >
-                    {/* Top indicator dot on peak */}
-                    {item.isPeak && (
-                      <span className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white ring-1 ring-black" />
-                    )}
-                  </div>
-                </div>
-
-                {/* X Axis Label */}
-                <span className={`text-[10px] sm:text-[11px] font-mono mt-2 transition-colors select-none ${
-                  isHovered || item.isPeak ? 'font-bold text-[#0C0C0C]' : 'text-zinc-400'
-                }`}>
-                  {item.hour.slice(0, 2)}h
-                </span>
-              </div>
-            );
-          })}
+                    {item.hour.slice(0, 2)}h
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
         </div>
       </div>
 
-      {/* 3 Hub Capacities Summary Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-        <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-zinc-200/70 space-y-2">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-bold text-[#0C0C0C] flex items-center gap-1.5">
-              <Globe className="w-3.5 h-3.5 text-zinc-500" /> {language === 'vi' ? 'Hub Nam Sài Gòn (Q.7)' : 'South Hub (D7)'}
+      {/* 3 Telemetry Hub Monitors (Polished Luxury Hardware Cards) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+        {/* Hub 1: South Hub (Q.7) */}
+        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 hover:border-sky-300 transition-all shadow-xs space-y-3.5 group">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-colors">
+                <Globe className="w-3.5 h-3.5" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-[#0F172A]">
+                  {language === 'vi' ? 'Hub Nam Sài Gòn (Q.7)' : 'South Hub (District 7)'}
+                </h4>
+                <p className="text-[10px] text-slate-400 font-mono">DC-SOUTH-01</p>
+              </div>
+            </div>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/80">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              {language === 'vi' ? 'Ổn định' : 'Optimal'}
             </span>
-            <span className="text-[10px] font-mono font-bold text-zinc-600">74%</span>
           </div>
-          <div className="w-full bg-zinc-200/70 rounded-full h-1.5 overflow-hidden">
-            <div className="bg-[#0C0C0C] h-full rounded-full" style={{ width: '74%' }} />
+
+          <div className="flex items-baseline justify-between">
+            <div className="text-xl font-black text-[#0F172A] font-mono">
+              4.800 <span className="text-xs font-normal text-slate-400 font-sans">{language === 'vi' ? 'kiện/h' : 'parcels/h'}</span>
+            </div>
+            <span className="text-xs font-mono font-bold text-slate-600">74% {language === 'vi' ? 'tải' : 'load'}</span>
           </div>
-          <div className="flex justify-between text-[10px] text-zinc-400 font-mono">
-            <span>4.800 kiện/h</span>
-            <span>Ổn định</span>
+
+          {/* Precision Track */}
+          <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+            <div className="bg-sky-600 h-full rounded-full transition-all" style={{ width: '74%' }} />
+          </div>
+
+          <div className="pt-1 flex items-center justify-between text-[10.5px] text-slate-500 font-mono border-t border-slate-100">
+            <span className="flex items-center gap-1">
+              <Clock className="w-3 h-3 text-slate-400" /> {language === 'vi' ? 'Xử lý: 14p/kiện' : '14m latency'}
+            </span>
+            <span className="flex items-center gap-1">
+              <Truck className="w-3 h-3 text-slate-400" /> 16 {language === 'vi' ? 'xe bến' : 'trucks'}
+            </span>
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-zinc-200/70 space-y-2">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-bold text-[#0C0C0C] flex items-center gap-1.5">
-              <Globe className="w-3.5 h-3.5 text-zinc-500" /> {language === 'vi' ? 'Hub Đông TP (Thủ Đức)' : 'East Hub (Thu Duc)'}
+        {/* Hub 2: East Hub (Thu Duc) */}
+        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 hover:border-sky-300 transition-all shadow-xs space-y-3.5 group">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-colors">
+                <Globe className="w-3.5 h-3.5" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-[#0F172A]">
+                  {language === 'vi' ? 'Hub Đông TP (Thủ Đức)' : 'East Hub (Thu Duc City)'}
+                </h4>
+                <p className="text-[10px] text-slate-400 font-mono">DC-EAST-02</p>
+              </div>
+            </div>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-50 text-amber-900 border border-amber-200/80">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+              {language === 'vi' ? 'Tải cao (82%)' : 'High Load'}
             </span>
-            <span className="text-[10px] font-mono font-bold text-zinc-600">82%</span>
           </div>
-          <div className="w-full bg-zinc-200/70 rounded-full h-1.5 overflow-hidden">
-            <div className="bg-[#0C0C0C] h-full rounded-full" style={{ width: '82%' }} />
+
+          <div className="flex items-baseline justify-between">
+            <div className="text-xl font-black text-[#0F172A] font-mono">
+              6.200 <span className="text-xs font-normal text-slate-400 font-sans">{language === 'vi' ? 'kiện/h' : 'parcels/h'}</span>
+            </div>
+            <span className="text-xs font-mono font-bold text-amber-800">82% {language === 'vi' ? 'tải' : 'load'}</span>
           </div>
-          <div className="flex justify-between text-[10px] text-zinc-400 font-mono">
-            <span>6.200 kiện/h</span>
-            <span>Tải cao</span>
+
+          {/* Precision Track */}
+          <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+            <div className="bg-sky-600 h-full rounded-full transition-all" style={{ width: '82%' }} />
+          </div>
+
+          <div className="pt-1 flex items-center justify-between text-[10.5px] text-slate-500 font-mono border-t border-slate-100">
+            <span className="flex items-center gap-1">
+              <Clock className="w-3 h-3 text-slate-400" /> {language === 'vi' ? 'Xử lý: 18p/kiện' : '18m latency'}
+            </span>
+            <span className="flex items-center gap-1">
+              <Truck className="w-3 h-3 text-slate-400" /> 24 {language === 'vi' ? 'xe bến' : 'trucks'}
+            </span>
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-zinc-200/70 space-y-2">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-bold text-[#0C0C0C] flex items-center gap-1.5">
-              <Globe className="w-3.5 h-3.5 text-zinc-500" /> {language === 'vi' ? 'Hub Trung Tâm (Q.1)' : 'Central Hub (D1)'}
+        {/* Hub 3: Central Hub (Q.1) */}
+        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 hover:border-sky-300 transition-all shadow-xs space-y-3.5 group">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-colors">
+                <Globe className="w-3.5 h-3.5" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-[#0F172A]">
+                  {language === 'vi' ? 'Hub Trung Tâm (Q.1)' : 'Central Hub (District 1)'}
+                </h4>
+                <p className="text-[10px] text-slate-400 font-mono">DC-METRO-03</p>
+              </div>
+            </div>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sky-50 text-sky-800 border border-sky-200/80">
+              <span className="w-1.5 h-1.5 rounded-full bg-sky-600" />
+              {language === 'vi' ? 'Nội thành' : 'Express'}
             </span>
-            <span className="text-[10px] font-mono font-bold text-zinc-600">61%</span>
           </div>
-          <div className="w-full bg-zinc-200/70 rounded-full h-1.5 overflow-hidden">
-            <div className="bg-[#0C0C0C] h-full rounded-full" style={{ width: '61%' }} />
+
+          <div className="flex items-baseline justify-between">
+            <div className="text-xl font-black text-[#0F172A] font-mono">
+              3.100 <span className="text-xs font-normal text-slate-400 font-sans">{language === 'vi' ? 'kiện/h' : 'parcels/h'}</span>
+            </div>
+            <span className="text-xs font-mono font-bold text-slate-600">61% {language === 'vi' ? 'tải' : 'load'}</span>
           </div>
-          <div className="flex justify-between text-[10px] text-zinc-400 font-mono">
-            <span>Giao trung bình: 38p</span>
-            <span>Tối ưu</span>
+
+          {/* Precision Track */}
+          <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+            <div className="bg-sky-600 h-full rounded-full transition-all" style={{ width: '61%' }} />
+          </div>
+
+          <div className="pt-1 flex items-center justify-between text-[10.5px] text-slate-500 font-mono border-t border-slate-100">
+            <span className="flex items-center gap-1">
+              <Clock className="w-3 h-3 text-slate-400" /> {language === 'vi' ? 'Giao TB: 38 phút' : '38m delivery'}
+            </span>
+            <span className="flex items-center gap-1">
+              <Truck className="w-3 h-3 text-slate-400" /> 10 {language === 'vi' ? 'xe bến' : 'trucks'}
+            </span>
           </div>
         </div>
       </div>

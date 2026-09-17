@@ -108,19 +108,19 @@ export const RevenueTrendChart: React.FC = () => {
   const totalPeriodOrders = activeData.reduce((sum, d) => sum + d.orders, 0);
 
   return (
-    <div className="rounded-[28px] bg-white border border-zinc-200/80 p-6 sm:p-7 shadow-xs space-y-6">
+    <div className="rounded-[32px] bg-gradient-to-b from-white via-sky-50/20 to-white/95 border border-sky-100/90 p-6 sm:p-7 shadow-sm space-y-6 relative overflow-hidden ambient-glow-sky">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-100">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-zinc-100 text-[#0C0C0C] flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
               <TrendingUp className="w-4 h-4" />
             </div>
-            <h3 className="text-base sm:text-lg font-black text-[#0C0C0C] tracking-tight font-sans">
+            <h3 className="text-base sm:text-lg font-black text-[#0F172A] tracking-tight font-sans">
               {language === 'vi' ? 'Biểu Đồ Doanh Thu & Đơn Hàng' : 'Revenue & Order Flow'}
             </h3>
           </div>
-          <p className="text-xs text-zinc-500 font-sans">
+          <p className="text-xs text-slate-500 font-sans">
             {language === 'vi'
               ? 'Dòng tiền giao dịch GMV và lưu lượng đơn thực tế toàn hệ sinh thái'
               : 'Ecosystem GMV transaction volume & real-time order execution'}
@@ -128,7 +128,7 @@ export const RevenueTrendChart: React.FC = () => {
         </div>
 
         {/* Timeframe Switcher */}
-        <div className="flex items-center rounded-full bg-zinc-100 p-1 border border-zinc-200 select-none self-start sm:self-auto">
+        <div className="flex items-center rounded-full bg-slate-100 p-1 border border-slate-200 select-none self-start sm:self-auto">
           {(['7D', '30D', '12M'] as const).map((mode) => (
             <button
               key={mode}
@@ -138,8 +138,8 @@ export const RevenueTrendChart: React.FC = () => {
               }}
               className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all cursor-pointer ${
                 timeframe === mode
-                  ? 'bg-[#0C0C0C] text-white shadow-2xs'
-                  : 'text-zinc-600 hover:text-black'
+                  ? 'bg-sky-600 text-white shadow-xs shadow-sky-500/25'
+                  : 'text-slate-600 hover:text-sky-600'
               }`}
             >
               {mode === '7D'
@@ -161,15 +161,15 @@ export const RevenueTrendChart: React.FC = () => {
               left: `${(points[hoveredIndex].x / svgWidth) * 100}%`,
               top: `${(points[hoveredIndex].y / svgHeight) * 100 - 15}%`,
             }}
-            className="absolute -translate-x-1/2 -translate-y-full z-20 pointer-events-none p-2.5 rounded-xl bg-[#0C0C0C] text-white shadow-xl text-left font-sans whitespace-nowrap animate-in fade-in zoom-in-95"
+            className="absolute -translate-x-1/2 -translate-y-full z-20 pointer-events-none p-2.5 rounded-xl bg-slate-900 text-white shadow-xl shadow-sky-950/20 border border-slate-700/60 text-left font-sans whitespace-nowrap animate-in fade-in zoom-in-95"
           >
-            <div className="text-[10px] font-mono uppercase text-zinc-400">
+            <div className="text-[10px] font-mono uppercase text-sky-400">
               {points[hoveredIndex].item.label}
             </div>
             <div className="text-xs font-black text-white font-mono mt-0.5">
               {formatVND(points[hoveredIndex].item.revenue)}
             </div>
-            <div className="text-[10px] text-zinc-300 font-mono mt-0.5">
+            <div className="text-[10px] text-slate-300 font-mono mt-0.5">
               {points[hoveredIndex].item.orders} {language === 'vi' ? 'đơn hàng' : 'orders'}
             </div>
           </div>
@@ -181,8 +181,8 @@ export const RevenueTrendChart: React.FC = () => {
         >
           <defs>
             <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#0C0C0C" stopOpacity="0.22" />
-              <stop offset="100%" stopColor="#0C0C0C" stopOpacity="0.0" />
+              <stop offset="0%" stopColor="#0284C7" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="#0284C7" stopOpacity="0.0" />
             </linearGradient>
           </defs>
 
@@ -196,7 +196,7 @@ export const RevenueTrendChart: React.FC = () => {
                 y1={y}
                 x2={svgWidth - paddingX}
                 y2={y}
-                stroke="#F4F4F5"
+                stroke="#F1F5F9"
                 strokeWidth="1"
                 strokeDasharray="4 4"
               />
@@ -210,7 +210,7 @@ export const RevenueTrendChart: React.FC = () => {
           <path
             d={linePath}
             fill="none"
-            stroke="#0C0C0C"
+            stroke="#0284C7"
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -228,7 +228,7 @@ export const RevenueTrendChart: React.FC = () => {
                     y1={paddingY}
                     x2={pt.x}
                     y2={svgHeight - paddingY}
-                    stroke="#A1A1AA"
+                    stroke="#94A3B8"
                     strokeWidth="1"
                     strokeDasharray="3 3"
                   />
@@ -241,8 +241,8 @@ export const RevenueTrendChart: React.FC = () => {
                   r={isHovered ? 6 : 3.5}
                   className={`transition-all duration-200 cursor-pointer ${
                     isHovered
-                      ? 'fill-white stroke-[#0C0C0C] stroke-[3px]'
-                      : 'fill-[#0C0C0C] stroke-white stroke-[1.5px]'
+                      ? 'fill-white stroke-sky-600 stroke-[3px]'
+                      : 'fill-sky-600 stroke-white stroke-[1.5px]'
                   }`}
                   onMouseEnter={() => setHoveredIndex(idx)}
                   onMouseLeave={() => setHoveredIndex(null)}
@@ -265,7 +265,7 @@ export const RevenueTrendChart: React.FC = () => {
                   x={pt.x}
                   y={svgHeight - 6}
                   textAnchor="middle"
-                  className="text-[10px] font-mono fill-zinc-400 select-none"
+                  className="text-[10px] font-mono fill-slate-400 select-none"
                 >
                   {pt.item.label}
                 </text>
@@ -276,21 +276,21 @@ export const RevenueTrendChart: React.FC = () => {
       </div>
 
       {/* Summary KPI Footnotes */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-zinc-100">
-        <div className="p-3 rounded-2xl bg-[#FAFAFA] border border-zinc-200/60">
-          <div className="text-[10px] font-mono uppercase text-zinc-500 font-bold">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-100">
+        <div className="p-3 rounded-2xl bg-sky-50/40 border border-sky-100">
+          <div className="text-[10px] font-mono uppercase text-sky-800 font-bold">
             {language === 'vi' ? 'TỔNG GMV GIAO DỊCH' : 'TOTAL GMV VOLUME'}
           </div>
-          <div className="text-base font-black text-[#0C0C0C] font-mono mt-1">
+          <div className="text-base font-black text-[#0F172A] font-mono mt-1">
             {formatVND(totalPeriodRevenue)}
           </div>
         </div>
 
-        <div className="p-3 rounded-2xl bg-[#FAFAFA] border border-zinc-200/60">
-          <div className="text-[10px] font-mono uppercase text-zinc-500 font-bold">
+        <div className="p-3 rounded-2xl bg-sky-50/40 border border-sky-100">
+          <div className="text-[10px] font-mono uppercase text-sky-800 font-bold">
             {language === 'vi' ? 'LƯỢNG ĐƠN HOÀN TẤT' : 'TOTAL COMPLETED ORDERS'}
           </div>
-          <div className="text-base font-black text-[#0C0C0C] font-mono mt-1">
+          <div className="text-base font-black text-[#0F172A] font-mono mt-1">
             {totalPeriodOrders.toLocaleString()} {language === 'vi' ? 'đơn' : 'orders'}
           </div>
         </div>

@@ -58,43 +58,43 @@ export const Footer: React.FC = () => {
       <div id="why-us-section" className="w-full border-b border-zinc-200/80 bg-[#FAFAFA]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <div className="flex items-start gap-4 p-5 rounded-2xl bg-white border border-zinc-200/80 shadow-2xs hover:border-black transition-all">
-              <div className="w-10 h-10 rounded-xl bg-[#0C0C0C] text-white flex items-center justify-center shrink-0">
+            <div className="flex items-start gap-4 p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-sky-300 hover:shadow-sm transition-all">
+              <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center shrink-0 shadow-2xs">
                 <Zap className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-[#0C0C0C] uppercase tracking-wider">{t('footer.flashDelivery')}</h4>
-                <p className="text-xs text-zinc-500 mt-1 leading-relaxed">{t('footer.flashDeliverySub')}</p>
+                <h4 className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">{t('footer.flashDelivery')}</h4>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">{t('footer.flashDeliverySub')}</p>
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-5 rounded-2xl bg-white border border-zinc-200/80 shadow-2xs hover:border-black transition-all">
-              <div className="w-10 h-10 rounded-xl bg-[#0C0C0C] text-white flex items-center justify-center shrink-0">
+            <div className="flex items-start gap-4 p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-sky-300 hover:shadow-sm transition-all">
+              <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center shrink-0 shadow-2xs">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-[#0C0C0C] uppercase tracking-wider">{t('footer.authentic')}</h4>
-                <p className="text-xs text-zinc-500 mt-1 leading-relaxed">{t('footer.authenticSub')}</p>
+                <h4 className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">{t('footer.authentic')}</h4>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">{t('footer.authenticSub')}</p>
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-5 rounded-2xl bg-white border border-zinc-200/80 shadow-2xs hover:border-black transition-all">
-              <div className="w-10 h-10 rounded-xl bg-[#0C0C0C] text-white flex items-center justify-center shrink-0">
+            <div className="flex items-start gap-4 p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-sky-300 hover:shadow-sm transition-all">
+              <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center shrink-0 shadow-2xs">
                 <RotateCcw className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-[#0C0C0C] uppercase tracking-wider">{t('footer.returns')}</h4>
-                <p className="text-xs text-zinc-500 mt-1 leading-relaxed">{t('footer.returnsSub')}</p>
+                <h4 className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">{t('footer.returns')}</h4>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">{t('footer.returnsSub')}</p>
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-5 rounded-2xl bg-white border border-zinc-200/80 shadow-2xs hover:border-black transition-all">
-              <div className="w-10 h-10 rounded-xl bg-[#0C0C0C] text-white flex items-center justify-center shrink-0">
+            <div className="flex items-start gap-4 p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:border-sky-300 hover:shadow-sm transition-all">
+              <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center shrink-0 shadow-2xs">
                 <Headphones className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-[#0C0C0C] uppercase tracking-wider">{t('footer.concierge')}</h4>
-                <p className="text-xs text-zinc-500 mt-1 leading-relaxed">{t('footer.conciergeSub')}</p>
+                <h4 className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">{t('footer.concierge')}</h4>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">{t('footer.conciergeSub')}</p>
               </div>
             </div>
           </div>
@@ -119,28 +119,28 @@ export const Footer: React.FC = () => {
                       className="w-full h-full object-contain mix-blend-multiply scale-140"
                     />
                   </div>
-                  <h3 className="text-2xl sm:text-[26px] font-black text-[#0C0C0C] tracking-[-0.03em] font-sans">
+                  <h3 className="text-2xl sm:text-[26px] font-black text-[#0F172A] tracking-[-0.03em] font-sans">
                     TerraSweep
                   </h3>
                 </div>
-                <p className="text-xs text-zinc-500 leading-relaxed">
+                <p className="text-xs text-slate-500 leading-relaxed">
                   {language === 'vi'
                     ? 'Nền tảng thương mại điện tử chuyên biệt về sneakers hiệu năng cao và streetwear kiến trúc. Mọi sản phẩm đều được kiểm định 100% chính hãng trước khi xuất kho.'
                     : 'Curated high-performance footwear and architectural streetwear platform. Every single item undergoes rigorous authenticity verification before dispatch.'}
                 </p>
               </div>
 
-              <div className="pt-2 space-y-2.5 text-xs text-zinc-600">
-                <div className="flex items-center gap-2 text-zinc-900 font-semibold">
-                  <PhoneCall className="w-4 h-4 text-zinc-500 shrink-0" />
+              <div className="pt-2 space-y-2.5 text-xs text-slate-600">
+                <div className="flex items-center gap-2 text-slate-900 font-semibold">
+                  <PhoneCall className="w-4 h-4 text-sky-600 shrink-0" />
                   <span>1900 8899 (24/7 Hotline)</span>
                 </div>
-                <div className="flex items-center gap-2 text-zinc-600">
-                  <Mail className="w-4 h-4 text-zinc-400 shrink-0" />
+                <div className="flex items-center gap-2 text-slate-600">
+                  <Mail className="w-4 h-4 text-slate-400 shrink-0" />
                   <span>concierge@terrasweep.com</span>
                 </div>
-                <div className="flex items-start gap-2 text-zinc-600 leading-snug">
-                  <MapPin className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2 text-slate-600 leading-snug">
+                  <MapPin className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
                   <span>Tầng 19, Tòa nhà Saigon Centre – Tháp 2, 67 Lê Lợi, Bến Nghé, Quận 1, TP. HCM</span>
                 </div>
               </div>
@@ -148,37 +148,32 @@ export const Footer: React.FC = () => {
 
             {/* Col 2: Customer Care */}
             <div className="space-y-3.5">
-              <h3 className="text-xs font-sans font-bold uppercase tracking-wider text-[#0C0C0C]">
+              <h3 className="text-xs font-sans font-bold uppercase tracking-wider text-[#0F172A]">
                 {t('footer.customerCareTitle')}
               </h3>
-              <ul className="space-y-2.5 text-xs text-zinc-600">
+              <ul className="space-y-2.5 text-xs text-slate-600">
                 <li>
-                  <a href="#about-section" className="hover:text-black transition-colors">
+                  <a href="#about-section" className="hover:text-sky-600 transition-colors">
                     {t('footer.helpCenter')}
                   </a>
                 </li>
                 <li>
-                  <a href="#about-section" className="hover:text-black transition-colors">
-                    {t('footer.orderGuide')}
+                  <a href="#about-section" className="hover:text-sky-600 transition-colors">
+                    {t('footer.howToBuy')}
                   </a>
                 </li>
                 <li>
-                  <a href="#about-section" className="hover:text-black transition-colors">
-                    {t('footer.shippingDelivery')}
+                  <a href="#about-section" className="hover:text-sky-600 transition-colors">
+                    {t('footer.shippingPolicy')}
                   </a>
                 </li>
                 <li>
-                  <a href="#about-section" className="hover:text-black transition-colors">
-                    {t('footer.returnsRefund')}
+                  <a href="#about-section" className="hover:text-sky-600 transition-colors">
+                    {t('footer.returnPolicy')}
                   </a>
                 </li>
                 <li>
-                  <a href="#about-section" className="hover:text-black transition-colors">
-                    {t('footer.inspectionGuide')}
-                  </a>
-                </li>
-                <li>
-                  <a href="#collection-section" className="hover:text-black transition-colors font-medium text-zinc-800">
+                  <a href="#collection-section" className="hover:text-sky-600 transition-colors font-medium text-slate-800">
                     {language === 'vi' ? 'Hướng dẫn chọn size giày & quần áo' : 'Size & Fit Exploration Guide'}
                   </a>
                 </li>
@@ -187,37 +182,37 @@ export const Footer: React.FC = () => {
 
             {/* Col 3: Ecosystem & Legal */}
             <div className="space-y-3.5">
-              <h3 className="text-xs font-sans font-bold uppercase tracking-wider text-[#0C0C0C]">
+              <h3 className="text-xs font-sans font-bold uppercase tracking-wider text-[#0F172A]">
                 {t('footer.aboutTitle')}
               </h3>
-              <ul className="space-y-2.5 text-xs text-zinc-600">
+              <ul className="space-y-2.5 text-xs text-slate-600">
                 <li>
-                  <a href="#about-section" className="hover:text-black transition-colors">
+                  <a href="#about-section" className="hover:text-sky-600 transition-colors">
                     {t('footer.aboutUs')}
                   </a>
                 </li>
                 <li>
-                  <a href="#about-section" className="hover:text-black transition-colors">
+                  <a href="#about-section" className="hover:text-sky-600 transition-colors">
                     {t('footer.sellWithUs')}
                   </a>
                 </li>
                 <li>
-                  <a href="#about-section" className="hover:text-black transition-colors">
+                  <a href="#about-section" className="hover:text-sky-600 transition-colors">
                     {t('footer.careers')}
                   </a>
                 </li>
                 <li>
-                  <a href="#about-section" className="hover:text-black transition-colors">
+                  <a href="#about-section" className="hover:text-sky-600 transition-colors">
                     {t('footer.terms')}
                   </a>
                 </li>
                 <li>
-                  <a href="#about-section" className="hover:text-black transition-colors">
+                  <a href="#about-section" className="hover:text-sky-600 transition-colors">
                     {t('footer.privacy')}
                   </a>
                 </li>
                 <li>
-                  <a href="#about-section" className="hover:text-black transition-colors">
+                  <a href="#about-section" className="hover:text-sky-600 transition-colors">
                     {t('footer.ipProtection')}
                   </a>
                 </li>
@@ -227,7 +222,7 @@ export const Footer: React.FC = () => {
             {/* Col 4: Payment Methods & Authentic Compliance Seals */}
             <div className="space-y-5">
               <div>
-                <h3 className="text-xs font-sans font-bold uppercase tracking-wider text-[#0C0C0C] mb-3">
+                <h3 className="text-xs font-sans font-bold uppercase tracking-wider text-[#0F172A] mb-3">
                   {t('footer.paymentMethodsTitle')}
                 </h3>
                 
@@ -290,7 +285,7 @@ export const Footer: React.FC = () => {
                           <circle cx="12" cy="12" r="2" />
                         </svg>
                       </div>
-                      <span className="font-sans font-black text-xs text-[#0C0C0C] tracking-wider leading-none select-none">
+                      <span className="font-sans font-black text-xs text-[#0F172A] tracking-wider leading-none select-none">
                         COD
                       </span>
                     </div>
@@ -299,14 +294,14 @@ export const Footer: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-xs font-sans font-bold uppercase tracking-wider text-[#0C0C0C] mb-3">
+                <h3 className="text-xs font-sans font-bold uppercase tracking-wider text-[#0F172A] mb-3">
                   {language === 'vi' ? 'Chứng nhận chính thức' : 'Official Certifications'}
                 </h3>
                 
                 {/* 3 Authentic Compliance Seals (Clean, Premium, Trustworthy Palette) */}
                 <div className="space-y-2">
                   {/* Seal 1: Đã Đăng Ký Bộ Công Thương (Official Ministry Blue) */}
-                  <div className="px-3 py-2.5 rounded-xl bg-zinc-50/90 hover:bg-white border border-zinc-200/90 flex items-center gap-3 shadow-2xs transition-colors">
+                  <div className="px-3 py-2.5 rounded-xl bg-slate-50/90 hover:bg-white border border-slate-200/90 flex items-center gap-3 shadow-2xs transition-colors">
                     <div className="w-6 h-6 rounded-lg bg-[#005BAA] text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-2xs">
                       ✓
                     </div>
@@ -314,14 +309,14 @@ export const Footer: React.FC = () => {
                       <p className="text-[8.5px] font-sans font-bold text-[#005BAA] uppercase tracking-wider">
                         {language === 'vi' ? 'ĐÃ ĐĂNG KÝ' : 'OFFICIAL REGISTRY'}
                       </p>
-                      <p className="text-xs font-bold text-[#0C0C0C]">
+                      <p className="text-xs font-bold text-[#0F172A]">
                         {language === 'vi' ? 'Bộ Công Thương' : 'Ministry of Industry & Trade'}
                       </p>
                     </div>
                   </div>
 
                   {/* Seal 2: 100% Chính Hãng (Trust Emerald) */}
-                  <div className="px-3 py-2.5 rounded-xl bg-zinc-50/90 hover:bg-white border border-zinc-200/90 flex items-center gap-3 shadow-2xs transition-colors">
+                  <div className="px-3 py-2.5 rounded-xl bg-slate-50/90 hover:bg-white border border-slate-200/90 flex items-center gap-3 shadow-2xs transition-colors">
                     <div className="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
                       <ShieldCheck className="w-4 h-4 text-white" />
                     </div>
@@ -329,14 +324,14 @@ export const Footer: React.FC = () => {
                       <p className="text-[8.5px] font-sans font-bold text-emerald-600 uppercase tracking-wider">
                         {language === 'vi' ? '100% CHÍNH HÃNG' : '100% GENUINE'}
                       </p>
-                      <p className="text-xs font-bold text-[#0C0C0C]">
+                      <p className="text-xs font-bold text-[#0F172A]">
                         {language === 'vi' ? 'Nói không với hàng giả' : 'Zero Fake Guarantee'}
                       </p>
                     </div>
                   </div>
 
                   {/* Seal 3: PCI DSS Level 1 (Cybersecurity Slate / Navy) */}
-                  <div className="px-3 py-2.5 rounded-xl bg-zinc-50/90 hover:bg-white border border-zinc-200/90 flex items-center gap-3 shadow-2xs transition-colors">
+                  <div className="px-3 py-2.5 rounded-xl bg-slate-50/90 hover:bg-white border border-slate-200/90 flex items-center gap-3 shadow-2xs transition-colors">
                     <div className="w-6 h-6 rounded-lg bg-[#1E293B] text-white flex items-center justify-center shrink-0 shadow-2xs">
                       <Lock className="w-3.5 h-3.5 text-white" />
                     </div>
@@ -344,7 +339,7 @@ export const Footer: React.FC = () => {
                       <p className="text-[8.5px] font-sans font-bold text-slate-600 uppercase tracking-wider">
                         PCI DSS LEVEL 1
                       </p>
-                      <p className="text-xs font-bold text-[#0C0C0C]">
+                      <p className="text-xs font-bold text-[#0F172A]">
                         {language === 'vi' ? 'Bảo mật thanh toán quốc tế' : 'Global Payment Security'}
                       </p>
                     </div>
@@ -391,33 +386,33 @@ export const Footer: React.FC = () => {
         {!isChatOpen ? (
           <button
             onClick={() => setIsChatOpen(true)}
-            className="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#0C0C0C] hover:bg-zinc-800 text-white font-bold text-xs shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer border border-white/20"
+            className="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-2xl shadow-sky-500/30 transition-all hover:scale-105 active:scale-95 cursor-pointer border border-sky-400/40"
           >
-            <MessageSquare className="w-4 h-4 fill-white text-[#0C0C0C]" />
+            <MessageSquare className="w-4 h-4 fill-white text-sky-600" />
             <span>{t('footer.chatWidgetLabel')}</span>
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           </button>
         ) : (
-          <div className="w-80 sm:w-96 rounded-[28px] bg-white border border-zinc-200 shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5">
+          <div className="w-80 sm:w-96 rounded-[28px] bg-white border border-slate-200 shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5">
             {/* Chat Header */}
-            <div className="p-4 bg-[#0C0C0C] text-white flex items-center justify-between">
+            <div className="p-4 bg-gradient-to-r from-sky-600 to-blue-700 text-white flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
                 <div>
                   <h4 className="text-xs font-bold">TerraSweep Concierge</h4>
-                  <p className="text-[10px] text-zinc-400 font-mono">Online 24/7 Priority Support</p>
+                  <p className="text-[10px] text-sky-200 font-mono">Online 24/7 Priority Support</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsChatOpen(false)}
-                className="w-7 h-7 rounded-full hover:bg-white/10 flex items-center justify-center text-zinc-400 hover:text-white cursor-pointer"
+                className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center text-white/80 hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Chat Body */}
-            <div className="p-4 h-64 overflow-y-auto space-y-3 bg-zinc-50 text-xs">
+            <div className="p-4 h-64 overflow-y-auto space-y-3 bg-slate-50 text-xs">
               {messages.map((m, idx) => (
                 <div
                   key={idx}
@@ -426,8 +421,8 @@ export const Footer: React.FC = () => {
                   <div
                     className={`max-w-[80%] p-3 rounded-2xl ${
                       m.sender === 'user'
-                        ? 'bg-[#0C0C0C] text-white rounded-br-none'
-                        : 'bg-white border border-zinc-200 text-zinc-800 rounded-bl-none shadow-2xs'
+                        ? 'bg-sky-600 text-white rounded-br-none shadow-xs shadow-sky-500/20'
+                        : 'bg-white border border-slate-200 text-slate-800 rounded-bl-none shadow-2xs'
                     }`}
                   >
                     {m.text}
@@ -437,17 +432,17 @@ export const Footer: React.FC = () => {
             </div>
 
             {/* Chat Input */}
-            <form onSubmit={handleSendMessage} className="p-3 bg-white border-t border-zinc-200 flex items-center gap-2">
+            <form onSubmit={handleSendMessage} className="p-3 bg-white border-t border-slate-100 flex items-center gap-2">
               <input
                 type="text"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 placeholder={language === 'vi' ? 'Nhập tin nhắn...' : 'Type your message...'}
-                className="flex-1 bg-zinc-100 rounded-full px-3.5 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-black"
+                className="flex-1 bg-slate-100 rounded-full px-3.5 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-sky-500"
               />
               <button
                 type="submit"
-                className="w-8 h-8 rounded-full bg-[#0C0C0C] text-white flex items-center justify-center hover:bg-zinc-800 transition-colors shrink-0 cursor-pointer"
+                className="w-8 h-8 rounded-full bg-sky-600 text-white flex items-center justify-center hover:bg-sky-700 transition-colors shrink-0 cursor-pointer shadow-xs shadow-sky-500/25"
               >
                 <Send className="w-3.5 h-3.5" />
               </button>

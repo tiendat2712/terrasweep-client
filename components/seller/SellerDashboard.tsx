@@ -76,19 +76,19 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-6 py-10 space-y-8">
       {/* Top Banner: Store Identity */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-8 bg-white rounded-[28px] border border-zinc-200 shadow-xs">
-        <div className="flex items-center gap-5">
-          <div className="w-14 h-14 rounded-2xl bg-[#0C0C0C] flex items-center justify-center text-white">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-8 bg-gradient-to-b from-white via-sky-50/25 to-white/95 rounded-[32px] border border-sky-100/90 shadow-sm relative overflow-hidden ambient-glow-sky">
+        <div className="flex items-center gap-5 relative z-10">
+          <div className="w-14 h-14 rounded-2xl bg-sky-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20">
             <Store className="w-7 h-7" />
           </div>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-black text-[#0C0C0C]">{t('seller.title')}</h1>
-              <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-zinc-100 text-zinc-900 border border-zinc-200">
+              <h1 className="text-2xl font-black text-[#0F172A]">{t('seller.title')}</h1>
+              <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-sky-50 text-sky-800 border border-sky-200">
                 {t('seller.badge')}
               </span>
             </div>
-            <p className="text-xs text-zinc-500 font-mono mt-1">
+            <p className="text-xs text-slate-500 font-mono mt-1">
               {t('seller.storeMeta')}
             </p>
           </div>
@@ -96,7 +96,7 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
 
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0C0C0C] hover:bg-zinc-800 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-xs shadow-sky-500/25 transition-colors cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>{t('seller.addNewProduct')}</span>
@@ -106,11 +106,11 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
       {/* 4 KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <DoubleBezelCard>
-          <div className="flex items-center justify-between text-zinc-400 text-xs font-bold uppercase tracking-wider">
+          <div className="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
             <span>{t('seller.kpiRevenue')}</span>
-            <DollarSign className="w-4 h-4 text-[#0C0C0C]" />
+            <DollarSign className="w-4 h-4 text-sky-600" />
           </div>
-          <div className="mt-3 text-2xl font-black text-[#0C0C0C] font-mono">
+          <div className="mt-3 text-2xl font-black text-[#0F172A] font-mono">
             {totalRevenue.toLocaleString('vi-VN')}₫
           </div>
           <span className="text-[11px] text-emerald-700 font-mono mt-1.5 block">
@@ -119,37 +119,37 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
         </DoubleBezelCard>
 
         <DoubleBezelCard>
-          <div className="flex items-center justify-between text-zinc-400 text-xs font-bold uppercase tracking-wider">
+          <div className="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
             <span>{t('seller.kpiPending')}</span>
-            <Clock className="w-4 h-4 text-[#0C0C0C]" />
+            <Clock className="w-4 h-4 text-sky-600" />
           </div>
-          <div className="mt-3 text-2xl font-black text-[#0C0C0C] font-mono">
+          <div className="mt-3 text-2xl font-black text-[#0F172A] font-mono">
             {pendingOrders.length}
           </div>
-          <span className="text-[11px] text-zinc-500 font-mono mt-1.5 block">
+          <span className="text-[11px] text-slate-500 font-mono mt-1.5 block">
             {t('seller.kpiPendingSub')}
           </span>
         </DoubleBezelCard>
 
         <DoubleBezelCard>
-          <div className="flex items-center justify-between text-zinc-400 text-xs font-bold uppercase tracking-wider">
+          <div className="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
             <span>{t('seller.kpiLowStock')}</span>
             <AlertTriangle className="w-4 h-4 text-amber-600" />
           </div>
           <div className="mt-3 text-2xl font-black text-amber-700 font-mono">
             {lowStockProducts.length} SKU
           </div>
-          <span className="text-[11px] text-zinc-500 font-mono mt-1.5 block">
+          <span className="text-[11px] text-slate-500 font-mono mt-1.5 block">
             {t('seller.kpiLowStockSub')}
           </span>
         </DoubleBezelCard>
 
         <DoubleBezelCard>
-          <div className="flex items-center justify-between text-zinc-400 text-xs font-bold uppercase tracking-wider">
+          <div className="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
             <span>{t('seller.kpiCompletionRate')}</span>
-            <TrendingUp className="w-4 h-4 text-[#0C0C0C]" />
+            <TrendingUp className="w-4 h-4 text-sky-600" />
           </div>
-          <div className="mt-3 text-2xl font-black text-[#0C0C0C] font-mono">
+          <div className="mt-3 text-2xl font-black text-[#0F172A] font-mono">
             99.4%
           </div>
           <span className="text-[11px] text-emerald-700 font-mono mt-1.5 block">
@@ -159,13 +159,13 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-3 border-b border-zinc-200 pb-3">
+      <div className="flex items-center gap-3 border-b border-slate-200 pb-3">
         <button
           onClick={() => setActiveTab('orders')}
           className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
             activeTab === 'orders'
-              ? 'bg-[#0C0C0C] text-white shadow-xs'
-              : 'bg-white text-zinc-600 hover:text-black border border-zinc-200'
+              ? 'bg-sky-600 text-white shadow-xs shadow-sky-500/25'
+              : 'bg-white text-slate-600 hover:text-sky-600 border border-slate-200'
           }`}
         >
           <Package className="w-4 h-4" />
@@ -175,8 +175,8 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
           onClick={() => setActiveTab('inventory')}
           className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
             activeTab === 'inventory'
-              ? 'bg-[#0C0C0C] text-white shadow-xs'
-              : 'bg-white text-zinc-600 hover:text-black border border-zinc-200'
+              ? 'bg-sky-600 text-white shadow-xs shadow-sky-500/25'
+              : 'bg-white text-slate-600 hover:text-sky-600 border border-slate-200'
           }`}
         >
           <Store className="w-4 h-4" />
@@ -186,17 +186,17 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
 
       {/* TAB 1: ORDERS TABLE */}
       {activeTab === 'orders' && (
-        <div className="bg-white rounded-[28px] border border-zinc-200 overflow-hidden shadow-xs">
-          <div className="p-6 border-b border-zinc-100 flex justify-between items-center">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800">
+        <div className="bg-gradient-to-b from-white via-sky-50/20 to-white/95 rounded-[32px] border border-sky-100/90 overflow-hidden shadow-sm relative">
+          <div className="p-6 border-b border-sky-100 flex justify-between items-center">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
               {t('seller.tableTitle')}
             </h3>
-            <span className="text-xs text-zinc-400 font-mono">{t('seller.realtimeSync')}</span>
+            <span className="text-xs text-sky-700 font-mono font-medium">{t('seller.realtimeSync')}</span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-zinc-50 text-zinc-500 uppercase font-mono text-[10px] border-b border-zinc-200">
+              <thead className="bg-slate-50 text-slate-500 uppercase font-mono text-[10px] border-b border-slate-200">
                 <tr>
                   <th className="p-5">{t('seller.colOrderId')}</th>
                   <th className="p-5">{t('seller.colCustomer')}</th>
@@ -206,36 +206,36 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
                   <th className="p-5 text-right">{t('seller.colAction')}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-100">
+              <tbody className="divide-y divide-slate-100">
                 {orders.map((order) => (
-                  <tr key={order.id} className="hover:bg-zinc-50/80 transition-colors">
-                    <td className="p-5 font-mono font-bold text-[#0C0C0C]">
+                  <tr key={order.id} className="hover:bg-sky-50/40 transition-colors">
+                    <td className="p-5 font-mono font-bold text-sky-600">
                       #{order.id}
-                      <span className="block text-[10px] text-zinc-400 font-normal mt-0.5">
+                      <span className="block text-[10px] text-slate-400 font-normal mt-0.5">
                         {order.createdAt}
                       </span>
                     </td>
 
                     <td className="p-5 max-w-xs">
-                      <div className="font-bold text-zinc-900">{order.customerName}</div>
-                      <div className="text-[11px] text-zinc-500 truncate mt-0.5">{order.shippingAddress}</div>
-                      <span className="text-[10px] text-zinc-400 font-mono">SĐT: {order.customerPhone}</span>
+                      <div className="font-bold text-slate-900">{order.customerName}</div>
+                      <div className="text-[11px] text-slate-500 truncate mt-0.5">{order.shippingAddress}</div>
+                      <span className="text-[10px] text-slate-400 font-mono">SĐT: {order.customerPhone}</span>
                     </td>
 
                     <td className="p-5">
                       <div className="space-y-1">
                         {order.items.map((item, idx) => (
-                          <div key={idx} className="text-zinc-700">
-                            <span className="font-mono font-bold text-[#0C0C0C]">{item.quantity}x</span>{' '}
+                          <div key={idx} className="text-slate-700">
+                            <span className="font-mono font-bold text-sky-700">{item.quantity}x</span>{' '}
                             {item.product.name}
                           </div>
                         ))}
                       </div>
                     </td>
 
-                    <td className="p-5 font-mono font-bold text-[#0C0C0C] text-sm">
+                    <td className="p-5 font-mono font-bold text-[#0F172A] text-sm">
                       {order.total.toLocaleString('vi-VN')}₫
-                      <span className="block text-[10px] text-zinc-400 font-normal">
+                      <span className="block text-[10px] text-slate-400 font-normal">
                         {order.paymentMethod}
                       </span>
                     </td>
@@ -244,11 +244,11 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
                       <span
                         className={`px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase border ${
                           order.status === 'pending'
-                            ? 'bg-zinc-900 text-white border-black animate-pulse'
+                            ? 'bg-sky-600 text-white border-sky-600 animate-pulse'
                             : order.status === 'confirmed'
-                            ? 'bg-zinc-100 text-zinc-900 border-zinc-300'
+                            ? 'bg-sky-50 text-sky-800 border-sky-200'
                             : order.status === 'shipping'
-                            ? 'bg-zinc-100 text-zinc-900 border-zinc-300'
+                            ? 'bg-sky-50 text-sky-800 border-sky-200'
                             : 'bg-emerald-50 text-emerald-800 border-emerald-200'
                         }`}
                       >
@@ -260,7 +260,7 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
                       {order.status === 'pending' ? (
                         <button
                           onClick={() => onConfirmOrder(order.id)}
-                          className="px-4 py-2 rounded-full bg-[#0C0C0C] hover:bg-zinc-800 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
+                          className="px-4 py-2 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-xs shadow-sky-500/25 transition-colors cursor-pointer"
                         >
                           {t('seller.btnConfirmPackage')}
                         </button>
@@ -284,26 +284,26 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
           {products.map((product) => (
             <div
               key={product.id}
-              className="p-5 rounded-[24px] bg-white border border-zinc-200 shadow-xs flex gap-4"
+              className="p-5 rounded-[28px] bg-gradient-to-b from-white via-sky-50/20 to-white/95 border border-sky-100/90 shadow-sm flex gap-4 hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 transition-all relative overflow-hidden ambient-glow-sky"
             >
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-20 h-20 rounded-2xl object-contain bg-[#F0F0F0] shrink-0 p-2 border border-zinc-200"
+                className="w-20 h-20 rounded-2xl object-contain bg-slate-50 shrink-0 p-2 border border-slate-200"
               />
 
               <div className="flex-1 min-w-0 flex flex-col justify-between">
                 <div>
-                  <h4 className="text-xs font-bold text-[#0C0C0C] truncate">{product.name}</h4>
-                  <span className="text-[10px] text-zinc-400 font-mono block mt-0.5">{product.category}</span>
-                  <div className="text-xs font-mono font-bold text-[#0C0C0C] mt-1.5">
+                  <h4 className="text-xs font-bold text-[#0F172A] truncate">{product.name}</h4>
+                  <span className="text-[10px] text-slate-400 font-mono block mt-0.5">{product.category}</span>
+                  <div className="text-xs font-mono font-bold text-sky-600 mt-1.5">
                     {product.flashPrice.toLocaleString('vi-VN')}₫
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-3 border-t border-zinc-100">
+                <div className="flex items-center justify-between pt-3 border-t border-slate-100">
                   <span className={`text-[11px] font-mono font-bold ${
-                    product.stock < 15 ? 'text-red-600' : 'text-zinc-800'
+                    product.stock < 15 ? 'text-red-600' : 'text-slate-800'
                   }`}>
                     {t('seller.stockCount', { count: product.stock })}
                   </span>
@@ -311,13 +311,13 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
                   <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => onUpdateStock(product.id, Math.max(0, product.stock - 5))}
-                      className="px-2.5 py-1 rounded-full bg-zinc-100 hover:bg-zinc-200 text-xs font-bold text-zinc-700 cursor-pointer"
+                      className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 cursor-pointer"
                     >
                       -5
                     </button>
                     <button
                       onClick={() => onUpdateStock(product.id, product.stock + 10)}
-                      className="px-2.5 py-1 rounded-full bg-[#0C0C0C] text-white hover:bg-zinc-800 text-xs font-bold cursor-pointer"
+                      className="px-2.5 py-1 rounded-full bg-sky-600 text-white hover:bg-sky-700 text-xs font-bold cursor-pointer shadow-xs shadow-sky-500/20"
                     >
                       +10
                     </button>
@@ -331,62 +331,62 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
 
       {/* Add Product Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="w-full max-w-lg rounded-[28px] bg-white border border-zinc-200 p-8 space-y-5 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+          <div className="w-full max-w-lg rounded-[28px] bg-white border border-slate-200 p-8 space-y-5 shadow-2xl relative">
             <button
               onClick={() => setShowAddModal(false)}
-              className="absolute top-5 right-5 p-2 rounded-full hover:bg-zinc-100 text-zinc-400 hover:text-black cursor-pointer"
+              className="absolute top-5 right-5 p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-900 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div>
-              <h3 className="text-lg font-bold text-[#0C0C0C]">{t('seller.modalTitle')}</h3>
-              <p className="text-xs text-zinc-500 mt-0.5">{t('seller.modalSubtitle')}</p>
+              <h3 className="text-lg font-bold text-[#0F172A]">{t('seller.modalTitle')}</h3>
+              <p className="text-xs text-slate-500 mt-0.5">{t('seller.modalSubtitle')}</p>
             </div>
 
             <form onSubmit={handleCreateProduct} className="space-y-4 text-xs">
               <div>
-                <label className="block text-zinc-700 font-bold mb-1.5">{t('seller.formProdName')}</label>
+                <label className="block text-slate-700 font-bold mb-1.5">{t('seller.formProdName')}</label>
                 <input
                   type="text"
                   required
                   value={newProdName}
                   onChange={(e) => setNewProdName(e.target.value)}
                   placeholder="e.g. TerraRunner X2 Minimalist Edition"
-                  className="w-full px-4 py-2.5 rounded-2xl bg-zinc-50 border border-zinc-200 text-zinc-900 focus:outline-none focus:border-black"
+                  className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-zinc-700 font-bold mb-1.5">{t('seller.formProdPrice')}</label>
+                  <label className="block text-slate-700 font-bold mb-1.5">{t('seller.formProdPrice')}</label>
                   <input
                     type="number"
                     required
                     value={newProdPrice}
                     onChange={(e) => setNewProdPrice(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-2xl bg-zinc-50 border border-zinc-200 text-zinc-900 font-mono focus:outline-none focus:border-black"
+                    className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 font-mono focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-zinc-700 font-bold mb-1.5">{t('seller.formProdStock')}</label>
+                  <label className="block text-slate-700 font-bold mb-1.5">{t('seller.formProdStock')}</label>
                   <input
                     type="number"
                     required
                     value={newProdStock}
                     onChange={(e) => setNewProdStock(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-2xl bg-zinc-50 border border-zinc-200 text-zinc-900 font-mono focus:outline-none focus:border-black"
+                    className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 font-mono focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-zinc-700 font-bold mb-1.5">{t('seller.formProdCategory')}</label>
+                <label className="block text-slate-700 font-bold mb-1.5">{t('seller.formProdCategory')}</label>
                 <select
                   value={newProdCategory}
                   onChange={(e) => setNewProdCategory(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-2xl bg-zinc-50 border border-zinc-200 text-zinc-900 focus:outline-none focus:border-black"
+                  className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
                 >
                   <option value="Running">{t('catalog.catRunning')}</option>
                   <option value="Lifestyle">{t('catalog.catLifestyle')}</option>
@@ -401,13 +401,13 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-5 py-2.5 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-bold cursor-pointer"
+                  className="px-5 py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold cursor-pointer"
                 >
                   {t('seller.btnCancel')}
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-full bg-[#0C0C0C] text-white font-bold hover:bg-zinc-800 cursor-pointer shadow-xs"
+                  className="px-6 py-2.5 rounded-full bg-sky-600 text-white font-bold hover:bg-sky-700 cursor-pointer shadow-xs shadow-sky-500/25"
                 >
                   {t('seller.btnSaveProduct')}
                 </button>
