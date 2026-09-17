@@ -100,6 +100,8 @@ const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
 
         {/* Wishlist Heart Icon */}
         <button
+          type="button"
+          suppressHydrationWarning
           onClick={(e) => onToggleWishlist(product.id, e)}
           aria-label={
             isFavorited
@@ -144,6 +146,8 @@ const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
 
         {/* Full-width Elongated Pill "Add to Cart" Button */}
         <button
+          type="button"
+          suppressHydrationWarning
           onClick={handleCardAddToCart}
           disabled={isAdding}
           aria-busy={isAdding}
@@ -293,6 +297,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
             {/* Price Popover Trigger */}
             <div className="relative">
               <button
+                type="button"
+                suppressHydrationWarning
                 onClick={() => setShowPricePopover(!showPricePopover)}
                 aria-label={language === 'vi' ? 'Chọn bộ lọc khoảng giá' : 'Filter by price range'}
                 className={`px-3.5 py-2 rounded-full border text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
@@ -328,6 +334,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                     </span>
                     {(priceTier !== 'all' || maxPrice < 500) && (
                       <button
+                        type="button"
+                        suppressHydrationWarning
                         onClick={() => {
                           setPriceTier('all');
                           setMaxPrice(500);
@@ -349,6 +357,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                       { id: 'above-3m', labelVi: '> 3.000k', labelEn: '> 3M ₫' },
                     ].map((tier) => (
                       <button
+                        type="button"
+                        suppressHydrationWarning
                         key={tier.id}
                         onClick={() => {
                           setPriceTier(tier.id);
@@ -400,9 +410,11 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               className="bg-white border-slate-200 hover:border-sky-400"
             />
 
-            {/* Reset All Filters Button */}
+            {/* Clear Filters Button (When active) */}
             {(selectedCategory !== 'All' || priceTier !== 'all' || maxPrice < 500) && (
               <button
+                type="button"
+                suppressHydrationWarning
                 onClick={() => {
                   setSelectedCategory('All');
                   setPriceTier('all');
@@ -424,6 +436,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               const isChecked = selectedCategory === cat.id;
               return (
                 <button
+                  type="button"
+                  suppressHydrationWarning
                   key={cat.id}
                   onClick={() => handleCategoryChange(cat.id)}
                   aria-label={language === 'vi' ? `Xem danh mục ${cat.label}` : `Browse category ${cat.label}`}

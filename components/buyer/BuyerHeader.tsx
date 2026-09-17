@@ -157,6 +157,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
             </Link>
 
             <button
+              type="button"
+              suppressHydrationWarning
               onClick={() => handleNavClick('#about-section')}
               className="px-3.5 py-1.5 rounded-full text-[13.5px] lg:text-[14px] xl:text-[14.5px] font-medium text-slate-600 hover:text-sky-600 hover:bg-slate-100/70 active:bg-sky-50 transition-colors duration-150 cursor-pointer whitespace-nowrap shrink-0 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
             >
@@ -164,6 +166,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
             </button>
 
             <button
+              type="button"
+              suppressHydrationWarning
               onClick={() => handleNavClick('#why-us-section')}
               className="px-3.5 py-1.5 rounded-full text-[13.5px] lg:text-[14px] xl:text-[14.5px] font-medium text-slate-600 hover:text-sky-600 hover:bg-slate-100/70 active:bg-sky-50 transition-colors duration-150 cursor-pointer whitespace-nowrap shrink-0 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
             >
@@ -171,6 +175,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
             </button>
 
             <button
+              type="button"
+              suppressHydrationWarning
               onClick={() => handleNavClick('#services-section')}
               className="px-3.5 py-1.5 rounded-full text-[13.5px] lg:text-[14px] xl:text-[14.5px] font-medium text-slate-600 hover:text-sky-600 hover:bg-slate-100/70 active:bg-sky-50 transition-colors duration-150 cursor-pointer whitespace-nowrap shrink-0 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
             >
@@ -184,6 +190,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
             {/* [ VI | EN ] Language Switcher */}
             <div className="flex items-center rounded-full bg-slate-100 p-0.5 text-[10px] font-mono font-bold border border-slate-200 select-none">
               <button
+                type="button"
+                suppressHydrationWarning
                 onClick={() => setLanguage('vi')}
                 aria-label={language === 'vi' ? 'Đang chọn Tiếng Việt' : 'Chuyển sang Tiếng Việt'}
                 className={`px-2 py-0.5 rounded-full transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
@@ -195,6 +203,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
                 VI
               </button>
               <button
+                type="button"
+                suppressHydrationWarning
                 onClick={() => setLanguage('en')}
                 aria-label={language === 'en' ? 'English selected' : 'Switch language to English'}
                 className={`px-2 py-0.5 rounded-full transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
@@ -209,6 +219,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
 
             {/* Shopping Cart Pill Button (Redirects to /cart) */}
             <button
+              type="button"
+              suppressHydrationWarning
               onClick={() => {
                 if (onOpenCart) onOpenCart();
                 else router.push('/cart');
@@ -229,6 +241,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
             {currentUser && currentUser.role !== 'customer' ? (
               <div className="relative">
                 <button
+                  type="button"
+                  suppressHydrationWarning
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   aria-label={language === 'vi' ? 'Menu tài khoản người dùng' : 'User account menu'}
                   className="h-10 sm:h-11 pl-2 sm:pl-3 pr-3 sm:pr-3.5 rounded-full border border-sky-200 hover:border-sky-400 bg-white/95 backdrop-blur-md flex items-center gap-2 cursor-pointer font-semibold text-xs text-slate-800 shadow-2xs hover:shadow-xs transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
@@ -273,6 +287,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
                       {t('nav.switchPortal')}
                     </p>
                     <button
+                      type="button"
+                      suppressHydrationWarning
                       onClick={() => {
                         onSwitchRole('seller');
                         setShowUserMenu(false);
@@ -283,6 +299,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
                       <span>{t('nav.sellerChannel')}</span>
                     </button>
                     <button
+                      type="button"
+                      suppressHydrationWarning
                       onClick={() => {
                         onSwitchRole('shipper');
                         setShowUserMenu(false);
@@ -293,6 +311,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
                       <span>{t('nav.shipperChannel')}</span>
                     </button>
                     <button
+                      type="button"
+                      suppressHydrationWarning
                       onClick={() => {
                         onSwitchRole('admin');
                         setShowUserMenu(false);
@@ -304,6 +324,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
                     </button>
                     <div className="my-1 border-t border-sky-100/80" />
                     <button
+                      type="button"
+                      suppressHydrationWarning
                       onClick={() => {
                         onOpenAuthModal();
                         setShowUserMenu(false);
@@ -333,6 +355,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
 
             {/* Mobile Hamburger Drawer Toggle */}
             <button
+              type="button"
+              suppressHydrationWarning
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden w-10 h-10 rounded-full border border-slate-200 bg-white hover:border-sky-500 flex items-center justify-center text-slate-800 transition-all cursor-pointer"
               aria-label="Toggle navigation menu"
