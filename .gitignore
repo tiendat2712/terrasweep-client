@@ -50,3 +50,5 @@ skills-lock.json
 # markdown files
 *.md
 !README.md
+!ROADMAP_P2_P3.md
+!AGENTS.md
