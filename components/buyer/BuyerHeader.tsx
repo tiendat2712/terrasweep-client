@@ -16,7 +16,9 @@ import {
   LogOut,
   X,
   Menu,
-  Sparkles
+  Sparkles,
+  Package,
+  User,
 } from 'lucide-react';
 
 interface BuyerHeaderProps {
@@ -246,6 +248,30 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
                       <p className="font-bold text-slate-900 text-xs">{currentUser.name}</p>
                       <p className="text-[10px] text-slate-500 font-mono truncate">{currentUser.email}</p>
                     </div>
+
+                    <Link
+                      href="/orders"
+                      onClick={() => setShowUserMenu(false)}
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-sky-700 flex items-center gap-2.5 cursor-pointer text-xs font-semibold transition-colors"
+                    >
+                      <Package className="w-3.5 h-3.5 text-sky-600" />
+                      <span>{language === 'vi' ? 'Đơn mua của tôi' : 'My Orders'}</span>
+                    </Link>
+
+                    <Link
+                      href="/profile"
+                      onClick={() => setShowUserMenu(false)}
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-sky-700 flex items-center gap-2.5 cursor-pointer text-xs font-semibold transition-colors"
+                    >
+                      <User className="w-3.5 h-3.5 text-sky-600" />
+                      <span>{language === 'vi' ? 'Hồ sơ & Sổ địa chỉ' : 'Profile & Addresses'}</span>
+                    </Link>
+
+                    <div className="my-1 border-t border-sky-100/80" />
+
+                    <p className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                      {t('nav.switchPortal')}
+                    </p>
                     <button
                       onClick={() => {
                         onSwitchRole('seller');

@@ -13,6 +13,10 @@ import {
   Check,
   X,
   Loader2,
+  Printer,
+  FileText,
+  QrCode,
+  CheckCircle2,
 } from 'lucide-react';
 import { OceanSelect } from '../common/OceanSelect';
 
@@ -31,12 +35,19 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
   onUpdateStock,
   onAddNewProduct,
 }) => {
-  const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState<'orders' | 'inventory'>('orders');
+  const [orderFilter, setOrderFilter] = useState<'all' | 'pending' | 'confirmed' | 'shipping' | 'delivered'>('all');
+  const [selectedSlipOrder, setSelectedSlipOrder] = useState<Order | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [confirmingOrderId, setConfirmingOrderId] = useState<string | null>(null);
   const [updatingStockId, setUpdatingStockId] = useState<string | null>(null);
   const [isSubmittingProduct, setIsSubmittingProduct] = useState(false);
+
+  // Filter orders by status
+  const filteredOrders = orders.filter((o) => {
+    if (orderFilter === 'all') return true;
+    return o.status === orderFilter;
+  });
 
   // New product form state
   const [newProdName, setNewProdName] = useState('');
@@ -226,6 +237,34 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
             </div>
           </div>
 
+          {/* 6-State Status Filter Bar */}
+          <div className="px-6 py-3 bg-slate-50/70 border-b border-sky-100 flex items-center gap-2 overflow-x-auto no-scrollbar">
+            {[
+              { id: 'all', label: language === 'vi' ? 'Tất cả' : 'All', count: orders.length },
+              { id: 'pending', label: language === 'vi' ? 'Chờ xác nhận' : 'Pending', count: orders.filter(o => o.status === 'pending').length },
+              { id: 'confirmed', label: language === 'vi' ? 'Đã duyệt / Đóng gói' : 'Confirmed', count: orders.filter(o => o.status === 'confirmed').length },
+              { id: 'shipping', label: language === 'vi' ? 'Đang giao' : 'Shipping', count: orders.filter(o => o.status === 'shipping').length },
+              { id: 'delivered', label: language === 'vi' ? 'Hoàn tất' : 'Delivered', count: orders.filter(o => o.status === 'delivered').length },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setOrderFilter(tab.id as any)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
+                  orderFilter === tab.id
+                    ? 'btn-ocean-primary text-white shadow-xs'
+                    : 'bg-white text-slate-600 hover:text-sky-600 hover:bg-sky-50/70 border border-slate-200/90'
+                }`}
+              >
+                <span>{tab.label}</span>
+                <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+                  orderFilter === tab.id ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'
+                }`}>
+                  {tab.count}
+                </span>
+              </button>
+            ))}
+          </div>
+
           <div className="relative group/table">
             <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-sky-200 scrollbar-track-transparent">
               <table className="w-full text-left text-xs min-w-[680px]">
@@ -240,7 +279,7 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {orders.map((order) => (
+                  {filteredOrders.map((order) => (
                     <tr key={order.id} className="hover:bg-sky-50/40 transition-colors">
                       <td className="p-5 font-mono font-bold text-sky-600">
                         #{order.id}
@@ -290,27 +329,38 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
                       </td>
 
                       <td className="p-5 text-right">
-                        {order.status === 'pending' ? (
+                        <div className="flex items-center justify-end gap-2">
                           <button
-                            onClick={() => handleConfirmOrderAsync(order.id)}
-                            disabled={confirmingOrderId === order.id}
-                            aria-busy={confirmingOrderId === order.id}
-                            className="btn-ocean-primary px-4 py-2 rounded-full font-bold text-xs cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-1.5 ml-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+                            onClick={() => setSelectedSlipOrder(order)}
+                            className="px-3 py-1.5 rounded-full border border-slate-200 hover:border-sky-500 bg-white text-slate-700 hover:text-sky-600 transition-all text-xs font-semibold flex items-center gap-1.5 cursor-pointer shadow-2xs hover:scale-105 active:scale-95"
+                            title={language === 'vi' ? 'Xem & In Phiếu Gửi Hàng A6' : 'View & Print A6 Packing Slip'}
                           >
-                            {confirmingOrderId === order.id ? (
-                              <>
-                                <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
-                                <span>{language === 'vi' ? 'Đang xử lý...' : 'Processing...'}</span>
-                              </>
-                            ) : (
-                              <span>{t('seller.btnConfirmPackage')}</span>
-                            )}
+                            <Printer className="w-3.5 h-3.5 text-sky-600" />
+                            <span className="hidden sm:inline">{language === 'vi' ? 'Phiếu A6' : 'Slip A6'}</span>
                           </button>
-                        ) : (
-                          <span className="text-xs text-emerald-700 font-semibold flex items-center justify-end gap-1.5">
-                            <Check className="w-4 h-4" /> {t('seller.statusApproved')}
-                          </span>
-                        )}
+
+                          {order.status === 'pending' ? (
+                            <button
+                              onClick={() => handleConfirmOrderAsync(order.id)}
+                              disabled={confirmingOrderId === order.id}
+                              aria-busy={confirmingOrderId === order.id}
+                              className="btn-ocean-primary px-4 py-2 rounded-full font-bold text-xs cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+                            >
+                              {confirmingOrderId === order.id ? (
+                                <>
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
+                                  <span>{language === 'vi' ? 'Đang xử lý...' : 'Processing...'}</span>
+                                </>
+                              ) : (
+                                <span>{t('seller.btnConfirmPackage')}</span>
+                              )}
+                            </button>
+                          ) : (
+                            <span className="text-xs text-emerald-700 font-semibold flex items-center gap-1">
+                              <Check className="w-4 h-4" /> {t('seller.statusApproved')}
+                            </span>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -479,6 +529,128 @@ export const SellerDashboard: React.FC<SellerDashboardProps> = ({
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      {/* A6 SHIPPING LABEL / PACKING SLIP MODAL */}
+      {selectedSlipOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 animate-in zoom-in-95 duration-200 my-8">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                <Printer className="w-4 h-4 text-sky-600" />
+                <span>{language === 'vi' ? 'Phiếu Gửi Hàng Chuẩn A6' : 'A6 Priority Shipping Label'}</span>
+              </span>
+              <button
+                onClick={() => setSelectedSlipOrder(null)}
+                className="w-7 h-7 rounded-full bg-slate-100 text-slate-500 hover:text-slate-900 flex items-center justify-center cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* A6 Physical Waybill Simulation (Ratio 105x148) */}
+            <div className="mt-4 p-5 rounded-2xl border-2 border-dashed border-slate-800 bg-[#FFFDF9] text-slate-900 space-y-4 shadow-sm select-none">
+              {/* Waybill Header */}
+              <div className="flex items-start justify-between border-b-2 border-slate-900 pb-3">
+                <div>
+                  <h4 className="font-black text-sm tracking-tight flex items-center gap-1">
+                    <span>TERRASWEEP</span>
+                    <span className="text-sky-600">EXPRESS</span>
+                  </h4>
+                  <p className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mt-0.5">
+                    PRIORITY LOGISTICS FLEET
+                  </p>
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] font-mono font-bold bg-slate-900 text-white px-2 py-0.5 rounded">
+                    HOT 2H
+                  </span>
+                  <p className="text-[9px] font-mono text-slate-600 mt-0.5">HUB: SGN-Q7</p>
+                </div>
+              </div>
+
+              {/* Barcode Section */}
+              <div className="text-center py-1">
+                {/* SVG Barcode simulation */}
+                <svg className="w-full h-11 mx-auto" viewBox="0 0 260 40" preserveAspectRatio="none">
+                  {[3,1,2,4,1,3,2,1,4,2,3,1,2,4,1,2,3,1,4,2,1,3,2,4,1,3,1,2,4,1,3,2,1,4,2,3,1,2,4,1,2,3,1,4,2,1,3,2,4,1,3,1,2,4,1,3,2].map((w, i) => (
+                    <rect key={i} x={i * 4.5} y={0} width={w * 0.8} height={40} fill="#0F172A" />
+                  ))}
+                </svg>
+                <p className="text-[11px] font-mono font-bold tracking-widest text-slate-900 mt-1">
+                  AWB-VN-{selectedSlipOrder.id}-EXP
+                </p>
+              </div>
+
+              {/* Sender & Recipient Box */}
+              <div className="grid grid-cols-2 gap-3 border-t-2 border-b-2 border-slate-900 py-2.5 text-[10px] leading-tight font-sans">
+                <div className="border-r border-slate-300 pr-2">
+                  <p className="font-bold text-slate-500 uppercase text-[9px]">NGƯỜI GỬI (FROM):</p>
+                  <p className="font-bold text-slate-900 mt-0.5">TerraSweep Flagship Store</p>
+                  <p className="text-slate-600 text-[9px] mt-0.5">Saigon Centre Tower 2, Q.1, TP.HCM</p>
+                  <p className="text-slate-600 font-mono text-[9px]">Hotline: 1900 8899</p>
+                </div>
+                <div className="pl-1">
+                  <p className="font-bold text-slate-500 uppercase text-[9px]">NGƯỜI NHẬN (TO):</p>
+                  <p className="font-bold text-slate-900 mt-0.5">{selectedSlipOrder.customerName}</p>
+                  <p className="text-slate-600 text-[9px] mt-0.5 line-clamp-2">{selectedSlipOrder.shippingAddress}</p>
+                  <p className="text-slate-900 font-mono font-bold text-[9px]">SĐT: {selectedSlipOrder.customerPhone}</p>
+                </div>
+              </div>
+
+              {/* Items Packing Checklist */}
+              <div className="text-[10px] space-y-1.5">
+                <p className="font-bold text-slate-500 uppercase text-[9px]">DANH SÁCH KIỂM SOÁT HÀNG (SKU CHECKLIST):</p>
+                <div className="bg-white border border-slate-200 rounded-lg p-2 space-y-1">
+                  {selectedSlipOrder.items.map((item, i) => (
+                    <div key={i} className="flex justify-between items-center text-[10px] text-slate-800">
+                      <span className="truncate pr-2">[ ] {item.quantity}x {item.product.name} {item.variant ? `(${item.variant})` : ''}</span>
+                      <span className="font-mono font-bold shrink-0">{item.price.toLocaleString('vi-VN')}₫</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Payment & COD Tag */}
+              <div className="p-2.5 rounded-xl border border-slate-900 bg-slate-900 text-white flex items-center justify-between">
+                <div>
+                  <p className="text-[9px] font-mono uppercase text-slate-300">HÌNH THỨC THU TIỀN:</p>
+                  <p className="text-xs font-black font-mono">
+                    {selectedSlipOrder.paymentMethod === 'COD' ? 'THU TIỀN MẶT (COD)' : 'ĐÃ THANH TOÁN (PAID)'}
+                  </p>
+                </div>
+                <p className="text-sm font-black font-mono text-amber-300">
+                  {selectedSlipOrder.paymentMethod === 'COD'
+                    ? `${selectedSlipOrder.total.toLocaleString('vi-VN')}₫`
+                    : '0 VNĐ'}
+                </p>
+              </div>
+
+              {/* Signature Seal */}
+              <div className="flex items-center justify-between pt-1 text-[9px] text-slate-500 font-mono border-t border-slate-200">
+                <span>Chữ ký xác nhận người nhận</span>
+                <span>Ngày in: {new Date().toLocaleDateString('vi-VN')}</span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="mt-5 flex items-center gap-3">
+              <button
+                onClick={() => setSelectedSlipOrder(null)}
+                className="flex-1 py-2.5 rounded-full border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-100 transition-colors cursor-pointer"
+              >
+                {t('common.close')}
+              </button>
+              <button
+                onClick={() => {
+                  window.print();
+                }}
+                className="flex-1 py-2.5 rounded-full btn-ocean-primary text-white text-xs font-semibold shadow-xs hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Printer className="w-3.5 h-3.5" />
+                <span>{language === 'vi' ? 'In Phiếu Gửi Hàng' : 'Print Packing Slip'}</span>
+              </button>
+            </div>
           </div>
         </div>
       )}

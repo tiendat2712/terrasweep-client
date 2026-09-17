@@ -1,4 +1,4 @@
-import { Product, Order, PlatformUser, CategoryItem, TopSearchItem } from '@/types';
+import { Product, Order, PlatformUser, CategoryItem, TopSearchItem, AddressItem, MerchantKYCApplication, DisputeClaim } from '@/types';
 
 export const CATEGORY_LIST: CategoryItem[] = [
   // Hàng 1
@@ -1001,6 +1001,87 @@ export const INITIAL_ORDERS: Order[] = [
         completed: true
       }
     ]
+  },
+  {
+    id: 'TS-98425',
+    customerName: 'Nguyễn Thành Long',
+    customerPhone: '0903***771',
+    shippingAddress: 'Số 45 Lê Duẩn, P. Bến Nghé, Quận 1, TP.HCM',
+    items: [
+      {
+        product: INITIAL_PRODUCTS[3] || INITIAL_PRODUCTS[0],
+        quantity: 1,
+        price: 890000,
+        variant: 'Size 42 / Midnight Black'
+      }
+    ],
+    subtotal: 890000,
+    discount: 50000,
+    shippingFee: 0,
+    total: 840000,
+    status: 'confirmed',
+    paymentMethod: 'ApplePay',
+    createdAt: '14:20 - Hôm nay',
+    deliveryNote: 'Gọi trước khi giao 15 phút',
+    trackingEvents: [
+      {
+        status: 'pending',
+        title: 'Đơn hàng đã đặt',
+        timestamp: '14:20 PM',
+        location: 'TerraSweep Hub',
+        note: 'Đã thanh toán thành công qua Apple Pay',
+        completed: true
+      },
+      {
+        status: 'confirmed',
+        title: 'Shop đã xác nhận',
+        timestamp: '14:40 PM',
+        location: 'Kho TerraSweep Flagship',
+        note: 'Shop đang tiến hành đóng gói niêm phong',
+        completed: true
+      }
+    ]
+  },
+  {
+    id: 'TS-98426',
+    customerName: 'Đặng Minh Triết',
+    customerPhone: '0938***299',
+    shippingAddress: 'Tòa nhà Landmark Plus, 208 Nguyễn Hữu Cảnh, Bình Thạnh',
+    items: [
+      {
+        product: INITIAL_PRODUCTS[0],
+        quantity: 2,
+        price: 549000,
+        variant: 'M / Pure White'
+      }
+    ],
+    subtotal: 1098000,
+    discount: 100000,
+    shippingFee: 20000,
+    total: 1018000,
+    status: 'cancelled',
+    paymentMethod: 'FlashPay',
+    createdAt: '10:05 - Hôm qua',
+    deliveryNote: 'Khách yêu cầu hủy đơn vì thay đổi địa chỉ công tác',
+    failReason: 'Khách hàng hủy đơn trước khi xuất kho',
+    trackingEvents: [
+      {
+        status: 'pending',
+        title: 'Đơn hàng đã đặt',
+        timestamp: '10:05 AM',
+        location: 'TerraSweep Hub',
+        note: 'Đơn hàng tạo thành công',
+        completed: true
+      },
+      {
+        status: 'cancelled',
+        title: 'Đơn hàng đã hủy',
+        timestamp: '10:30 AM',
+        location: 'Hệ thống tự động',
+        note: 'Đã hoàn tiền 100% về tài khoản FlashPay của khách',
+        completed: true
+      }
+    ]
   }
 ];
 
@@ -1056,4 +1137,92 @@ export const CATEGORIES = [
   { id: 'Smart Home', name: 'Nhà Thông Minh', icon: 'Home' },
   { id: 'Accessories', name: 'Phụ Kiện Sạc GaN', icon: 'BatteryCharging' },
   { id: 'Neo Apparel', name: 'Thời Trang Cyber', icon: 'Shirt' }
+];
+
+export const INITIAL_ADDRESSES: AddressItem[] = [
+  {
+    id: 'addr-1',
+    recipientName: 'Phan Trịnh Tiến Đạt',
+    phone: '0901 234 567',
+    address: 'Căn hộ A12-08, Vinhomes Central Park, 208 Nguyễn Hữu Cảnh, Phường 22, Quận Bình Thạnh, TP. Hồ Chí Minh',
+    isDefault: true,
+    tag: 'home'
+  },
+  {
+    id: 'addr-2',
+    recipientName: 'Tiến Đạt (Terra Tech Lab)',
+    phone: '0988 765 432',
+    address: 'Tầng 19, Tòa nhà Saigon Centre Tower 2, 67 Lê Lợi, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh',
+    isDefault: false,
+    tag: 'office'
+  }
+];
+
+export const INITIAL_KYC_APPLICATIONS: MerchantKYCApplication[] = [
+  {
+    id: 'KYC-8821',
+    shopName: 'AeroKnit Atelier Flagship',
+    ownerName: 'Vũ Hải Đăng',
+    email: 'contact@aeroknit.design',
+    phone: '0938 112 334',
+    businessLicense: '0317892011 (Sở KH&ĐT TP.HCM cấp)',
+    category: 'Footwear & Streetwear',
+    bankAccount: '19038291083018 (Techcombank)',
+    bankName: 'Techcombank Chi Nhánh Tân Định',
+    status: 'pending',
+    submittedAt: 'Hôm nay, 09:30'
+  },
+  {
+    id: 'KYC-8819',
+    shopName: 'CyberAudio Acoustics VN',
+    ownerName: 'Trịnh Thúy Vy',
+    email: 'support@cyberaudio.vn',
+    phone: '0912 889 900',
+    businessLicense: '0108920192 (Sở KH&ĐT Hà Nội cấp)',
+    category: 'Cyber Audio & Gadgets',
+    bankAccount: '0071000982736 (Vietcombank)',
+    bankName: 'Vietcombank Chi Nhánh Bến Thành',
+    status: 'pending',
+    submittedAt: 'Hôm qua, 16:15'
+  },
+  {
+    id: 'KYC-8810',
+    shopName: 'VoidWalk Sneaker Lab',
+    ownerName: 'Hoàng Quốc Tuấn',
+    email: 'lab@voidwalk.com',
+    phone: '0909 332 119',
+    businessLicense: '0316782910 (Sở KH&ĐT TP.HCM cấp)',
+    category: 'Footwear',
+    bankAccount: '1029384756 (MB Bank)',
+    bankName: 'MB Bank Chi Nhánh Quận 7',
+    status: 'approved',
+    submittedAt: '12/05/2026'
+  }
+];
+
+export const INITIAL_DISPUTES: DisputeClaim[] = [
+  {
+    id: 'DISP-1042',
+    orderId: 'FC-98421',
+    customerName: 'Nguyễn Văn An',
+    sellerName: 'TerraSweep Flagship Store',
+    amount: 1490000,
+    reason: 'Sản phẩm trầy xước đế khi mở hộp đồng kiểm',
+    status: 'pending',
+    createdAt: 'Hôm nay, 11:20',
+    evidencePhoto: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80',
+    resolutionNote: 'Khách hàng yêu cầu đổi mới đôi khác đúng mã màu'
+  },
+  {
+    id: 'DISP-1039',
+    orderId: 'FC-98418',
+    customerName: 'Trần Thị Mai',
+    sellerName: 'Honor Official Store',
+    amount: 549000,
+    reason: 'Hộp tai nghe bị rách seal niêm phong',
+    status: 'refunded',
+    createdAt: 'Hôm qua, 14:05',
+    evidencePhoto: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&auto=format&fit=crop&q=80',
+    resolutionNote: 'Admin đã duyệt hoàn 100% tiền về ví khách hàng'
+  }
 ];

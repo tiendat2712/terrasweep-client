@@ -1,8 +1,8 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product, CartItem, PlatformUser, Role, Order, OrderStatus } from '@/types';
-import { INITIAL_PRODUCTS, INITIAL_ORDERS, INITIAL_USERS } from '@/data/mockData';
+import { Product, CartItem, PlatformUser, Role, Order, OrderStatus, TrackingEvent, AddressItem, MerchantKYCApplication, DisputeClaim } from '@/types';
+import { INITIAL_PRODUCTS, INITIAL_ORDERS, INITIAL_USERS, INITIAL_ADDRESSES, INITIAL_KYC_APPLICATIONS, INITIAL_DISPUTES } from '@/data/mockData';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { useRouter } from 'next/navigation';
 
@@ -30,6 +30,22 @@ interface CartContextType {
     discount: number;
     items?: CartItem[];
   }) => string;
+  cancelOrder: (orderId: string, reason?: string) => void;
+  reorder: (orderId: string) => void;
+  updateOrderStatus: (
+    orderId: string,
+    status: OrderStatus,
+    extra?: { podPhoto?: string; failReason?: string; rescheduledDate?: string }
+  ) => void;
+  addresses: AddressItem[];
+  addAddress: (addr: Omit<AddressItem, 'id'>) => void;
+  removeAddress: (id: string) => void;
+  setDefaultAddress: (id: string) => void;
+  kycApplications: MerchantKYCApplication[];
+  approveKyc: (id: string) => void;
+  rejectKyc: (id: string, reason: string) => void;
+  disputes: DisputeClaim[];
+  resolveDispute: (id: string, resolution: 'refunded' | 'rejected', note?: string) => void;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
   isTrackingOpen: boolean;
@@ -73,8 +89,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   ]);
 
   const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
+  const [addresses, setAddresses] = useState<AddressItem[]>(INITIAL_ADDRESSES);
+  const [kycApplications, setKycApplications] = useState<MerchantKYCApplication[]>(INITIAL_KYC_APPLICATIONS);
+  const [disputes, setDisputes] = useState<DisputeClaim[]>(INITIAL_DISPUTES);
 
-  // Load cart & orders from localStorage on mount
+  // Load cart, orders & addresses from localStorage on mount
   useEffect(() => {
     try {
       const savedCart = localStorage.getItem('flashcart_cart_items');
@@ -89,6 +108,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const parsedOrders = JSON.parse(savedOrders);
         if (Array.isArray(parsedOrders) && parsedOrders.length > 0) {
           setOrders(parsedOrders);
+        }
+      }
+      const savedAddresses = localStorage.getItem('flashcart_addresses');
+      if (savedAddresses) {
+        const parsedAddresses = JSON.parse(savedAddresses);
+        if (Array.isArray(parsedAddresses) && parsedAddresses.length > 0) {
+          setAddresses(parsedAddresses);
         }
       }
     } catch {
@@ -113,6 +139,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Ignore quota errors
     }
   }, [orders]);
+
+  // Sync addresses to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('flashcart_addresses', JSON.stringify(addresses));
+    } catch {
+      // Ignore quota errors
+    }
+  }, [addresses]);
 
   const triggerToast = (
     text: string,
@@ -292,6 +327,180 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return newOrderId;
   };
 
+  const addAddress = (addr: Omit<AddressItem, 'id'>) => {
+    const newAddr: AddressItem = {
+      ...addr,
+      id: `addr-${Date.now()}`,
+    };
+    setAddresses((prev) => {
+      const updated = addr.isDefault
+        ? prev.map((a) => ({ ...a, isDefault: false })).concat(newAddr)
+        : [...prev, newAddr];
+      return updated;
+    });
+    triggerToast(
+      language === 'vi' ? 'Đã lưu địa chỉ nhận hàng mới!' : 'New shipping address saved!',
+      'success'
+    );
+  };
+
+  const removeAddress = (id: string) => {
+    setAddresses((prev) => prev.filter((a) => a.id !== id));
+    triggerToast(
+      language === 'vi' ? 'Đã xóa địa chỉ thành công!' : 'Address removed successfully!',
+      'info'
+    );
+  };
+
+  const setDefaultAddress = (id: string) => {
+    setAddresses((prev) =>
+      prev.map((a) => ({
+        ...a,
+        isDefault: a.id === id,
+      }))
+    );
+    triggerToast(
+      language === 'vi' ? 'Đã đặt làm địa chỉ giao hàng mặc định!' : 'Set as default delivery address!',
+      'success'
+    );
+  };
+
+  const cancelOrder = (orderId: string, reason?: string) => {
+    setOrders((prev) =>
+      prev.map((ord) => {
+        if (ord.id === orderId) {
+          return {
+            ...ord,
+            status: 'cancelled' as OrderStatus,
+            failReason: reason || (language === 'vi' ? 'Khách hàng yêu cầu hủy đơn' : 'Cancelled by customer'),
+            trackingEvents: [
+              ...ord.trackingEvents,
+              {
+                status: 'cancelled' as OrderStatus,
+                title: language === 'vi' ? 'Đã hủy đơn hàng' : 'Order Cancelled',
+                timestamp: language === 'vi' ? 'Vừa xong' : 'Just now',
+                location: 'Hệ thống tự động',
+                note: reason || (language === 'vi' ? 'Khách hàng xác nhận hủy đơn' : 'Customer confirmed cancellation'),
+                completed: true,
+              },
+            ],
+          };
+        }
+        return ord;
+      })
+    );
+    triggerToast(
+      language === 'vi' ? `Đã hủy đơn hàng #${orderId} thành công!` : `Order #${orderId} cancelled!`,
+      'info'
+    );
+  };
+
+  const reorder = (orderId: string) => {
+    const target = orders.find((o) => o.id === orderId);
+    if (!target) return;
+    target.items.forEach((item) => {
+      addToCart(item.product, item.quantity, item.variant);
+    });
+    triggerToast(
+      language === 'vi' ? `Đã thêm ${target.items.length} mặt hàng vào giỏ!` : `Added ${target.items.length} items to cart!`,
+      'success',
+      language === 'vi' ? 'Xem giỏ hàng' : 'View Cart',
+      () => router.push('/cart')
+    );
+  };
+
+  const updateOrderStatus = (
+    orderId: string,
+    status: OrderStatus,
+    extra?: { podPhoto?: string; failReason?: string; rescheduledDate?: string }
+  ) => {
+    setOrders((prev) =>
+      prev.map((ord) => {
+        if (ord.id === orderId) {
+          const newEvent: TrackingEvent = {
+            status,
+            title:
+              status === 'confirmed'
+                ? language === 'vi' ? 'Shop xác nhận đóng gói' : 'Merchant Packed'
+                : status === 'picking'
+                ? language === 'vi' ? 'Bàn giao Shipper' : 'Handed to Courier'
+                : status === 'shipping'
+                ? language === 'vi' ? 'Đang giao hàng' : 'Out for Delivery'
+                : status === 'delivered'
+                ? language === 'vi' ? 'Giao hàng thành công (PoD)' : 'Delivered with PoD'
+                : status === 'failed'
+                ? language === 'vi' ? 'Giao thất bại / Hẹn lại' : 'Delivery Failed / Rescheduled'
+                : language === 'vi' ? 'Cập nhật trạng thái' : 'Status Updated',
+            timestamp: language === 'vi' ? 'Vừa xong' : 'Just now',
+            location: 'Tuyến giao hàng',
+            note: extra?.failReason || (extra?.podPhoto ? (language === 'vi' ? 'Đã chụp ảnh bằng chứng giao hàng' : 'Proof of delivery photo saved') : ''),
+            completed: true,
+          };
+          return {
+            ...ord,
+            status,
+            podPhoto: extra?.podPhoto || ord.podPhoto,
+            podTimestamp: extra?.podPhoto ? new Date().toLocaleTimeString('vi-VN') : ord.podTimestamp,
+            failReason: extra?.failReason || ord.failReason,
+            rescheduledDate: extra?.rescheduledDate || ord.rescheduledDate,
+            trackingEvents: [...ord.trackingEvents, newEvent],
+          };
+        }
+        return ord;
+      })
+    );
+  };
+
+  const approveKyc = (id: string) => {
+    setKycApplications((prev) =>
+      prev.map((app) => (app.id === id ? { ...app, status: 'approved' } : app))
+    );
+    triggerToast(
+      language === 'vi' ? 'Đã phê duyệt giấy phép mở shop!' : 'Merchant KYC approved!',
+      'success'
+    );
+  };
+
+  const rejectKyc = (id: string, reason: string) => {
+    setKycApplications((prev) =>
+      prev.map((app) =>
+        app.id === id ? { ...app, status: 'rejected', rejectionReason: reason } : app
+      )
+    );
+    triggerToast(
+      language === 'vi' ? 'Đã từ chối hồ sơ đăng ký shop!' : 'Merchant KYC rejected!',
+      'info'
+    );
+  };
+
+  const resolveDispute = (
+    id: string,
+    resolution: 'refunded' | 'rejected',
+    note?: string
+  ) => {
+    setDisputes((prev) =>
+      prev.map((disp) =>
+        disp.id === id
+          ? {
+              ...disp,
+              status: resolution,
+              resolutionNote: note || (resolution === 'refunded' ? 'Admin duyệt hoàn tiền 100%' : 'Bác khiếu nại'),
+            }
+          : disp
+      )
+    );
+    triggerToast(
+      language === 'vi'
+        ? resolution === 'refunded'
+          ? 'Đã duyệt hoàn tiền cho khách hàng!'
+          : 'Đã bác bỏ khiếu nại của khách!'
+        : resolution === 'refunded'
+        ? 'Refund approved for customer!'
+        : 'Dispute rejected!',
+      'success'
+    );
+  };
+
   const handleLogin = (user: PlatformUser, targetRole: Role) => {
     setCurrentUser(user);
     setActiveRole(targetRole);
@@ -315,6 +524,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         orders,
         setOrders,
         createOrder,
+        cancelOrder,
+        reorder,
+        updateOrderStatus,
+        addresses,
+        addAddress,
+        removeAddress,
+        setDefaultAddress,
+        kycApplications,
+        approveKyc,
+        rejectKyc,
+        disputes,
+        resolveDispute,
         isCartOpen,
         setIsCartOpen,
         isTrackingOpen,

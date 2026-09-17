@@ -147,8 +147,11 @@ export default function FlashCartHome() {
   const handleUpdateOrderStatus = (
     orderId: string,
     newStatus: OrderStatus,
-    locationNote?: string
+    extraOrNote?: { podPhoto?: string; podTimestamp?: string; failReason?: string; rescheduledDate?: string } | string
   ) => {
+    const extraObj = typeof extraOrNote === 'object' ? extraOrNote : undefined;
+    const noteStr = typeof extraOrNote === 'string' ? extraOrNote : extraObj?.failReason || (extraObj?.podPhoto ? (language === 'vi' ? 'Đã chụp ảnh xác nhận PoD' : 'Proof of delivery photo verified') : undefined);
+
     setOrders((prev) =>
       prev.map((o) => {
         if (o.id === orderId) {
@@ -157,7 +160,7 @@ export default function FlashCartHome() {
               return {
                 ...evt,
                 timestamp: language === 'vi' ? 'Vừa xong' : 'Just now',
-                note: locationNote || evt.note,
+                note: noteStr || evt.note,
                 completed: true,
               };
             }
@@ -168,6 +171,10 @@ export default function FlashCartHome() {
             status: newStatus,
             shipperId: 'ship-01',
             shipperName: 'Trần Văn Mạnh (Fleet Pro)',
+            podPhoto: extraObj?.podPhoto || o.podPhoto,
+            podTimestamp: extraObj?.podTimestamp || (extraObj?.podPhoto ? new Date().toLocaleTimeString('vi-VN') : o.podTimestamp),
+            failReason: extraObj?.failReason || o.failReason,
+            rescheduledDate: extraObj?.rescheduledDate || o.rescheduledDate,
             trackingEvents: updatedEvents,
           };
         }

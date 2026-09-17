@@ -34,7 +34,7 @@ export interface CartItem {
   selectedOption?: string;
 }
 
-export type OrderStatus = 'pending' | 'confirmed' | 'picking' | 'shipping' | 'delivered' | 'failed';
+export type OrderStatus = 'pending' | 'confirmed' | 'picking' | 'shipping' | 'delivered' | 'failed' | 'cancelled' | 'returned';
 
 export interface TrackingEvent {
   status: OrderStatus;
@@ -54,6 +54,7 @@ export interface Order {
     product: Product;
     quantity: number;
     price: number;
+    variant?: string;
   }[];
   subtotal: number;
   discount: number;
@@ -67,6 +68,48 @@ export interface Order {
   qrCode?: string;
   createdAt: string;
   deliveryNote?: string;
+  podPhoto?: string;
+  podTimestamp?: string;
+  podRecipientSignature?: string;
+  failReason?: string;
+  rescheduledDate?: string;
+}
+
+export interface AddressItem {
+  id: string;
+  recipientName: string;
+  phone: string;
+  address: string;
+  isDefault: boolean;
+  tag?: 'home' | 'office';
+}
+
+export interface MerchantKYCApplication {
+  id: string;
+  shopName: string;
+  ownerName: string;
+  email: string;
+  phone: string;
+  businessLicense: string;
+  category: string;
+  bankAccount: string;
+  bankName: string;
+  status: 'pending' | 'approved' | 'rejected';
+  submittedAt: string;
+  rejectionReason?: string;
+}
+
+export interface DisputeClaim {
+  id: string;
+  orderId: string;
+  customerName: string;
+  sellerName: string;
+  amount: number;
+  reason: string;
+  status: 'pending' | 'refunded' | 'rejected';
+  createdAt: string;
+  evidencePhoto?: string;
+  resolutionNote?: string;
 }
 
 export interface PlatformUser {
