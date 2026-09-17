@@ -12,6 +12,7 @@ import {
   Sparkles,
   Loader2
 } from 'lucide-react';
+import { OceanSelect } from './OceanSelect';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -101,7 +102,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md overflow-y-auto transition-opacity">
       <div
         className="relative w-full max-w-2xl rounded-[32px] bg-gradient-to-b from-white via-sky-50/20 to-white/95 border border-sky-100 shadow-2xl overflow-hidden my-6 ambient-glow-sky"
         onClick={(e) => e.stopPropagation()}
@@ -191,16 +192,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="block text-slate-700 font-bold mb-1.5">{t('auth.targetRole')}</label>
-                  <select
+                  <OceanSelect
                     value={selectedRole}
-                    onChange={(e) => setSelectedRole(e.target.value as Role)}
-                    className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 font-mono font-bold cursor-pointer focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
-                  >
-                    <option value="customer">{t('auth.roleCustomer')}</option>
-                    <option value="seller">{t('auth.roleSeller')}</option>
-                    <option value="shipper">{t('auth.roleShipper')}</option>
-                    <option value="admin">{t('auth.roleAdmin')}</option>
-                  </select>
+                    onChange={(val) => setSelectedRole(val as Role)}
+                    options={[
+                      { value: 'customer', label: t('auth.roleCustomer') },
+                      { value: 'seller', label: t('auth.roleSeller') },
+                      { value: 'shipper', label: t('auth.roleShipper') },
+                      { value: 'admin', label: t('auth.roleAdmin') },
+                    ]}
+                    variant="rounded"
+                    className="w-full justify-between py-2.5 px-3.5 rounded-2xl bg-slate-50 border-slate-200 font-mono font-bold"
+                    menuClassName="w-full"
+                  />
                 </div>
 
                 <div>
@@ -229,10 +233,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <button
                 type="submit"
                 disabled={isAuthenticating}
-                className="w-full py-3.5 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs tracking-wider shadow-md shadow-sky-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 hover:scale-[1.005] active:scale-[0.99]"
+                aria-busy={isAuthenticating}
+                className="w-full py-3.5 rounded-full btn-ocean-primary font-bold text-xs tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-sky-500/20"
               >
-                <span>{t('auth.submitButton')}</span>
-                <ArrowRight className="w-4 h-4" />
+                {isAuthenticating ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-white" />
+                    <span>{t('auth.redirectingSubtitle') || 'Đang xác thực...'}</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{t('auth.submitButton')}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
               </button>
             </form>
           </div>

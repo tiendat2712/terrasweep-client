@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Role, Product, Order, CartItem, PlatformUser, OrderStatus } from '@/types';
 import { INITIAL_PRODUCTS, INITIAL_ORDERS, INITIAL_USERS } from '@/data/mockData';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { useCart } from '@/context/CartContext';
 
 // Common Components
 import { RoleSwitcher } from '@/components/common/RoleSwitcher';
@@ -18,8 +20,6 @@ import { CategorySection } from '@/components/buyer/CategorySection';
 import { FlashSaleSection } from '@/components/buyer/FlashSaleSection';
 import { TopSearchesSection } from '@/components/buyer/TopSearchesSection';
 import { ProductCatalog } from '@/components/buyer/ProductCatalog';
-import { ProductDetailModal } from '@/components/buyer/ProductDetailModal';
-import { CartDrawer } from '@/components/buyer/CartDrawer';
 import { OrderTrackingView } from '@/components/buyer/OrderTrackingView';
 
 // Role Dashboards
@@ -31,207 +31,40 @@ import { ArrowRight, Check } from 'lucide-react';
 
 export default function FlashCartHome() {
   const { t, language } = useLanguage();
+  const router = useRouter();
 
-  // Master Role State
-  const [activeRole, setActiveRole] = useState<Role>('customer');
+  const {
+    cartItems,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    orders,
+    setOrders,
+    createOrder,
+    isTrackingOpen,
+    setIsTrackingOpen,
+    toastMessage,
+    setToastMessage,
+    triggerToast,
+    currentUser,
+    setCurrentUser,
+    handleLogin,
+    activeRole,
+    setActiveRole,
+    isAuthModalOpen,
+    setIsAuthModalOpen,
+  } = useCart();
 
   // Shared Core State (Reactive across all 4 roles)
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
-  const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
   const [users, setUsers] = useState<PlatformUser[]>(INITIAL_USERS);
-  const [currentUser, setCurrentUser] = useState<PlatformUser>(INITIAL_USERS[0]);
 
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      product: INITIAL_PRODUCTS[0],
-      quantity: 1,
-      selectedColor: 'M / Pure White',
-    },
-  ]);
-
-  // UI Modals & Views State
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isTrackingOpen, setIsTrackingOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [catalogCategory, setCatalogCategory] = useState<string>('All');
-  const [toastMessage, setToastMessage] = useState<{
-    text: string;
-    type: 'success' | 'info';
-    actionText?: string;
-    onAction?: () => void;
-  } | null>(null);
 
-  // Helper to show reactive notification banner
-  const triggerToast = (
-    text: string,
-    type: 'success' | 'info' = 'success',
-    actionText?: string,
-    onAction?: () => void
-  ) => {
-    setToastMessage({ text, type, actionText, onAction });
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 5000);
-  };
-
-  // AUTH / LOGIN REDIRECTION HANDLER
-  const handleLogin = (user: PlatformUser, targetRole: Role) => {
-    setCurrentUser(user);
-    setActiveRole(targetRole);
-
-    triggerToast(
-      language === 'vi'
-        ? `Chào mừng ${user.name}! Đã chuyển hướng tới [${targetRole.toUpperCase()}].`
-        : `Welcome ${user.name}! Redirected to [${targetRole.toUpperCase()}].`,
-      'success'
-    );
-  };
-
-  // 1. BUYER ACTIONS
-  const handleAddToCart = (product: Product, quantity = 1, variant?: string) => {
-    setCartItems((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.product.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
-      }
-      return [
-        ...prev,
-        {
-          product,
-          quantity,
-          selectedColor: variant || 'Standard',
-        },
-      ];
-    });
-
-    triggerToast(
-      language === 'vi'
-        ? `Đã thêm "${product.name.slice(0, 30)}..." vào giỏ hàng`
-        : `Added "${product.name.slice(0, 30)}..." to shopping bag`,
-      'success',
-      language === 'vi' ? 'Mở Túi Đồ' : 'Open Bag',
-      () => setIsCartOpen(true)
-    );
-  };
-
-  const handleBuyNow = (product: Product, quantity = 1, variant?: string) => {
-    handleAddToCart(product, quantity, variant);
-    setIsCartOpen(true);
-  };
-
-  const handleUpdateCartQuantity = (productId: string, quantity: number) => {
-    if (quantity <= 0) {
-      handleRemoveCartItem(productId);
-      return;
-    }
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
-      )
-    );
-  };
-
-  const handleRemoveCartItem = (productId: string) => {
-    setCartItems((prev) => prev.filter((item) => item.product.id !== productId));
-  };
-
-  const handleCheckout = (orderData: {
-    customerName: string;
-    customerPhone: string;
-    shippingAddress: string;
-    paymentMethod: 'FlashPay' | 'COD' | 'CyberCard' | 'ApplePay';
-    shippingFee: number;
-    discount: number;
-  }) => {
-    const subtotal = cartItems.reduce(
-      (sum, item) => sum + item.product.flashPrice * item.quantity,
-      0
-    );
-    const newOrderId = `TS-${Math.floor(10000 + Math.random() * 90000)}`;
-
-    const newOrder: Order = {
-      id: newOrderId,
-      customerName: orderData.customerName,
-      customerPhone: orderData.customerPhone,
-      shippingAddress: orderData.shippingAddress,
-      items: cartItems.map((item) => ({
-        product: item.product,
-        quantity: item.quantity,
-        price: item.product.flashPrice,
-      })),
-      subtotal,
-      discount: orderData.discount,
-      shippingFee: orderData.shippingFee,
-      total: Math.max(0, subtotal - orderData.discount + orderData.shippingFee),
-      status: 'pending',
-      paymentMethod: orderData.paymentMethod,
-      createdAt: language === 'vi' ? 'Vừa xong' : 'Just now',
-      trackingEvents: [
-        {
-          status: 'pending',
-          title: language === 'vi' ? 'Đơn hàng đã đặt' : 'Order Placed',
-          timestamp: language === 'vi' ? 'Vừa xong' : 'Just now',
-          location: 'TerraSweep Hub',
-          note: language === 'vi' ? 'Đang gửi thông báo chuẩn bị kiện hàng tới Shop Flagship' : 'Dispatching preparation notice to merchant flagship',
-          completed: true,
-        },
-        {
-          status: 'confirmed',
-          title: language === 'vi' ? 'Shop xác nhận & đóng gói' : 'Merchant Packing',
-          timestamp: language === 'vi' ? 'Chờ duyệt' : 'Pending',
-          location: 'Kho TerraSweep Flagship',
-          note: language === 'vi' ? 'Shop kiểm tra số lượng và đóng gói' : 'Merchant inspecting stock and packing box',
-          completed: false,
-        },
-        {
-          status: 'picking',
-          title: language === 'vi' ? 'Bàn giao Shipper' : 'Handed Off to Courier',
-          timestamp: language === 'vi' ? 'Chờ xử lý' : 'Pending',
-          location: 'Kho trung chuyển',
-          note: language === 'vi' ? 'Chờ shipper quét laser QR tiếp nhận' : 'Awaiting carrier laser scan QR handover',
-          completed: false,
-        },
-        {
-          status: 'shipping',
-          title: language === 'vi' ? 'Đang vận chuyển' : 'In Transit',
-          timestamp: language === 'vi' ? 'Chờ xử lý' : 'Pending',
-          location: 'Tuyến đường giao',
-          note: language === 'vi' ? 'Tài xế đang trên đường giao tới bạn' : 'Courier on route to destination',
-          completed: false,
-        },
-        {
-          status: 'delivered',
-          title: language === 'vi' ? 'Hoàn thành giao hàng' : 'Order Delivered',
-          timestamp: language === 'vi' ? 'Chờ xử lý' : 'Pending',
-          location: orderData.shippingAddress,
-          note: language === 'vi' ? 'Khách hàng nhận kiện hàng' : 'Recipient received parcel',
-          completed: false,
-        },
-      ],
-    };
-
-    setOrders([newOrder, ...orders]);
-    setCartItems([]);
-    setIsTrackingOpen(true);
-
-    triggerToast(
-      language === 'vi'
-        ? `Đã tạo đơn hàng #${newOrderId} thành công!`
-        : `Order #${newOrderId} created successfully!`,
-      'success',
-      language === 'vi' ? 'Chuyển sang Merchant' : 'Switch to Merchant',
-      () => {
-        const sellerUser = users.find((u) => u.role === 'seller') || users[1];
-        setCurrentUser(sellerUser);
-        setActiveRole('seller');
-      }
-    );
+  const handleSelectProduct = (product: Product) => {
+    router.push(`/${product.id}`);
   };
 
   // 2. SELLER ACTIONS
@@ -444,7 +277,7 @@ export default function FlashCartHome() {
           {/* Authentic TerraSweep Single-Tier Navbar with Language Switcher */}
           <BuyerHeader
             cartItemCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
-            onOpenCart={() => setIsCartOpen(true)}
+            onOpenCart={() => router.push('/cart')}
             onOpenTracking={() => setIsTrackingOpen(true)}
             onSearch={setSearchQuery}
             searchQuery={searchQuery}
@@ -469,7 +302,7 @@ export default function FlashCartHome() {
             {/* Editorial Services & Curated Drops Hero */}
             <FlashSaleBanner
               flashProducts={products.filter((p) => p.isFlashSale)}
-              onSelectProduct={setSelectedProduct}
+              onSelectProduct={handleSelectProduct}
             />
 
             {/* 1. Shopee-style 2-Row Category Directory */}
@@ -481,44 +314,26 @@ export default function FlashCartHome() {
             {/* 2. Shopee-style Interactive Flash Sale Section with Countdown & Flame Velocity */}
             <FlashSaleSection
               flashProducts={products.filter((p) => p.isFlashSale)}
-              onSelectProduct={setSelectedProduct}
-              onAddToCart={handleAddToCart}
+              onSelectProduct={handleSelectProduct}
+              onAddToCart={addToCart}
             />
 
             {/* 3. Shopee-style Top Trending Searches with Ranking & Monthly Sales */}
             <TopSearchesSection
               products={products}
-              onSelectProduct={setSelectedProduct}
+              onSelectProduct={handleSelectProduct}
             />
 
             {/* 4. TerraSweep 2-Column Collection & Sidebar Filters */}
             <ProductCatalog
               products={products}
-              onSelectProduct={setSelectedProduct}
-              onAddToCart={handleAddToCart}
+              onSelectProduct={handleSelectProduct}
+              onAddToCart={addToCart}
               searchQuery={searchQuery}
               externalCategory={catalogCategory}
               onSelectCategory={setCatalogCategory}
             />
           </div>
-
-          {/* Product Detail Modal */}
-          <ProductDetailModal
-            product={selectedProduct}
-            onClose={() => setSelectedProduct(null)}
-            onAddToCart={handleAddToCart}
-            onBuyNow={handleBuyNow}
-          />
-
-          {/* Cart & Checkout Slide-Over Drawer */}
-          <CartDrawer
-            isOpen={isCartOpen}
-            onClose={() => setIsCartOpen(false)}
-            cartItems={cartItems}
-            onUpdateQuantity={handleUpdateCartQuantity}
-            onRemoveItem={handleRemoveCartItem}
-            onCheckout={handleCheckout}
-          />
         </main>
       )}
 

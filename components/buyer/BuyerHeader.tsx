@@ -1,6 +1,8 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { PlatformUser, Role } from '@/types';
 import { useLanguage } from '@/i18n/LanguageContext';
 import {
@@ -39,12 +41,31 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
   onSwitchRole,
 }) => {
   const { t, language, setLanguage } = useLanguage();
+  const router = useRouter();
+  const pathname = usePathname();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleNavClick = (hash?: string) => {
     setIsMobileMenuOpen(false);
+    if (pathname !== '/') {
+      if (!hash) {
+        router.push('/');
+      } else {
+        router.push(`/${hash}`);
+      }
+      return;
+    }
     if (hash) {
       const element = document.querySelector(hash);
       if (element) {
@@ -56,7 +77,11 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
   };
 
   const handleTriggerSearch = () => {
-    handleNavClick('#collection-section');
+    if (pathname !== '/') {
+      router.push('/#collection-section');
+    } else {
+      handleNavClick('#collection-section');
+    }
   };
 
   const trendingTags = [
@@ -69,64 +94,83 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
   ];
 
   return (
-    <div className="w-full flex flex-col">
+    <>
       {/* ========================================================================= */}
       {/* 1. SINGLE-TIER LUXURY NAVBAR (STRICT 1:1 MATCH WITH REFERENCE IMAGE 1)   */}
       {/* ========================================================================= */}
-      <header className="w-full bg-white/85 backdrop-blur-md border-b border-sky-100/80 sticky top-0 z-40 shadow-xs">
+      <header
+        className={`w-full sticky top-0 z-50 transition-all duration-300 ${
+          isScrolled
+            ? 'bg-white/95 backdrop-blur-md border-b border-sky-200/90 shadow-md shadow-sky-950/5'
+            : 'bg-white/85 backdrop-blur-md border-b border-sky-100/80 shadow-xs'
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between gap-4">
           
           {/* LEFT: TerraSweep Brand Identity Lockup (Integrated mark & wordmark) */}
           <div className="flex items-center shrink-0">
-            <button
-              onClick={() => {
-                onSearch('');
-                handleNavClick();
+            <Link
+              href="/"
+              onClick={(e) => {
+                if (pathname === '/') {
+                  e.preventDefault();
+                  if (onSearch) onSearch('');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  if (onSearch) onSearch('');
+                }
               }}
               className="group flex items-center gap-2.5 sm:gap-3 cursor-pointer text-left focus:outline-none"
             >
-              <div className="relative w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 flex items-center justify-center shrink-0 overflow-hidden">
+              <div className="relative w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 flex items-center justify-center shrink-0 overflow-hidden rounded-xl bg-gradient-to-br from-sky-50 to-sky-100/50 border border-sky-100/80 shadow-2xs group-hover:border-sky-200 transition-colors">
                 <img
                   src="/images/brand-logo.webp"
                   alt="TerraSweep"
                   className="w-full h-full object-contain mix-blend-multiply scale-140 group-hover:scale-150 transition-transform duration-300"
                 />
               </div>
-              <span className="text-[26px] sm:text-[28px] md:text-[30px] font-black tracking-[-0.03em] text-[#0F172A] font-sans group-hover:opacity-85 transition-opacity">
-                TerraSweep
+              <span className="text-[22px] sm:text-[24px] md:text-[26px] font-black tracking-[-0.03em] font-sans group-hover:opacity-90 transition-opacity whitespace-nowrap">
+                <span className="text-slate-900">Terra</span>
+                <span className="bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 bg-clip-text text-transparent">Sweep</span>
               </span>
-            </button>
+            </Link>
           </div>
 
-          {/* CENTER: Exactly 4 Editorial Navigation Links (Exact Match With Image 1) */}
-          <nav className="hidden md:flex items-center gap-8 lg:gap-11 text-sm font-medium text-slate-600">
-            <button
-              onClick={() => {
-                onSearch('');
-                handleNavClick();
+          {/* CENTER: 4 Editorial Navigation Links with Refined Proportions */}
+          <nav className="hidden md:flex items-center gap-1 sm:gap-1.5 lg:gap-2.5 xl:gap-4 shrink-0">
+            <Link
+              href="/"
+              onClick={(e) => {
+                if (pathname === '/') {
+                  e.preventDefault();
+                  if (onSearch) onSearch('');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  if (onSearch) onSearch('');
+                }
               }}
-              className="hover:text-sky-600 transition-colors cursor-pointer py-1"
+              className="px-3.5 py-1.5 rounded-full text-[13.5px] lg:text-[14px] xl:text-[14.5px] font-medium text-slate-600 hover:text-sky-600 hover:bg-slate-100/70 active:bg-sky-50 transition-colors duration-150 cursor-pointer whitespace-nowrap shrink-0 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
             >
               {t('nav.home')}
-            </button>
+            </Link>
 
             <button
               onClick={() => handleNavClick('#about-section')}
-              className="hover:text-sky-600 transition-colors cursor-pointer py-1"
+              className="px-3.5 py-1.5 rounded-full text-[13.5px] lg:text-[14px] xl:text-[14.5px] font-medium text-slate-600 hover:text-sky-600 hover:bg-slate-100/70 active:bg-sky-50 transition-colors duration-150 cursor-pointer whitespace-nowrap shrink-0 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
             >
               {t('nav.aboutUs')}
             </button>
 
             <button
               onClick={() => handleNavClick('#why-us-section')}
-              className="hover:text-sky-600 transition-colors cursor-pointer py-1"
+              className="px-3.5 py-1.5 rounded-full text-[13.5px] lg:text-[14px] xl:text-[14.5px] font-medium text-slate-600 hover:text-sky-600 hover:bg-slate-100/70 active:bg-sky-50 transition-colors duration-150 cursor-pointer whitespace-nowrap shrink-0 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
             >
               {t('nav.whyUs')}
             </button>
 
             <button
               onClick={() => handleNavClick('#services-section')}
-              className="hover:text-sky-600 transition-colors cursor-pointer py-1"
+              className="px-3.5 py-1.5 rounded-full text-[13.5px] lg:text-[14px] xl:text-[14.5px] font-medium text-slate-600 hover:text-sky-600 hover:bg-slate-100/70 active:bg-sky-50 transition-colors duration-150 cursor-pointer whitespace-nowrap shrink-0 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
             >
               {t('nav.ourServices')}
             </button>
@@ -139,7 +183,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
             <div className="flex items-center rounded-full bg-slate-100 p-0.5 text-[10px] font-mono font-bold border border-slate-200 select-none">
               <button
                 onClick={() => setLanguage('vi')}
-                className={`px-2 py-0.5 rounded-full transition-all cursor-pointer ${
+                aria-label={language === 'vi' ? 'Đang chọn Tiếng Việt' : 'Chuyển sang Tiếng Việt'}
+                className={`px-2 py-0.5 rounded-full transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
                   language === 'vi'
                     ? 'bg-sky-600 text-white shadow-xs'
                     : 'text-slate-600 hover:text-sky-700'
@@ -149,7 +194,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
               </button>
               <button
                 onClick={() => setLanguage('en')}
-                className={`px-2 py-0.5 rounded-full transition-all cursor-pointer ${
+                aria-label={language === 'en' ? 'English selected' : 'Switch language to English'}
+                className={`px-2 py-0.5 rounded-full transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
                   language === 'en'
                     ? 'bg-sky-600 text-white shadow-xs'
                     : 'text-slate-600 hover:text-sky-700'
@@ -159,12 +205,15 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
               </button>
             </div>
 
-            {/* Shopping Cart Circular Button with Dynamic Badge */}
+            {/* Shopping Cart Pill Button (Redirects to /cart) */}
             <button
-              onClick={onOpenCart}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-slate-200 hover:border-sky-500 bg-white text-slate-800 hover:text-sky-600 flex items-center justify-center relative shadow-2xs hover:scale-105 active:scale-95 transition-all cursor-pointer group"
+              onClick={() => {
+                if (onOpenCart) onOpenCart();
+                else router.push('/cart');
+              }}
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-slate-200 hover:border-sky-500 bg-white text-slate-800 hover:text-sky-600 flex items-center justify-center relative shadow-2xs hover:scale-105 active:scale-95 transition-all cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
               title={t('cart.title')}
-              aria-label="Shopping Cart"
+              aria-label={language === 'vi' ? `Giỏ hàng (${cartItemCount} sản phẩm)` : `Shopping Cart (${cartItemCount} items)`}
             >
               <ShoppingCart className="w-4 h-4 sm:w-4.5 sm:h-4.5 transition-transform group-hover:scale-110" />
               {cartItemCount > 0 && (
@@ -179,31 +228,32 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
               <div className="relative">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="h-10 sm:h-11 pl-2 sm:pl-3 pr-3 sm:pr-3.5 rounded-full border border-zinc-300 hover:border-black bg-white flex items-center gap-2 cursor-pointer font-medium text-xs text-zinc-900 shadow-2xs transition-all"
+                  aria-label={language === 'vi' ? 'Menu tài khoản người dùng' : 'User account menu'}
+                  className="h-10 sm:h-11 pl-2 sm:pl-3 pr-3 sm:pr-3.5 rounded-full border border-sky-200 hover:border-sky-400 bg-white/95 backdrop-blur-md flex items-center gap-2 cursor-pointer font-semibold text-xs text-slate-800 shadow-2xs hover:shadow-xs transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
                 >
                   <img
                     src={currentUser.avatar}
                     alt={currentUser.name}
-                    className="w-6 h-6 rounded-full object-cover border border-zinc-300"
+                    className="w-6 h-6 rounded-full object-cover border border-sky-200"
                   />
                   <span className="max-w-[80px] sm:max-w-[100px] truncate">{currentUser.name}</span>
-                  <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
+                  <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${showUserMenu ? 'rotate-180 text-sky-600' : ''}`} />
                 </button>
 
                 {showUserMenu && (
-                  <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl bg-white border border-zinc-200 shadow-xl py-2 z-50 animate-in fade-in">
-                    <div className="px-4 py-2 border-b border-zinc-100">
-                      <p className="font-bold text-zinc-900">{currentUser.name}</p>
-                      <p className="text-[10px] text-zinc-400 font-mono truncate">{currentUser.email}</p>
+                  <div className="absolute right-0 top-full mt-2 w-60 rounded-2xl bg-white/98 backdrop-blur-xl border border-sky-100/90 shadow-xl shadow-sky-950/10 p-2 z-50 animate-in fade-in zoom-in-95 duration-150 ambient-glow-sky">
+                    <div className="px-3 py-2 rounded-xl bg-sky-50/50 mb-1 border border-sky-100/60">
+                      <p className="font-bold text-slate-900 text-xs">{currentUser.name}</p>
+                      <p className="text-[10px] text-slate-500 font-mono truncate">{currentUser.email}</p>
                     </div>
                     <button
                       onClick={() => {
                         onSwitchRole('seller');
                         setShowUserMenu(false);
                       }}
-                      className="w-full text-left px-4 py-2 hover:bg-zinc-50 flex items-center gap-2 cursor-pointer text-xs"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-sky-700 flex items-center gap-2.5 cursor-pointer text-xs font-semibold transition-colors"
                     >
-                      <Store className="w-3.5 h-3.5" />
+                      <Store className="w-3.5 h-3.5 text-sky-600" />
                       <span>{t('nav.sellerChannel')}</span>
                     </button>
                     <button
@@ -211,9 +261,9 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
                         onSwitchRole('shipper');
                         setShowUserMenu(false);
                       }}
-                      className="w-full text-left px-4 py-2 hover:bg-zinc-50 flex items-center gap-2 cursor-pointer text-xs"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-sky-700 flex items-center gap-2.5 cursor-pointer text-xs font-semibold transition-colors"
                     >
-                      <Truck className="w-3.5 h-3.5" />
+                      <Truck className="w-3.5 h-3.5 text-sky-600" />
                       <span>{t('nav.shipperChannel')}</span>
                     </button>
                     <button
@@ -221,38 +271,38 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
                         onSwitchRole('admin');
                         setShowUserMenu(false);
                       }}
-                      className="w-full text-left px-4 py-2 hover:bg-zinc-50 flex items-center gap-2 cursor-pointer text-xs"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-sky-50 text-slate-700 hover:text-sky-700 flex items-center gap-2.5 cursor-pointer text-xs font-semibold transition-colors"
                     >
-                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <ShieldCheck className="w-3.5 h-3.5 text-sky-600" />
                       <span>{t('nav.adminChannel')}</span>
                     </button>
-                    <div className="my-1 border-t border-zinc-100" />
+                    <div className="my-1 border-t border-sky-100/80" />
                     <button
                       onClick={() => {
                         onOpenAuthModal();
                         setShowUserMenu(false);
                       }}
-                      className="w-full text-left px-4 py-2 hover:bg-zinc-50 text-red-600 flex items-center gap-2 cursor-pointer text-xs font-semibold"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-600 flex items-center gap-2.5 cursor-pointer text-xs font-semibold transition-colors"
                     >
-                      <LogOut className="w-3.5 h-3.5" />
+                      <LogOut className="w-3.5 h-3.5 text-rose-500" />
                       <span>{t('nav.switchAccount')}</span>
                     </button>
                   </div>
                 )}
               </div>
             ) : (
-              <button
-                onClick={onOpenAuthModal}
-                className="h-10 sm:h-11 pl-4 pr-1.5 sm:pr-2 rounded-full border border-slate-200 hover:border-sky-500 bg-white hover:bg-sky-50/40 flex items-center gap-2.5 transition-all shadow-2xs group cursor-pointer active:scale-95"
+              <Link
+                href="/login"
+                className="h-10 sm:h-11 pl-4 pr-1.5 sm:pr-2 rounded-full border border-slate-200 hover:border-sky-500 bg-white hover:bg-sky-50/40 flex items-center gap-2.5 transition-all shadow-2xs group cursor-pointer active:scale-95 shrink-0 whitespace-nowrap"
                 title={t('nav.login')}
               >
-                <span className="text-xs sm:text-sm font-semibold text-[#0F172A] tracking-tight">
+                <span className="text-xs sm:text-sm font-semibold text-[#0F172A] tracking-tight whitespace-nowrap">
                   {t('nav.login')}
                 </span>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full btn-ocean-primary flex items-center justify-center group-hover:scale-105 transition-all shadow-2xs">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full btn-ocean-primary flex items-center justify-center group-hover:scale-105 transition-all shadow-2xs shrink-0">
                   <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
-              </button>
+              </Link>
             )}
 
             {/* Mobile Hamburger Drawer Toggle */}
@@ -268,9 +318,9 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
 
         {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-200 bg-white px-6 py-5 space-y-4 animate-in slide-in-from-top-2 duration-200">
+          <div className="md:hidden border-t border-slate-200 bg-white px-6 py-5 space-y-5 animate-in slide-in-from-top-2 duration-200 shadow-xl">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <span className="text-xs font-mono font-bold uppercase text-slate-400">TerraSweep Menu</span>
+              <span className="text-xs font-mono font-bold uppercase text-slate-500">TerraSweep Menu</span>
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
@@ -283,39 +333,100 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
               </button>
             </div>
 
-            <div className="flex flex-col space-y-3 text-sm font-semibold text-slate-800">
-              <button
-                onClick={() => {
-                  onSearch('');
-                  handleNavClick();
+            <div className="flex flex-col space-y-1 text-base font-semibold text-slate-800">
+              <Link
+                href="/"
+                onClick={(e) => {
+                  setIsMobileMenuOpen(false);
+                  if (pathname === '/') {
+                    e.preventDefault();
+                    if (onSearch) onSearch('');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  } else {
+                    if (onSearch) onSearch('');
+                  }
                 }}
-                className="text-left py-1 hover:text-sky-600 cursor-pointer"
+                className="text-left px-3.5 py-2.5 rounded-xl hover:bg-sky-50 hover:text-sky-600 transition-colors cursor-pointer"
               >
                 {t('nav.home')}
-              </button>
+              </Link>
               <button
                 onClick={() => handleNavClick('#about-section')}
-                className="text-left py-1 hover:text-sky-600 cursor-pointer"
+                className="text-left px-3.5 py-2.5 rounded-xl hover:bg-sky-50 hover:text-sky-600 transition-colors cursor-pointer"
               >
                 {t('nav.aboutUs')}
               </button>
               <button
                 onClick={() => handleNavClick('#why-us-section')}
-                className="text-left py-1 hover:text-sky-600 cursor-pointer"
+                className="text-left px-3.5 py-2.5 rounded-xl hover:bg-sky-50 hover:text-sky-600 transition-colors cursor-pointer"
               >
                 {t('nav.whyUs')}
               </button>
               <button
                 onClick={() => handleNavClick('#services-section')}
-                className="text-left py-1 hover:text-sky-600 cursor-pointer"
+                className="text-left px-3.5 py-2.5 rounded-xl hover:bg-sky-50 hover:text-sky-600 transition-colors cursor-pointer"
               >
                 {t('nav.ourServices')}
               </button>
               <button
                 onClick={() => handleNavClick('#collection-section')}
-                className="text-left py-1 hover:text-sky-600 cursor-pointer"
+                className="text-left px-3.5 py-2.5 rounded-xl hover:bg-sky-50 hover:text-sky-600 transition-colors cursor-pointer"
               >
                 {t('nav.collection')}
+              </button>
+            </div>
+
+            {/* Quick Role Switcher Mobile Card (Gói 3 Polish) */}
+            <div className="pt-4 border-t border-slate-100 space-y-2.5">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-sky-600" />
+                <span>{language === 'vi' ? 'Chuyển Vai Trò Quản Trị' : 'Role Navigation'}</span>
+              </span>
+
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onSwitchRole('seller');
+                  }}
+                  className="p-2.5 rounded-xl bg-sky-50/70 hover:bg-sky-100 border border-sky-200/80 text-center text-xs font-bold text-sky-900 flex flex-col items-center gap-1 transition-all cursor-pointer active:scale-95"
+                >
+                  <Store className="w-4 h-4 text-sky-600" />
+                  <span className="text-[11px]">{language === 'vi' ? 'Shop Bán' : 'Seller'}</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onSwitchRole('shipper');
+                  }}
+                  className="p-2.5 rounded-xl bg-sky-50/70 hover:bg-sky-100 border border-sky-200/80 text-center text-xs font-bold text-sky-900 flex flex-col items-center gap-1 transition-all cursor-pointer active:scale-95"
+                >
+                  <Truck className="w-4 h-4 text-sky-600" />
+                  <span className="text-[11px]">{language === 'vi' ? 'Shipper' : 'Courier'}</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onSwitchRole('admin');
+                  }}
+                  className="p-2.5 rounded-xl bg-sky-50/70 hover:bg-sky-100 border border-sky-200/80 text-center text-xs font-bold text-sky-900 flex flex-col items-center gap-1 transition-all cursor-pointer active:scale-95"
+                >
+                  <ShieldCheck className="w-4 h-4 text-sky-600" />
+                  <span className="text-[11px]">{language === 'vi' ? 'Quản Trị' : 'Admin'}</span>
+                </button>
+              </div>
+
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onOpenAuthModal();
+                }}
+                className="w-full py-2 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5 text-slate-500" />
+                <span>{language === 'vi' ? 'Đổi Tài Khoản / Đăng Nhập' : 'Switch Account / Login'}</span>
               </button>
             </div>
           </div>
@@ -333,7 +444,7 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
           
           {/* Master Search Input Bar */}
           <div className="w-full flex items-center rounded-full bg-white border border-slate-300 hover:border-sky-400 focus-within:border-sky-500 focus-within:ring-2 focus-within:ring-sky-500/20 focus-within:shadow-md shadow-2xs pl-4 sm:pl-5 pr-1.5 sm:pr-2 py-1.5 sm:py-2 transition-all duration-200">
-            <Search className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400 mr-2.5 sm:mr-3 shrink-0" />
+            <Search className="w-4 h-4 sm:w-5 sm:h-5 text-slate-500 mr-2.5 sm:mr-3 shrink-0" />
             
             <input
               ref={searchInputRef}
@@ -344,13 +455,15 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
                 if (e.key === 'Enter') handleTriggerSearch();
               }}
               placeholder={t('nav.searchPlaceholder')}
-              className="w-full bg-transparent text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none font-medium"
+              aria-label={t('nav.searchPlaceholder') || 'Tìm kiếm sản phẩm trên TerraSweep'}
+              className="w-full bg-transparent text-xs sm:text-sm text-slate-900 placeholder-slate-500 focus:outline-none font-medium"
             />
 
             {searchQuery && (
               <button
                 onClick={() => onSearch('')}
-                className="text-slate-400 hover:text-sky-600 p-1 mr-1 transition-colors cursor-pointer"
+                className="text-slate-500 hover:text-sky-600 p-1 mr-1 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-full"
+                aria-label={language === 'vi' ? 'Xóa từ khóa tìm kiếm' : 'Clear search query'}
                 title="Clear input"
               >
                 <X className="w-4 h-4" />
@@ -360,7 +473,8 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
             {/* Ocean Blue Luminous Search Action Button */}
             <button
               onClick={handleTriggerSearch}
-              className="btn-ocean-primary rounded-full px-5 sm:px-6 py-2 sm:py-2.5 text-xs font-bold flex items-center gap-2 shrink-0 cursor-pointer"
+              aria-label={language === 'vi' ? 'Bắt đầu tìm kiếm' : 'Start search'}
+              className="btn-ocean-primary rounded-full px-5 sm:px-6 py-2 sm:py-2.5 text-xs font-bold flex items-center gap-2 shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
             >
               <Search className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">{language === 'vi' ? 'Tìm kiếm' : 'Search'}</span>
@@ -381,7 +495,7 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
                   onSearch(tag);
                   handleTriggerSearch();
                 }}
-                className="px-3.5 py-1 rounded-full bg-white hover:bg-zinc-100 border border-zinc-200 text-zinc-700 hover:text-black hover:border-zinc-300 transition-all text-xs font-medium cursor-pointer shadow-2xs active:scale-95 whitespace-nowrap shrink-0"
+                className="px-3.5 py-1 rounded-full bg-white hover:bg-zinc-100 border border-zinc-200 text-zinc-700 hover:text-black hover:border-zinc-300 transition-all text-xs font-medium cursor-pointer shadow-2xs active:scale-95 whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
               >
                 {tag}
               </button>
@@ -389,6 +503,6 @@ export const BuyerHeader: React.FC<BuyerHeaderProps> = ({
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 };

@@ -29,8 +29,8 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 
   return (
     <div className={`flex items-center gap-2.5 select-none ${className}`}>
-      {/* Seamless 3D Isometric Brand Logo */}
-      <div className={`relative ${logoSize} flex items-center justify-center shrink-0 overflow-hidden`}>
+      {/* Seamless 3D Isometric Brand Logo with Ocean Glow Droplet Frame */}
+      <div className={`relative ${logoSize} flex items-center justify-center shrink-0 overflow-hidden rounded-xl ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : 'bg-gradient-to-br from-sky-50 to-sky-100/50 border border-sky-100/80 shadow-2xs'}`}>
         <img
           src="/images/brand-logo.webp"
           alt="TerraSweep Brand Logo"
@@ -40,9 +40,16 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 
       <div className="flex flex-col">
         <div className="flex items-center">
-          <span className={`font-black ${textSize} ${textColor} tracking-tight`}>
-            TerraSweep
-          </span>
+          {theme === 'dark' ? (
+            <span className={`font-black ${textSize} text-white tracking-tight`}>
+              TerraSweep
+            </span>
+          ) : (
+            <span className={`font-black ${textSize} tracking-tight`}>
+              <span className="text-slate-900">Terra</span>
+              <span className="bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 bg-clip-text text-transparent">Sweep</span>
+            </span>
+          )}
         </div>
         {(showSubtitle || subtitle) && (
           <span className={`text-[10px] ${subtitleColor} tracking-widest font-semibold uppercase font-mono`}>

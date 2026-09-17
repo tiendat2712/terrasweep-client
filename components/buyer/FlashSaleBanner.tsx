@@ -51,9 +51,12 @@ export const FlashSaleBanner: React.FC<FlashSaleBannerProps> = ({
         {/* Big Editorial Headline with italic serif accent */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl md:text-5xl font-black text-[#0F172A] tracking-tight leading-tight">
-              {t('hero.headlinePart1')} <br />
-              <span className="font-serif italic font-normal tracking-normal text-sky-800">
+            <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
+              <span className="bg-gradient-to-r from-slate-900 via-sky-950 to-sky-900 bg-clip-text text-transparent">
+                {t('hero.headlinePart1')}
+              </span>
+              <br />
+              <span className="font-serif italic font-normal tracking-normal bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
                 {t('hero.headlineAccent')}
               </span>
             </h1>
@@ -88,7 +91,10 @@ export const FlashSaleBanner: React.FC<FlashSaleBannerProps> = ({
       {/* 2. TWO LARGE BENTO CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Bento 1: Style Consulting */}
-        <div className="group rounded-[32px] bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 p-6 sm:p-7 shadow-sm hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 transition-all duration-300 flex flex-col justify-between overflow-hidden relative ambient-glow-sky">
+        <div
+          onClick={() => flashProducts[0] && onSelectProduct(flashProducts[0])}
+          className="group rounded-[32px] bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 p-6 sm:p-7 shadow-sm hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 transition-all duration-300 flex flex-col justify-between overflow-hidden relative ambient-glow-sky cursor-pointer"
+        >
           <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-100 mb-5">
             <img
               src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&auto=format&fit=crop&q=80"
@@ -102,7 +108,7 @@ export const FlashSaleBanner: React.FC<FlashSaleBannerProps> = ({
 
           <div>
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-bold text-[#0F172A]">{t('hero.styleConsultingTitle')}</h3>
+              <h3 className="text-xl font-bold text-slate-900 group-hover:text-sky-700 transition-colors">{t('hero.styleConsultingTitle')}</h3>
               <div className="w-8 h-8 rounded-full bg-sky-50 group-hover:bg-sky-600 group-hover:text-white transition-colors flex items-center justify-center text-sky-700 shadow-2xs">
                 <ArrowUpRight className="w-4 h-4" />
               </div>
@@ -114,7 +120,10 @@ export const FlashSaleBanner: React.FC<FlashSaleBannerProps> = ({
         </div>
 
         {/* Bento 2: Care & Cleaning */}
-        <div className="group rounded-[32px] bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 p-6 sm:p-7 shadow-sm hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 transition-all duration-300 flex flex-col justify-between overflow-hidden relative ambient-glow-sky">
+        <div
+          onClick={() => (flashProducts[1] || flashProducts[0]) && onSelectProduct(flashProducts[1] || flashProducts[0])}
+          className="group rounded-[32px] bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 p-6 sm:p-7 shadow-sm hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 transition-all duration-300 flex flex-col justify-between overflow-hidden relative ambient-glow-sky cursor-pointer"
+        >
           <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-100 mb-5">
             <img
               src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&auto=format&fit=crop&q=80"
@@ -128,7 +137,7 @@ export const FlashSaleBanner: React.FC<FlashSaleBannerProps> = ({
 
           <div>
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-bold text-[#0F172A]">{t('hero.careCleaningTitle')}</h3>
+              <h3 className="text-xl font-bold text-slate-900 group-hover:text-sky-700 transition-colors">{t('hero.careCleaningTitle')}</h3>
               <div className="w-8 h-8 rounded-full bg-sky-50 group-hover:bg-sky-600 group-hover:text-white transition-colors flex items-center justify-center text-sky-700 shadow-2xs">
                 <ArrowUpRight className="w-4 h-4" />
               </div>

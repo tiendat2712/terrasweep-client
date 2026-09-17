@@ -98,7 +98,7 @@ export const LogisticsThroughputChart: React.FC = () => {
                 {activeItem.hour}
               </span>
               <span className="text-[#0F172A] font-bold text-sm">
-                {activeItem.volume.toLocaleString()} <span className="text-slate-400 text-xs font-normal font-sans">{language === 'vi' ? 'kiện/giờ' : 'parcels/h'}</span>
+                {activeItem.volume.toLocaleString()} <span className="text-slate-500 text-xs font-normal font-sans">{language === 'vi' ? 'kiện/giờ' : 'parcels/h'}</span>
               </span>
               <span className="text-slate-400 text-xs">•</span>
               <span className="text-slate-600 text-xs">
@@ -106,7 +106,7 @@ export const LogisticsThroughputChart: React.FC = () => {
               </span>
               <span className="text-slate-400 text-xs">•</span>
               <span className="text-slate-600 text-xs flex items-center gap-1">
-                <Truck className="w-3 h-3 text-slate-400" /> {activeItem.activeTrucks} {language === 'vi' ? 'xe xuất bến' : 'trucks'}
+                <Truck className="w-3 h-3 text-slate-500" /> {activeItem.activeTrucks} {language === 'vi' ? 'xe xuất bến' : 'trucks'}
               </span>
               {activeItem.isPeak && (
                 <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-bold uppercase tracking-wider">
@@ -115,7 +115,7 @@ export const LogisticsThroughputChart: React.FC = () => {
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-2 text-slate-400 text-[11px]">
+            <div className="flex items-center gap-2 text-slate-500 text-[11px]">
               <Activity className="w-3.5 h-3.5 text-sky-600" />
               <span>{language === 'vi' ? 'Rê chuột trên từng cột để xem chi tiết lưu lượng và số xe điều phối' : 'Hover over bars for hourly throughput telemetry'}</span>
             </div>
@@ -177,7 +177,7 @@ export const LogisticsThroughputChart: React.FC = () => {
                     x={paddingLeft - 8}
                     y={y + 3.5}
                     textAnchor="end"
-                    className="text-[10px] fill-zinc-400 font-mono font-medium select-none"
+                    className="text-[10px] fill-slate-500 font-mono font-medium select-none"
                   >
                     {tick.label}
                   </text>
@@ -279,7 +279,7 @@ export const LogisticsThroughputChart: React.FC = () => {
                     className={`text-[10px] sm:text-[11px] font-mono select-none transition-colors ${
                       isHovered || item.isPeak
                         ? 'fill-[#0F172A] font-bold'
-                        : 'fill-slate-400 font-normal'
+                        : 'fill-slate-500 font-medium'
                     }`}
                   >
                     {item.hour.slice(0, 2)}h
@@ -304,7 +304,7 @@ export const LogisticsThroughputChart: React.FC = () => {
                 <h4 className="text-xs font-bold text-[#0F172A]">
                   {language === 'vi' ? 'Hub Nam Sài Gòn (Q.7)' : 'South Hub (District 7)'}
                 </h4>
-                <p className="text-[10px] text-slate-400 font-mono">DC-SOUTH-01</p>
+                <p className="text-[10px] text-slate-500 font-mono">DC-SOUTH-01</p>
               </div>
             </div>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/80">
@@ -315,7 +315,7 @@ export const LogisticsThroughputChart: React.FC = () => {
 
           <div className="flex items-baseline justify-between">
             <div className="text-xl font-black text-[#0F172A] font-mono">
-              4.800 <span className="text-xs font-normal text-slate-400 font-sans">{language === 'vi' ? 'kiện/h' : 'parcels/h'}</span>
+              4.800 <span className="text-xs font-normal text-slate-500 font-sans">{language === 'vi' ? 'kiện/h' : 'parcels/h'}</span>
             </div>
             <span className="text-xs font-mono font-bold text-slate-600">74% {language === 'vi' ? 'tải' : 'load'}</span>
           </div>
@@ -327,10 +327,10 @@ export const LogisticsThroughputChart: React.FC = () => {
 
           <div className="pt-1 flex items-center justify-between text-[10.5px] text-slate-500 font-mono border-t border-slate-100">
             <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3 text-slate-400" /> {language === 'vi' ? 'Xử lý: 14p/kiện' : '14m latency'}
+              <Clock className="w-3 h-3 text-slate-500" /> {language === 'vi' ? 'Xử lý: 14p/kiện' : '14m latency'}
             </span>
             <span className="flex items-center gap-1">
-              <Truck className="w-3 h-3 text-slate-400" /> 16 {language === 'vi' ? 'xe bến' : 'trucks'}
+              <Truck className="w-3 h-3 text-slate-500" /> 16 {language === 'vi' ? 'xe bến' : 'trucks'}
             </span>
           </div>
         </div>
@@ -346,7 +346,7 @@ export const LogisticsThroughputChart: React.FC = () => {
                 <h4 className="text-xs font-bold text-[#0F172A]">
                   {language === 'vi' ? 'Hub Đông TP (Thủ Đức)' : 'East Hub (Thu Duc City)'}
                 </h4>
-                <p className="text-[10px] text-slate-400 font-mono">DC-EAST-02</p>
+                <p className="text-[10px] text-slate-500 font-mono">DC-EAST-02</p>
               </div>
             </div>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-50 text-amber-900 border border-amber-200/80">
@@ -357,7 +357,7 @@ export const LogisticsThroughputChart: React.FC = () => {
 
           <div className="flex items-baseline justify-between">
             <div className="text-xl font-black text-[#0F172A] font-mono">
-              6.200 <span className="text-xs font-normal text-slate-400 font-sans">{language === 'vi' ? 'kiện/h' : 'parcels/h'}</span>
+              6.200 <span className="text-xs font-normal text-slate-500 font-sans">{language === 'vi' ? 'kiện/h' : 'parcels/h'}</span>
             </div>
             <span className="text-xs font-mono font-bold text-amber-800">82% {language === 'vi' ? 'tải' : 'load'}</span>
           </div>
@@ -369,10 +369,10 @@ export const LogisticsThroughputChart: React.FC = () => {
 
           <div className="pt-1 flex items-center justify-between text-[10.5px] text-slate-500 font-mono border-t border-slate-100">
             <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3 text-slate-400" /> {language === 'vi' ? 'Xử lý: 18p/kiện' : '18m latency'}
+              <Clock className="w-3 h-3 text-slate-500" /> {language === 'vi' ? 'Xử lý: 18p/kiện' : '18m latency'}
             </span>
             <span className="flex items-center gap-1">
-              <Truck className="w-3 h-3 text-slate-400" /> 24 {language === 'vi' ? 'xe bến' : 'trucks'}
+              <Truck className="w-3 h-3 text-slate-500" /> 24 {language === 'vi' ? 'xe bến' : 'trucks'}
             </span>
           </div>
         </div>
@@ -388,7 +388,7 @@ export const LogisticsThroughputChart: React.FC = () => {
                 <h4 className="text-xs font-bold text-[#0F172A]">
                   {language === 'vi' ? 'Hub Trung Tâm (Q.1)' : 'Central Hub (District 1)'}
                 </h4>
-                <p className="text-[10px] text-slate-400 font-mono">DC-METRO-03</p>
+                <p className="text-[10px] text-slate-500 font-mono">DC-METRO-03</p>
               </div>
             </div>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sky-50 text-sky-800 border border-sky-200/80">
@@ -399,7 +399,7 @@ export const LogisticsThroughputChart: React.FC = () => {
 
           <div className="flex items-baseline justify-between">
             <div className="text-xl font-black text-[#0F172A] font-mono">
-              3.100 <span className="text-xs font-normal text-slate-400 font-sans">{language === 'vi' ? 'kiện/h' : 'parcels/h'}</span>
+              3.100 <span className="text-xs font-normal text-slate-500 font-sans">{language === 'vi' ? 'kiện/h' : 'parcels/h'}</span>
             </div>
             <span className="text-xs font-mono font-bold text-slate-600">61% {language === 'vi' ? 'tải' : 'load'}</span>
           </div>
@@ -411,10 +411,10 @@ export const LogisticsThroughputChart: React.FC = () => {
 
           <div className="pt-1 flex items-center justify-between text-[10.5px] text-slate-500 font-mono border-t border-slate-100">
             <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3 text-slate-400" /> {language === 'vi' ? 'Giao TB: 38 phút' : '38m delivery'}
+              <Clock className="w-3 h-3 text-slate-500" /> {language === 'vi' ? 'Giao TB: 38 phút' : '38m delivery'}
             </span>
             <span className="flex items-center gap-1">
-              <Truck className="w-3 h-3 text-slate-400" /> 10 {language === 'vi' ? 'xe bến' : 'trucks'}
+              <Truck className="w-3 h-3 text-slate-500" /> 10 {language === 'vi' ? 'xe bến' : 'trucks'}
             </span>
           </div>
         </div>

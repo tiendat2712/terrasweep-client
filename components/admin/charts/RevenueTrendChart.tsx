@@ -138,7 +138,7 @@ export const RevenueTrendChart: React.FC = () => {
               }}
               className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all cursor-pointer ${
                 timeframe === mode
-                  ? 'bg-sky-600 text-white shadow-xs shadow-sky-500/25'
+                  ? 'btn-ocean-primary font-bold'
                   : 'text-slate-600 hover:text-sky-600'
               }`}
             >
@@ -265,7 +265,7 @@ export const RevenueTrendChart: React.FC = () => {
                   x={pt.x}
                   y={svgHeight - 6}
                   textAnchor="middle"
-                  className="text-[10px] font-mono fill-slate-400 select-none"
+                  className="text-[10px] font-mono fill-slate-500 font-medium select-none"
                 >
                   {pt.item.label}
                 </text>

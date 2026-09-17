@@ -1,0 +1,21 @@
+{
+  "name": "TerraSweep — Minimalist Luxury E-Commerce",
+  "short_name": "TerraSweep",
+  "description": "Nền tảng thương mại điện tử đương đại cao cấp TerraSweep với trải nghiệm mua sắm mượt mà, Flash Sale trực tiếp và giao hàng siêu tốc.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0284C7",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Product } from '@/types';
 import { useLanguage } from '@/i18n/LanguageContext';
-import { Heart, ChevronDown, Check, SlidersHorizontal } from 'lucide-react';
+import { Heart, ChevronDown, Check, SlidersHorizontal, Loader2 } from 'lucide-react';
+import { OceanSelect } from '@/components/common/OceanSelect';
 
 interface AnimatedProductCardProps {
   product: Product;
@@ -22,8 +23,25 @@ const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
   onToggleWishlist,
   t,
 }) => {
+  const { language } = useLanguage();
   const cardRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
+
+  const handleCardAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isAdding) return;
+    setIsAdding(true);
+    setTimeout(() => {
+      onAddToCart(product);
+      setIsAdding(false);
+      setIsAdded(true);
+      setTimeout(() => {
+        setIsAdded(false);
+      }, 1200);
+    }, 450);
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -59,23 +77,23 @@ const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
         transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
         transitionDelay: isVisible ? `${staggerDelay}ms` : '0ms',
       }}
-      className={`group gloss-sweep-card rounded-[28px] bg-white border border-sky-100/90 p-4 hover:border-sky-400 hover:shadow-xl hover:shadow-sky-500/10 hover:-translate-y-2 transition-all flex flex-col justify-between cursor-pointer will-change-transform ${
+      className={`group gloss-sweep-card rounded-[28px] bg-white border border-sky-100/90 p-4 hover:border-sky-300 hover:shadow-xl hover:shadow-sky-500/12 hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between cursor-pointer will-change-transform ${
         isVisible
           ? 'opacity-100 translate-y-0 scale-100'
           : 'opacity-0 translate-y-9 scale-[0.96]'
       }`}
     >
       {/* Image Container with Ambient Subtle Tone & Zoom */}
-      <div className="relative aspect-square w-full rounded-[24px] bg-slate-50 group-hover:bg-sky-50/40 overflow-hidden flex items-center justify-center p-6 transition-colors duration-500">
+      <div className="relative aspect-square w-full rounded-[24px] bg-gradient-to-b from-sky-50/50 via-slate-50/70 to-sky-50/30 group-hover:bg-sky-50/70 overflow-hidden flex items-center justify-center p-6 transition-all duration-500">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-contain group-hover:scale-108 transition-transform duration-700 ease-out"
+          className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 ease-out"
         />
 
         {/* Top Drop Badge */}
         {product.isFlashSale && (
-          <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-sky-600 text-[9.5px] font-sans font-bold uppercase tracking-wider text-white shadow-xs shadow-sky-500/25">
+          <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full btn-ocean-primary text-[9.5px] font-sans font-bold uppercase tracking-wider text-white shadow-xs">
             ⚡ Drop
           </div>
         )}
@@ -83,8 +101,13 @@ const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
         {/* Wishlist Heart Icon */}
         <button
           onClick={(e) => onToggleWishlist(product.id, e)}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/95 hover:bg-white shadow-xs flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer"
-          title="Add to wishlist"
+          aria-label={
+            isFavorited
+              ? (language === 'vi' ? 'Bỏ sản phẩm khỏi danh sách yêu thích' : 'Remove from wishlist')
+              : (language === 'vi' ? 'Thêm sản phẩm vào danh sách yêu thích' : 'Add to wishlist')
+          }
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/95 hover:bg-white shadow-xs flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
+          title="Wishlist"
         >
           <Heart
             className={`w-4 h-4 transition-colors ${
@@ -99,21 +122,21 @@ const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
       {/* Product Metadata & CTA */}
       <div className="mt-4 space-y-3">
         <div>
-          <h3 className="text-sm font-bold text-[#0F172A] truncate font-sans group-hover:text-sky-600 transition-colors">
+          <h3 className="text-sm font-bold text-slate-900 truncate font-sans group-hover:text-sky-600 transition-colors">
             {product.name}
           </h3>
           <div className="flex items-baseline justify-between mt-1">
             <div className="flex items-baseline gap-2">
-              <span className="text-sm font-bold text-[#0F172A] font-mono">
+              <span className="text-sm font-bold text-slate-900 font-mono">
                 ${priceUSD}
               </span>
               {product.originalPrice > product.flashPrice && (
-                <span className="text-xs text-slate-400 line-through font-mono">
+                <span className="text-xs text-slate-500 line-through font-mono">
                   ${originalPriceUSD}
                 </span>
               )}
             </div>
-            <span className="text-[10px] text-slate-400 font-mono">
+            <span className="text-[10px] text-slate-500 font-mono font-medium">
               {product.flashPrice.toLocaleString('vi-VN')}₫
             </span>
           </div>
@@ -121,13 +144,29 @@ const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
 
         {/* Full-width Elongated Pill "Add to Cart" Button */}
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onAddToCart(product);
-          }}
-          className="w-full py-2.5 rounded-full btn-ocean-primary text-xs font-bold flex items-center justify-center cursor-pointer"
+          onClick={handleCardAddToCart}
+          disabled={isAdding}
+          aria-busy={isAdding}
+          aria-label={isAdded ? (language === 'vi' ? 'Đã thêm vào giỏ' : 'Added') : (language === 'vi' ? `Thêm ${product.name} vào giỏ hàng` : `Add ${product.name} to cart`)}
+          className={`w-full py-2.5 rounded-full text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-xs hover:shadow-md active:scale-95 transition-all duration-300 disabled:opacity-75 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 ${
+            isAdded
+              ? 'bg-emerald-600 text-white shadow-emerald-500/20'
+              : 'btn-ocean-primary hover:shadow-sky-500/25'
+          }`}
         >
-          {t('catalog.addToCart')}
+          {isAdding ? (
+            <>
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
+              <span>{t('catalog.adding') || 'Đang thêm...'}</span>
+            </>
+          ) : isAdded ? (
+            <>
+              <Check className="w-3.5 h-3.5 text-white animate-in zoom-in-50" />
+              <span>{t('catalog.added') || 'Đã thêm!'}</span>
+            </>
+          ) : (
+            <span>{t('catalog.addToCart')}</span>
+          )}
         </button>
       </div>
     </div>
@@ -226,7 +265,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   return (
     <section id="collection-section" className="mt-10 sm:mt-14 mb-24">
       {/* 1. HORIZONTAL EDITORIAL FILTER & CONTROL TOOLBAR */}
-      <div className="rounded-[32px] bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 p-5 sm:p-7 shadow-sm space-y-5 mb-8 ambient-glow-sky overflow-hidden relative">
+      <div className="rounded-[32px] bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 p-5 sm:p-7 shadow-sm space-y-5 mb-8 ambient-glow-sky relative">
         
         {/* TOP ROW: Title, Item Counter, Price & Sort Controls */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
@@ -255,7 +294,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
             <div className="relative">
               <button
                 onClick={() => setShowPricePopover(!showPricePopover)}
-                className={`px-3.5 py-2 rounded-full border text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer select-none ${
+                aria-label={language === 'vi' ? 'Chọn bộ lọc khoảng giá' : 'Filter by price range'}
+                className={`px-3.5 py-2 rounded-full border text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
                   priceTier !== 'all' || maxPrice < 500
                     ? 'btn-ocean-primary shadow-xs'
                     : 'bg-white text-slate-700 border-slate-200 hover:border-sky-500'
@@ -263,7 +303,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               >
                 <span>
                   {priceTier === 'under-300k'
-                    ? '< 300k'
+                    ? '< 300.000₫'
                     : priceTier === '300k-1m'
                     ? '300k - 1tr'
                     : priceTier === '1m-3m'
@@ -271,19 +311,19 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                     : priceTier === 'above-3m'
                     ? '> 3tr'
                     : maxPrice < 500
-                    ? `< $${maxPrice}`
+                    ? `< ${(maxPrice * 20).toLocaleString('vi-VN')}k ₫`
                     : language === 'vi'
                     ? 'Mức giá'
                     : 'Price range'}
                 </span>
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showPricePopover ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${showPricePopover ? 'rotate-180 text-sky-600' : ''}`} />
               </button>
 
               {/* Price Filter Floating Popover */}
               {showPricePopover && (
-                <div className="absolute right-0 top-full mt-2 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-xl z-30 space-y-4 animate-in fade-in zoom-in-95">
+                <div className="absolute right-0 top-full mt-2 w-72 p-5 rounded-2xl bg-white/98 backdrop-blur-xl border border-sky-100/90 shadow-xl shadow-sky-950/10 z-30 space-y-4 animate-in fade-in zoom-in-95 ambient-glow-sky">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#0F172A] uppercase tracking-wider font-mono">
+                    <span className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono">
                       {language === 'vi' ? 'LỌC THEO GIÁ' : 'PRICE FILTER'}
                     </span>
                     {(priceTier !== 'all' || maxPrice < 500) && (
@@ -303,10 +343,10 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   <div className="grid grid-cols-2 gap-1.5 text-[11px]">
                     {[
                       { id: 'all', labelVi: 'Tất cả mức giá', labelEn: 'All prices' },
-                      { id: 'under-300k', labelVi: '< 300.000₫', labelEn: '< $15' },
-                      { id: '300k-1m', labelVi: '300k - 1.000k', labelEn: '$15 - $40' },
-                      { id: '1m-3m', labelVi: '1.000k - 3.000k', labelEn: '$40 - $120' },
-                      { id: 'above-3m', labelVi: '> 3.000k', labelEn: '> $120' },
+                      { id: 'under-300k', labelVi: '< 300.000₫', labelEn: '< 300k ₫' },
+                      { id: '300k-1m', labelVi: '300k - 1.000k', labelEn: '300k - 1M ₫' },
+                      { id: '1m-3m', labelVi: '1.000k - 3.000k', labelEn: '1M - 3M ₫' },
+                      { id: 'above-3m', labelVi: '> 3.000k', labelEn: '> 3M ₫' },
                     ].map((tier) => (
                       <button
                         key={tier.id}
@@ -314,10 +354,10 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                           setPriceTier(tier.id);
                           if (tier.id === 'all') setMaxPrice(500);
                         }}
-                        className={`px-2.5 py-1.5 rounded-lg border text-left font-medium transition-all cursor-pointer ${
+                        className={`px-3 py-2 rounded-xl border text-left font-semibold transition-all cursor-pointer ${
                           priceTier === tier.id
-                            ? 'bg-sky-600 text-white border-sky-600 shadow-2xs'
-                            : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-sky-300'
+                            ? 'btn-ocean-primary text-white shadow-2xs'
+                            : 'bg-white text-slate-700 border-sky-100/80 hover:border-sky-300 hover:bg-sky-50/40'
                         }`}
                       >
                         {language === 'vi' ? tier.labelVi : tier.labelEn}
@@ -326,10 +366,10 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   </div>
 
                   {/* Slider */}
-                  <div className="space-y-2 pt-2 border-t border-slate-100">
-                    <div className="flex items-center justify-between text-xs text-slate-500 font-mono">
-                      <span>{language === 'vi' ? 'Mức tối đa:' : 'Max:'}</span>
-                      <span className="font-bold text-sky-600">${maxPrice}</span>
+                  <div className="space-y-2 pt-2 border-t border-sky-100/70">
+                    <div className="flex items-center justify-between text-xs text-slate-600 font-mono">
+                      <span>{language === 'vi' ? 'Mức tối đa:' : 'Max limit:'}</span>
+                      <span className="font-bold text-sky-700">{(maxPrice * 20).toLocaleString('vi-VN')}k ₫</span>
                     </div>
                     <input
                       type="range"
@@ -337,8 +377,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                       max="500"
                       step="10"
                       value={maxPrice}
+                      aria-label={language === 'vi' ? 'Giới hạn mức giá tối đa' : 'Maximum price limit'}
                       onChange={(e) => setMaxPrice(Number(e.target.value))}
-                      className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600"
+                      className="w-full h-1.5 bg-sky-100 rounded-lg appearance-none cursor-pointer accent-sky-600"
                     />
                   </div>
                 </div>
@@ -346,18 +387,18 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
             </div>
 
             {/* Sort by Dropdown Pill */}
-            <div className="relative inline-flex items-center">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="appearance-none bg-white border border-slate-200 hover:border-sky-500 pl-3.5 pr-8 py-2 rounded-full text-xs font-semibold text-[#0F172A] cursor-pointer focus:outline-none transition-all shadow-2xs"
-              >
-                <option value="popularity">{t('catalog.sortPopularity')}</option>
-                <option value="price-asc">{t('catalog.sortPriceAsc')}</option>
-                <option value="price-desc">{t('catalog.sortPriceDesc')}</option>
-              </select>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-3 pointer-events-none" />
-            </div>
+            <OceanSelect
+              value={sortBy}
+              onChange={(val) => setSortBy(val as any)}
+              options={[
+                { value: 'popularity', label: t('catalog.sortPopularity') },
+                { value: 'price-asc', label: t('catalog.sortPriceAsc') },
+                { value: 'price-desc', label: t('catalog.sortPriceDesc') },
+              ]}
+              variant="pill"
+              align="right"
+              className="bg-white border-slate-200 hover:border-sky-400"
+            />
 
             {/* Reset All Filters Button */}
             {(selectedCategory !== 'All' || priceTier !== 'all' || maxPrice < 500) && (
@@ -368,7 +409,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   setMaxPrice(500);
                   onSelectCategory?.('All');
                 }}
-                className="px-3 py-1.5 text-xs text-slate-500 hover:text-sky-600 font-semibold underline cursor-pointer transition-colors"
+                className="px-3 py-1.5 text-xs text-slate-500 hover:text-sky-600 font-semibold underline cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-md"
               >
                 {language === 'vi' ? 'Xóa lọc' : 'Reset'}
               </button>
@@ -385,9 +426,10 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                 <button
                   key={cat.id}
                   onClick={() => handleCategoryChange(cat.id)}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer select-none whitespace-nowrap ${
+                  aria-label={language === 'vi' ? `Xem danh mục ${cat.label}` : `Browse category ${cat.label}`}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer select-none whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
                     isChecked
-                      ? 'btn-ocean-primary font-bold scale-102'
+                      ? 'btn-ocean-primary font-bold scale-102 shadow-xs'
                       : 'bg-white/80 text-slate-600 border border-sky-100 hover:border-sky-300 hover:text-sky-600 hover:bg-sky-50/50'
                   }`}
                 >
@@ -415,22 +457,91 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
         ))}
       </div>
 
-      {/* Empty State */}
+      {/* Empty State (Upgraded Atmospheric Ocean with Quick Filters) */}
       {filteredProducts.length === 0 && (
-        <div className="text-center py-20 bg-white rounded-[28px] border border-slate-200 shadow-2xs">
-          <SlidersHorizontal className="w-10 h-10 text-slate-400 mx-auto mb-3" />
-          <p className="text-sm font-bold text-slate-800">{t('catalog.noProductsFound')}</p>
-          <button
-            onClick={() => {
-              setSelectedCategory('All');
-              setPriceTier('all');
-              setMaxPrice(500);
-              onSelectCategory?.('All');
-            }}
-            className="mt-4 px-6 py-2.5 rounded-full bg-sky-600 text-white text-xs font-bold shadow-xs hover:bg-sky-700 transition-all cursor-pointer shadow-sky-500/25"
-          >
-            {t('catalog.resetFilters')}
-          </button>
+        <div className="text-center py-14 sm:py-20 rounded-[36px] bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 shadow-sm relative overflow-hidden ambient-glow-sky my-4">
+          <div className="absolute -top-12 -left-12 w-48 h-48 bg-sky-400/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="relative z-10 flex flex-col items-center max-w-md mx-auto px-4">
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-sky-50 to-sky-100/70 text-sky-600 flex items-center justify-center mb-5 shadow-xs border border-sky-200/80">
+              <SlidersHorizontal className="w-9 h-9" />
+            </div>
+
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 border border-sky-200/80 text-sky-800 text-[11px] font-mono font-bold uppercase tracking-wider mb-2.5">
+              <span>{language === 'vi' ? 'Không Tìm Thấy Kết Quả' : 'No Results Found'}</span>
+            </div>
+
+            <p className="text-sm font-bold text-slate-900 mb-1">
+              {searchQuery
+                ? (language === 'vi' ? `Không có sản phẩm nào khớp với "${searchQuery}"` : `No products matching "${searchQuery}"`)
+                : t('catalog.noProductsFound')}
+            </p>
+            
+            <p className="text-xs text-slate-500 mb-6 leading-relaxed">
+              {language === 'vi'
+                ? 'Thử điều chỉnh lại bộ lọc khoảng giá hoặc bấm chọn nhanh danh mục gợi ý bên dưới.'
+                : 'Try adjusting your price range or tap a suggested category below to continue browsing.'}
+            </p>
+
+            {/* Quick Recovery Filter Chips */}
+            <div className="flex items-center justify-center flex-wrap gap-2 mb-6">
+              <button
+                onClick={() => {
+                  setSelectedCategory('All');
+                  setPriceTier('all');
+                  setMaxPrice(500);
+                  onSelectCategory?.('All');
+                }}
+                className="px-3.5 py-1.5 rounded-full bg-white hover:bg-sky-50 border border-sky-200 text-xs font-semibold text-sky-700 shadow-2xs transition-all cursor-pointer active:scale-95"
+              >
+                {language === 'vi' ? 'Tất Cả Sản Phẩm' : 'All Products'}
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedCategory('Footwear');
+                  setPriceTier('all');
+                  setMaxPrice(500);
+                  onSelectCategory?.('Footwear');
+                }}
+                className="px-3.5 py-1.5 rounded-full bg-white hover:bg-sky-50 border border-slate-200 hover:border-sky-300 text-xs font-semibold text-slate-700 hover:text-sky-700 shadow-2xs transition-all cursor-pointer active:scale-95"
+              >
+                {language === 'vi' ? '👟 Giày Dép' : '👟 Footwear'}
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedCategory('Men Apparel');
+                  setPriceTier('all');
+                  setMaxPrice(500);
+                  onSelectCategory?.('Men Apparel');
+                }}
+                className="px-3.5 py-1.5 rounded-full bg-white hover:bg-sky-50 border border-slate-200 hover:border-sky-300 text-xs font-semibold text-slate-700 hover:text-sky-700 shadow-2xs transition-all cursor-pointer active:scale-95"
+              >
+                {language === 'vi' ? '👕 Thời Trang' : '👕 Apparel'}
+              </button>
+              <button
+                onClick={() => {
+                  setPriceTier('under-300k');
+                  setMaxPrice(500);
+                }}
+                className="px-3.5 py-1.5 rounded-full bg-white hover:bg-sky-50 border border-slate-200 hover:border-sky-300 text-xs font-semibold text-slate-700 hover:text-sky-700 shadow-2xs transition-all cursor-pointer active:scale-95"
+              >
+                {'< 300.000₫'}
+              </button>
+            </div>
+
+            <button
+              onClick={() => {
+                setSelectedCategory('All');
+                setPriceTier('all');
+                setMaxPrice(500);
+                onSelectCategory?.('All');
+              }}
+              className="px-7 py-3 rounded-full btn-ocean-primary text-white text-xs font-extrabold uppercase tracking-wider shadow-lg shadow-sky-500/25 hover:shadow-sky-500/35 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+            >
+              {t('catalog.resetFilters')}
+            </button>
+          </div>
         </div>
       )}
     </section>

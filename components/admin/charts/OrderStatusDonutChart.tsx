@@ -158,7 +158,7 @@ export const OrderStatusDonutChart: React.FC = () => {
 
               <div className="flex items-center gap-2 font-mono text-[11px]">
                 <span className="font-bold text-[#0F172A]">{seg.percentage}%</span>
-                <span className="text-slate-400">({seg.count.toLocaleString()})</span>
+                <span className="text-slate-500 font-medium">({seg.count.toLocaleString()})</span>
               </div>
             </div>
           );

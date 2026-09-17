@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Product } from '@/types';
 import { useLanguage } from '@/i18n/LanguageContext';
-import { X, Star } from 'lucide-react';
+import { X, Star, Loader2, Check } from 'lucide-react';
 
 interface ProductDetailModalProps {
   product: Product | null;
@@ -15,10 +15,11 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   onClose,
   onAddToCart,
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedColor, setSelectedColor] = useState('#FFFFFF');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!product) return null;
 
@@ -32,8 +33,18 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
   const priceUSD = Math.round(product.flashPrice / 25000);
 
+  const handleModalAddToCart = () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    setTimeout(() => {
+      onAddToCart(product, quantity, `${selectedSize} / ${selectedColor}`);
+      setIsSubmitting(false);
+      onClose();
+    }, 450);
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md overflow-y-auto transition-opacity">
       <div
         className="relative w-full max-w-4xl rounded-[32px] bg-gradient-to-b from-white via-sky-50/20 to-white/95 border border-sky-100 shadow-2xl overflow-hidden my-6 ambient-glow-sky"
         onClick={(e) => e.stopPropagation()}
@@ -190,13 +201,19 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
               {/* Elongated Ocean Blue Pill "Add to Cart" Button */}
               <button
-                onClick={() => {
-                  onAddToCart(product, quantity, `${selectedSize} / ${selectedColor}`);
-                  onClose();
-                }}
-                className="flex-1 py-3 px-6 rounded-full bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold tracking-tight shadow-md shadow-sky-500/25 transition-all cursor-pointer text-center active:scale-95"
+                onClick={handleModalAddToCart}
+                disabled={isSubmitting}
+                aria-busy={isSubmitting}
+                className="flex-1 py-3 px-6 rounded-full btn-ocean-primary text-xs font-bold tracking-tight cursor-pointer text-center flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed shadow-md shadow-sky-500/20"
               >
-                {t('detail.addToCart')}
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-white" />
+                    <span>{language === 'vi' ? 'Đang thêm...' : 'Adding...'}</span>
+                  </>
+                ) : (
+                  <span>{t('detail.addToCart')}</span>
+                )}
               </button>
             </div>
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Role, PlatformUser } from '@/types';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { ShoppingBag, Store, Truck, ShieldCheck, LogIn, ChevronUp, ChevronDown, Layers } from 'lucide-react';
@@ -21,6 +21,13 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
 }) => {
   const { t } = useLanguage();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   const roles: {
     id: Role;
@@ -61,7 +68,7 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
   const currentRoleInfo = roles.find((r) => r.id === currentRole) || roles[0];
 
   return (
-    <aside aria-label="Role Switcher Dock" className="fixed bottom-6 left-6 z-50 select-none">
+    <aside suppressHydrationWarning aria-label="Role Switcher Dock" className="fixed bottom-6 left-6 z-50 select-none">
       {/* Expanded Dev Panel */}
       {isExpanded ? (
         <div className="rounded-3xl bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 shadow-2xl p-4 w-80 text-zinc-900 space-y-3 animate-in slide-in-from-bottom-4 duration-200 ambient-glow-sky overflow-hidden relative">
@@ -91,7 +98,7 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
                   onClick={() => onRoleChange(item.id)}
                   className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
                     isActive
-                      ? 'border-sky-600 bg-sky-600 text-white shadow-md shadow-sky-500/25'
+                      ? 'btn-ocean-primary border-sky-300'
                       : 'border-slate-200 bg-slate-50 hover:bg-sky-50/60 hover:border-sky-200 text-slate-800'
                   }`}
                 >
@@ -117,7 +124,7 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
           {onOpenAuthModal && (
             <button
               onClick={onOpenAuthModal}
-              className="w-full py-2.5 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs shadow-sky-500/20"
+              className="w-full py-2.5 rounded-full btn-ocean-primary font-bold text-xs flex items-center justify-center gap-2 cursor-pointer"
             >
               <LogIn className="w-3.5 h-3.5" />
               <span>{t('roleSwitcher.openAuthModal')}</span>
@@ -127,6 +134,7 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
       ) : (
         /* Collapsed Floating Pill */
         <button
+          suppressHydrationWarning
           onClick={() => setIsExpanded(true)}
           className="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-white/95 backdrop-blur-md hover:bg-white border border-sky-200/80 shadow-xl text-xs font-semibold text-zinc-900 transition-all cursor-pointer group hover:scale-105"
         >

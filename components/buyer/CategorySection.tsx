@@ -22,6 +22,11 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
+
   // Scroll reveal on viewport enter
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -46,6 +51,8 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
       setCanScrollLeft(scrollLeft > 10);
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+      const maxScroll = scrollWidth - clientWidth;
+      setScrollProgress(maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0);
     }
   };
 
@@ -63,7 +70,28 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
     }
   };
 
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollContainerRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
+    setScrollLeftState(scrollContainerRef.current.scrollLeft);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !scrollContainerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollContainerRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    scrollContainerRef.current.scrollLeft = scrollLeftState - walk;
+    checkScroll();
+  };
+
+  const handleMouseUpOrLeave = () => {
+    setIsDragging(false);
+  };
+
   const handleCategoryClick = (cat: CategoryItem) => {
+    if (isDragging) return;
     onSelectCategory(cat.productCategory);
     const target = document.querySelector('#collection-section');
     if (target) {
@@ -103,36 +131,46 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
             </div>
 
             {/* Editorial Headline with Soft Ocean Accent */}
-            <h2 className="text-2xl sm:text-3xl font-black text-[#0F172A] tracking-tight leading-tight">
-              {language === 'vi' ? 'Danh Mục ' : 'Curated '}
-              <span className="font-serif italic font-normal text-sky-700">
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
+              <span className="bg-gradient-to-r from-slate-900 via-sky-950 to-sky-900 bg-clip-text text-transparent">
+                {language === 'vi' ? 'Danh Mục ' : 'Curated '}
+              </span>
+              <span className="font-serif italic font-normal bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
                 {language === 'vi' ? 'Tuyển Chọn' : 'Collections'}
               </span>
             </h2>
           </div>
 
-          {/* Navigation Controls */}
-          <div className="flex items-center gap-2 self-end sm:self-center">
+          {/* Ocean Capsule Navigator with Scroll Progress */}
+          <div className="flex items-center gap-1.5 p-1 rounded-full bg-white/90 border border-sky-200/80 shadow-xs backdrop-blur-md self-end sm:self-center">
             <button
               onClick={() => handleScroll('left')}
               disabled={!canScrollLeft}
-              className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all cursor-pointer ${
+              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all duration-200 ${
                 canScrollLeft
-                  ? 'border-sky-200 bg-white text-slate-700 hover:border-sky-500 hover:bg-sky-600 hover:text-white shadow-sm hover:scale-105 active:scale-95'
-                  : 'border-slate-200 bg-slate-50/80 text-slate-300 cursor-not-allowed'
+                  ? 'hover:btn-ocean-primary hover:text-white text-slate-700 active:scale-90 cursor-pointer shadow-2xs'
+                  : 'text-slate-300 cursor-not-allowed'
               }`}
               aria-label="Previous categories"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
 
+            {/* Interactive Progress Bar Pill */}
+            <div className="hidden sm:flex items-center w-16 h-1.5 bg-sky-100/80 rounded-full overflow-hidden mx-1" title={`${Math.round(scrollProgress)}%`}>
+              <div
+                className="h-full btn-ocean-primary rounded-full transition-all duration-300"
+                style={{ width: `${Math.max(15, scrollProgress)}%` }}
+              />
+            </div>
+
             <button
               onClick={() => handleScroll('right')}
               disabled={!canScrollRight}
-              className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all cursor-pointer ${
+              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all duration-200 ${
                 canScrollRight
-                  ? 'border-sky-200 bg-white text-slate-700 hover:border-sky-500 hover:bg-sky-600 hover:text-white shadow-sm hover:scale-105 active:scale-95'
-                  : 'border-slate-200 bg-slate-50/80 text-slate-300 cursor-not-allowed'
+                  ? 'hover:btn-ocean-primary hover:text-white text-slate-700 active:scale-90 cursor-pointer shadow-2xs'
+                  : 'text-slate-300 cursor-not-allowed'
               }`}
               aria-label="Next categories"
             >
@@ -141,17 +179,41 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
           </div>
         </div>
 
-        {/* Scrollable Container with Horizontal Gradient Mask Overlays */}
-        <div className="relative mt-6">
+        {/* Scrollable Container with Floating Edge Chevrons */}
+        <div className="relative mt-6 group/carousel">
+          {/* Floating Left Edge Chevron Button */}
+          <button
+            onClick={() => handleScroll('left')}
+            disabled={!canScrollLeft}
+            className={`absolute left-2 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/95 backdrop-blur-md border border-sky-200 shadow-lg shadow-sky-950/10 text-slate-700 hover:btn-ocean-primary hover:text-white transition-all duration-300 hidden md:flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 ${
+              canScrollLeft ? 'opacity-0 group-hover/carousel:opacity-100' : 'opacity-0 pointer-events-none scale-75'
+            }`}
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          {/* Floating Right Edge Chevron Button */}
+          <button
+            onClick={() => handleScroll('right')}
+            disabled={!canScrollRight}
+            className={`absolute right-2 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/95 backdrop-blur-md border border-sky-200 shadow-lg shadow-sky-950/10 text-slate-700 hover:btn-ocean-primary hover:text-white transition-all duration-300 hidden md:flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 ${
+              canScrollRight ? 'opacity-0 group-hover/carousel:opacity-100' : 'opacity-0 pointer-events-none scale-75'
+            }`}
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+
           {/* Left gradient fade mask */}
           <div
-            className={`pointer-events-none absolute left-0 top-0 bottom-0 w-10 sm:w-16 bg-gradient-to-r from-white via-white/85 to-transparent z-10 transition-opacity duration-300 ${
+            className={`pointer-events-none absolute left-0 top-0 bottom-0 w-12 sm:w-20 bg-gradient-to-r from-white via-white/80 to-transparent z-10 transition-opacity duration-300 ${
               canScrollLeft ? 'opacity-100' : 'opacity-0'
             }`}
           />
           {/* Right gradient fade mask */}
           <div
-            className={`pointer-events-none absolute right-0 top-0 bottom-0 w-10 sm:w-16 bg-gradient-to-l from-white via-white/85 to-transparent z-10 transition-opacity duration-300 ${
+            className={`pointer-events-none absolute right-0 top-0 bottom-0 w-12 sm:w-20 bg-gradient-to-l from-white via-white/80 to-transparent z-10 transition-opacity duration-300 ${
               canScrollRight ? 'opacity-100' : 'opacity-0'
             }`}
           />
@@ -159,19 +221,35 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
           <div
             ref={scrollContainerRef}
             onScroll={checkScroll}
-            className="overflow-x-auto scrollbar-none scroll-smooth flex flex-col gap-6 py-2 px-1"
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUpOrLeave}
+            onMouseLeave={handleMouseUpOrLeave}
+            className={`overflow-x-auto scrollbar-none scroll-smooth flex flex-col gap-6 py-2 px-1 ${
+              isDragging ? 'cursor-grabbing select-none' : 'cursor-grab'
+            }`}
           >
             {/* Row 1 */}
             <div className="flex items-start gap-4 sm:gap-6 min-w-max">
               {row1.map((cat, idx) => {
                 const isActive = selectedCategory === cat.productCategory;
                 const badge = getBadgeType(idx);
+                const staggerDelay = (idx % 10) * 45;
 
                 return (
                   <button
                     key={cat.id}
                     onClick={() => handleCategoryClick(cat)}
-                    className="group flex flex-col items-center gap-3 w-[104px] sm:w-[122px] text-center cursor-pointer transition-all duration-300 hover:-translate-y-2 focus:outline-none"
+                    style={{
+                      transitionDuration: '550ms',
+                      transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                      transitionDelay: isVisible ? `${staggerDelay}ms` : '0ms',
+                    }}
+                    className={`group flex flex-col items-center gap-3 w-[104px] sm:w-[122px] text-center cursor-pointer transition-all duration-300 hover:-translate-y-2 focus:outline-none will-change-transform ${
+                      isVisible
+                        ? 'opacity-100 translate-y-0 scale-100'
+                        : 'opacity-0 translate-y-6 scale-90'
+                    }`}
                   >
                     {/* Circle Image Wrapper with Spring Bounce & Soft Ring */}
                     <div className="relative">
@@ -179,7 +257,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                         className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center overflow-hidden transition-all duration-300 p-2.5 ${
                           isActive
                             ? 'bg-sky-50 ring-4 ring-sky-500/40 border-2 border-sky-500 shadow-md shadow-sky-500/25 scale-105'
-                            : 'bg-white/90 border border-sky-100 group-hover:border-sky-300 group-hover:ring-4 group-hover:ring-sky-100 group-hover:shadow-md group-hover:shadow-sky-500/15 group-hover:scale-108'
+                            : 'bg-gradient-to-br from-white via-sky-50/40 to-white/90 border border-sky-100/90 group-hover:border-sky-300 group-hover:ring-4 group-hover:ring-sky-100/70 group-hover:shadow-lg group-hover:shadow-sky-500/15 group-hover:scale-108'
                         }`}
                       >
                         <img
@@ -229,12 +307,22 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
               {row2.map((cat, idx) => {
                 const isActive = selectedCategory === cat.productCategory;
                 const badge = getBadgeType(idx + 10);
+                const staggerDelay = ((idx % 10) + 2) * 45;
 
                 return (
                   <button
                     key={cat.id}
                     onClick={() => handleCategoryClick(cat)}
-                    className="group flex flex-col items-center gap-3 w-[104px] sm:w-[122px] text-center cursor-pointer transition-all duration-300 hover:-translate-y-2 focus:outline-none"
+                    style={{
+                      transitionDuration: '550ms',
+                      transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                      transitionDelay: isVisible ? `${staggerDelay}ms` : '0ms',
+                    }}
+                    className={`group flex flex-col items-center gap-3 w-[104px] sm:w-[122px] text-center cursor-pointer transition-all duration-300 hover:-translate-y-2 focus:outline-none will-change-transform ${
+                      isVisible
+                        ? 'opacity-100 translate-y-0 scale-100'
+                        : 'opacity-0 translate-y-6 scale-90'
+                    }`}
                   >
                     {/* Circle Image Wrapper */}
                     <div className="relative">
@@ -242,7 +330,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                         className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center overflow-hidden transition-all duration-300 p-2.5 ${
                           isActive
                             ? 'bg-sky-50 ring-4 ring-sky-500/40 border-2 border-sky-500 shadow-md shadow-sky-500/25 scale-105'
-                            : 'bg-white/90 border border-sky-100 group-hover:border-sky-300 group-hover:ring-4 group-hover:ring-sky-100 group-hover:shadow-md group-hover:shadow-sky-500/15 group-hover:scale-108'
+                            : 'bg-gradient-to-br from-white via-sky-50/40 to-white/90 border border-sky-100/90 group-hover:border-sky-300 group-hover:ring-4 group-hover:ring-sky-100/70 group-hover:shadow-lg group-hover:shadow-sky-500/15 group-hover:scale-108'
                         }`}
                       >
                         <img

@@ -179,7 +179,7 @@ export const TOP_SEARCH_ITEMS: TopSearchItem[] = [
     nameVi: 'Sữa Rửa Mặt Tạo Bọt CeraVe Foaming Cleanser 236ml',
     nameEn: 'CeraVe Foaming Facial Cleanser 236ml',
     salesMonthly: '139k+ / tháng',
-    image: 'https://images.unsplash.com/photo-1556228722-d0b5d9213197?w=500&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500&auto=format&fit=crop&q=80',
     price: 320000,
     category: 'Beauty',
   },

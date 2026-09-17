@@ -53,6 +53,8 @@ export interface TranslationSchema {
     sortPriceAsc: string;
     sortPriceDesc: string;
     addToCart: string;
+    adding: string;
+    added: string;
     noProductsFound: string;
     resetFilters: string;
     catAll: string;
@@ -241,6 +243,7 @@ export interface TranslationSchema {
     colGovAction: string;
     btnUnlock: string;
     btnLock: string;
+    scrollCue: string;
   };
   roleSwitcher: {
     title: string;
@@ -287,9 +290,12 @@ export interface TranslationSchema {
     hotlineChat: string;
     helpCenter: string;
     orderGuide: string;
+    howToBuy?: string;
     shippingDelivery: string;
+    shippingPolicy?: string;
     importPolicy: string;
     returnsRefund: string;
+    returnPolicy?: string;
     inspectionGuide: string;
     aboutTitle: string;
     aboutUs: string;

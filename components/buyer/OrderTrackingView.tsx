@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Order, OrderStatus } from '@/types';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { Truck, CheckCircle2, Clock, PackageCheck, MapPin, ShieldCheck, X } from 'lucide-react';
+import { OceanSelect } from '@/components/common/OceanSelect';
 
 interface OrderTrackingViewProps {
   orders: Order[];
@@ -63,17 +64,18 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({
         </div>
 
         <div className="flex items-center gap-3">
-          <select
+          <OceanSelect
             value={currentOrder.id}
-            onChange={(e) => setSelectedOrderId(e.target.value)}
-            className="px-4 py-2 rounded-full bg-zinc-50 border border-zinc-200 text-xs text-zinc-900 font-mono font-bold cursor-pointer focus:outline-none focus:border-black"
-          >
-            {orders.map((o) => (
-              <option key={o.id} value={o.id}>
-                Order #{o.id} ({o.status.toUpperCase()})
-              </option>
-            ))}
-          </select>
+            onChange={(val) => setSelectedOrderId(val)}
+            options={orders.map((o) => ({
+              value: o.id,
+              label: `Order #${o.id}`,
+              badge: o.status.toUpperCase(),
+            }))}
+            variant="pill"
+            align="right"
+            className="font-mono"
+          />
 
           {onClose && (
             <button

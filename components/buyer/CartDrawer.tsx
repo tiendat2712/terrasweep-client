@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CartItem } from '@/types';
 import { useLanguage } from '@/i18n/LanguageContext';
-import { X, Trash2, ShoppingBag, ArrowRight, Tag, Truck } from 'lucide-react';
+import { X, Trash2, ShoppingBag, ArrowRight, Tag, Truck, Loader2 } from 'lucide-react';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -69,11 +69,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
       });
       setIsCheckingOut(false);
       onClose();
-    }, 500);
+    }, 600);
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-black/50 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/60 backdrop-blur-md transition-opacity">
       <div className="absolute inset-0" onClick={onClose} />
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
@@ -186,7 +186,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     </input>
                     <button
                       onClick={handleApplyVoucher}
-                      className="px-4 py-2 rounded-xl bg-sky-600 text-white text-xs font-bold hover:bg-sky-700 transition-colors cursor-pointer shadow-xs shadow-sky-500/25"
+                      className="px-4 py-2 rounded-xl btn-ocean-primary text-xs font-bold cursor-pointer"
                     >
                       {t('common.apply')}
                     </button>
@@ -275,10 +275,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <button
                 onClick={handlePlaceOrder}
                 disabled={isCheckingOut}
-                className="w-full py-3.5 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-sky-500/25 transition-all cursor-pointer disabled:opacity-50 active:scale-95"
+                aria-busy={isCheckingOut}
+                className="w-full py-3.5 rounded-full btn-ocean-primary font-bold text-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-sky-500/20"
               >
                 {isCheckingOut ? (
-                  <span className="animate-pulse">{t('cart.creatingOrder')}</span>
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-white" />
+                    <span>{t('cart.creatingOrder')}</span>
+                  </div>
                 ) : (
                   <>
                     <span>{t('cart.checkoutButton')}</span>
