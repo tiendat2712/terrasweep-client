@@ -4,8 +4,8 @@
   "description": "Nền tảng thương mại điện tử đương đại cao cấp TerraSweep với trải nghiệm mua sắm mượt mà, Flash Sale trực tiếp và giao hàng siêu tốc.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FFFFFF",
-  "theme_color": "#0284C7",
+  "background_color": "#f2f9fb",
+  "theme_color": "#dff2f6",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",

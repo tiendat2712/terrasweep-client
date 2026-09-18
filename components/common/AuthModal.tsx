@@ -104,7 +104,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md overflow-y-auto transition-opacity">
       <div
-        className="relative w-full max-w-2xl rounded-[32px] bg-gradient-to-b from-white via-sky-50/20 to-white/95 border border-sky-100 shadow-2xl overflow-hidden my-6 ambient-glow-sky"
+        className="relative w-full max-w-2xl rounded-[32px] ocean-surface border border-sky-100 shadow-2xl overflow-hidden my-6 ambient-glow-sky"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -120,7 +120,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <div className="flex justify-center mb-2">
               <BrandLogo size="lg" showSubtitle theme="light" />
             </div>
-            <h2 className="text-2xl font-black text-[#0F172A] tracking-tight">
+            <h2 className="text-2xl font-black text-foreground tracking-tight">
               {t('auth.title')}
             </h2>
             <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
@@ -164,7 +164,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-[#0F172A] group-hover:text-sky-600 transition-colors flex items-center gap-1.5">
+                      <span className="text-xs font-bold text-foreground group-hover:text-sky-600 transition-colors flex items-center gap-1.5">
                         {p.icon}
                         {p.title}
                       </span>

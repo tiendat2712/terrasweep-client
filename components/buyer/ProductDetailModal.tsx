@@ -6,7 +6,7 @@ import { X, Star, Loader2, Check } from 'lucide-react';
 interface ProductDetailModalProps {
   product: Product | null;
   onClose: () => void;
-  onAddToCart: (product: Product, quantity: number, variant: string) => void;
+  onAddToCart: (product: Product, quantity: number, variant: string, origin?: any) => void;
   onBuyNow: (product: Product, quantity: number, variant: string) => void;
 }
 
@@ -31,13 +31,13 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
     { name: 'Jet Black', hex: '#0C0C0C', border: false },
   ];
 
-  const priceUSD = Math.round(product.flashPrice / 25000);
-
-  const handleModalAddToCart = () => {
+  const handleModalAddToCart = (e: React.MouseEvent) => {
     if (isSubmitting) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const origin = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
     setIsSubmitting(true);
     setTimeout(() => {
-      onAddToCart(product, quantity, `${selectedSize} / ${selectedColor}`);
+      onAddToCart(product, quantity, `${selectedSize} / ${selectedColor}`, origin);
       setIsSubmitting(false);
       onClose();
     }, 450);
@@ -46,7 +46,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md overflow-y-auto transition-opacity">
       <div
-        className="relative w-full max-w-4xl rounded-[32px] bg-gradient-to-b from-white via-sky-50/20 to-white/95 border border-sky-100 shadow-2xl overflow-hidden my-6 ambient-glow-sky"
+        className="relative w-full max-w-4xl rounded-[32px] ocean-surface border border-sky-100 shadow-2xl overflow-hidden my-6 ambient-glow-sky"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -80,7 +80,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             <div>
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-black text-[#0F172A] tracking-tight">
+                  <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
                     {product.name.split('-')[0].trim()}{' '}
                     <span className="font-serif italic font-normal text-sky-800">
                       X1
@@ -118,19 +118,26 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               </div>
 
               {/* Price */}
-              <div className="mt-4 flex items-baseline gap-3">
-                <span className="text-3xl font-black text-[#0F172A] font-mono">
-                  ${priceUSD}
+              <div className="mt-4 flex items-baseline gap-3 flex-wrap">
+                <span className="text-3xl font-black text-sky-900 font-mono">
+                  {product.flashPrice.toLocaleString('vi-VN')}₫
                 </span>
-                <span className="text-xs text-slate-400 font-mono">
-                  ({product.flashPrice.toLocaleString('vi-VN')}₫)
-                </span>
+                {product.originalPrice > product.flashPrice && (
+                  <span className="text-sm text-slate-400 line-through font-mono">
+                    {product.originalPrice.toLocaleString('vi-VN')}₫
+                  </span>
+                )}
+                {product.discountPercent > 0 && (
+                  <span className="px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 text-xs font-bold font-mono">
+                    -{product.discountPercent}%
+                  </span>
+                )}
               </div>
             </div>
 
             {/* SELECT SIZE */}
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-[#0F172A]">
+              <label className="text-xs font-bold uppercase tracking-wider text-foreground">
                 {t('detail.selectSize')}
               </label>
               <div className="flex items-center gap-2.5">
@@ -155,7 +162,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
             {/* COLORS */}
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-[#0F172A]">
+              <label className="text-xs font-bold uppercase tracking-wider text-foreground">
                 {t('detail.colors')}
               </label>
               <div className="flex items-center gap-3">
@@ -190,7 +197,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 >
                   −
                 </button>
-                <span className="px-3 font-bold text-[#0F172A]">{quantity}</span>
+                <span className="px-3 font-bold text-foreground">{quantity}</span>
                 <button
                   onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
                   className="px-2 text-slate-500 hover:text-sky-600 font-bold cursor-pointer"
@@ -204,7 +211,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 onClick={handleModalAddToCart}
                 disabled={isSubmitting}
                 aria-busy={isSubmitting}
-                className="flex-1 py-3 px-6 rounded-full btn-ocean-primary text-xs font-bold tracking-tight cursor-pointer text-center flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed shadow-md shadow-sky-500/20"
+                className="flex-1 py-3 px-6 rounded-full btn-ocean-primary text-xs font-bold tracking-tight cursor-pointer text-center flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed active:scale-95 transition-all"
               >
                 {isSubmitting ? (
                   <>
@@ -219,7 +226,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
             {/* DESCRIPTION */}
             <div className="pt-4 border-t border-slate-100 space-y-1.5 text-xs">
-              <span className="font-bold uppercase tracking-wider text-[#0F172A] block">
+              <span className="font-bold uppercase tracking-wider text-foreground block">
                 {t('detail.description')}
               </span>
               <p className="text-slate-500 leading-relaxed">

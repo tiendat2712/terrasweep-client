@@ -1,4 +1,19 @@
-import { Product, Order, PlatformUser, CategoryItem, TopSearchItem, AddressItem, MerchantKYCApplication, DisputeClaim } from '@/types';
+import {
+  Product,
+  Order,
+  PlatformUser,
+  CategoryItem,
+  TopSearchItem,
+  AddressItem,
+  MerchantKYCApplication,
+  DisputeClaim,
+  ProductReview,
+  ShopVoucher,
+  SellerAccount,
+  PlatformVoucher,
+  AdminAuditLog,
+  AccountSuspensionRecord,
+} from '@/types';
 
 export const CATEGORY_LIST: CategoryItem[] = [
   // Hàng 1
@@ -476,7 +491,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     salesCount: '620 đã bán',
     stock: 9,
     category: 'Cyber Vision',
-    image: 'https://images.unsplash.com/photo-1622979135225-d2ba269bc1df?w=600&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1593508512255-86ab42a8e620?w=600&auto=format&fit=crop&q=80',
     tags: ['4K Pancake', 'Spatial Audio', '120Hz'],
     badge: 'Yêu thích+',
     isFlashSale: false,
@@ -1082,6 +1097,187 @@ export const INITIAL_ORDERS: Order[] = [
         completed: true
       }
     ]
+  },
+  {
+    id: 'TS-98427',
+    customerName: 'Hoàng Quốc Bảo',
+    customerPhone: '0918***552',
+    shippingAddress: 'Tòa nhà Deutsches Haus, 33 Lê Duẩn, P. Bến Nghé, Quận 1, TP.HCM',
+    items: [
+      {
+        product: INITIAL_PRODUCTS[1],
+        quantity: 1,
+        price: 750000,
+        variant: 'Size 41 / Pearl White'
+      }
+    ],
+    subtotal: 750000,
+    discount: 0,
+    shippingFee: 22000,
+    total: 772000,
+    status: 'confirmed',
+    paymentMethod: 'COD',
+    shipperId: 'ship-01',
+    shipperName: 'Trần Văn Mạnh (Fleet Pro)',
+    createdAt: '13:50 - Hôm nay',
+    deliveryNote: 'Giao giờ hành chính, gửi quầy lễ tân tầng G',
+    trackingEvents: [
+      {
+        status: 'pending',
+        title: 'Đơn hàng đã tạo',
+        timestamp: '13:50 PM',
+        location: 'TerraSweep Hub',
+        note: 'Đơn hàng COD chờ điều phối',
+        completed: true
+      },
+      {
+        status: 'confirmed',
+        title: 'Đã phân công Shipper',
+        timestamp: '14:05 PM',
+        location: 'Kho Flagship Q.7',
+        note: 'Đã chỉ định tài xế Trần Văn Mạnh tiếp nhận',
+        completed: true
+      }
+    ]
+  },
+  {
+    id: 'TS-98428',
+    customerName: 'Trần Thảo My',
+    customerPhone: '0972***410',
+    shippingAddress: 'Vinhomes Central Park, 208 Nguyễn Hữu Cảnh, P.22, Bình Thạnh',
+    items: [
+      {
+        product: INITIAL_PRODUCTS[2],
+        quantity: 1,
+        price: 640000,
+        variant: 'Size 38 / Sky Horizon'
+      }
+    ],
+    subtotal: 640000,
+    discount: 50000,
+    shippingFee: 18000,
+    total: 608000,
+    status: 'failed',
+    paymentMethod: 'COD',
+    shipperId: 'ship-01',
+    shipperName: 'Trần Văn Mạnh (Fleet Pro)',
+    createdAt: 'Hôm qua, 16:30',
+    deliveryNote: 'Khách hẹn giao lại ca sáng mai vì đang ở công ty',
+    failReason: 'Khách hàng chủ động hẹn lại ca giao sau (đã gọi 3 cuộc đối soát)',
+    rescheduledDate: 'Ca sáng mai (08:00 - 12:00)',
+    trackingEvents: [
+      {
+        status: 'pending',
+        title: 'Đơn hàng đã đặt',
+        timestamp: '16:30 PM',
+        location: 'TerraSweep Hub',
+        note: 'Đơn hàng tạo thành công',
+        completed: true
+      },
+      {
+        status: 'shipping',
+        title: 'Đang giao hàng',
+        timestamp: '17:15 PM',
+        location: 'Khu vực Bình Thạnh',
+        note: 'Shipper đã liên hệ khách',
+        completed: true
+      },
+      {
+        status: 'failed',
+        title: 'Giao không thành công • Đã đổi lịch',
+        timestamp: '17:45 PM',
+        location: 'Vinhomes Central Park',
+        note: 'Khách yêu cầu dời sang sáng mai lúc 9h',
+        completed: true
+      }
+    ]
+  },
+  {
+    id: 'TS-98429',
+    customerName: 'Phạm Minh Quân',
+    customerPhone: '0908***192',
+    shippingAddress: '124 Võ Thị Sáu, Phường 8, Quận 3, TP.HCM',
+    items: [
+      {
+        product: INITIAL_PRODUCTS[4] || INITIAL_PRODUCTS[0],
+        quantity: 1,
+        price: 920000,
+        variant: 'Size 43 / Obsidian'
+      }
+    ],
+    subtotal: 920000,
+    discount: 40000,
+    shippingFee: 20000,
+    total: 900000,
+    status: 'shipping',
+    paymentMethod: 'COD',
+    shipperId: 'ship-01',
+    shipperName: 'Trần Văn Mạnh (Fleet Pro)',
+    createdAt: '11:15 - Hôm nay',
+    deliveryNote: 'Bấm chuông cổng số 2, gọi trước 5 phút',
+    trackingEvents: [
+      {
+        status: 'pending',
+        title: 'Đơn hàng đã đặt',
+        timestamp: '11:15 AM',
+        location: 'TerraSweep Hub',
+        note: 'Đã duyệt đơn',
+        completed: true
+      },
+      {
+        status: 'picking',
+        title: 'Đã lấy kiện tại kho',
+        timestamp: '12:00 PM',
+        location: 'Hub Tân Bình',
+        note: 'Kiểm đếm nguyên đai nguyên kiện',
+        completed: true
+      },
+      {
+        status: 'shipping',
+        title: 'Đang di chuyển tới điểm giao',
+        timestamp: '12:45 PM',
+        location: 'Quận 3 (Cách bạn 1.2 km)',
+        note: 'Dự kiến đến trong 10 phút',
+        completed: true
+      }
+    ]
+  },
+  {
+    id: 'TS-98430',
+    customerName: 'Lê Thùy Dung',
+    customerPhone: '0933***808',
+    shippingAddress: 'Masteri Thảo Điền, 159 Xa Lộ Hà Nội, P. Thảo Điền, TP. Thủ Đức',
+    items: [
+      {
+        product: INITIAL_PRODUCTS[0],
+        quantity: 1,
+        price: 450000,
+        variant: 'Size 37 / Minimal Cream'
+      }
+    ],
+    subtotal: 450000,
+    discount: 0,
+    shippingFee: 15000,
+    total: 465000,
+    status: 'delivered',
+    paymentMethod: 'COD',
+    shipperId: 'ship-01',
+    shipperName: 'Trần Văn Mạnh (Fleet Pro)',
+    podPhoto: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=600&auto=format&fit=crop&q=80',
+    podTimestamp: '10:15 Hôm nay (Ký nhận: Lê Thùy Dung)',
+    podRecipientSignature: 'Lê Thùy Dung',
+    createdAt: '08:30 - Hôm nay',
+    deliveryNote: 'Khách kiểm tra hộp trước khi thanh toán COD',
+    trackingEvents: [
+      {
+        status: 'delivered',
+        title: 'Giao hàng thành công',
+        timestamp: '10:15 AM',
+        location: 'Masteri Thảo Điền',
+        note: 'Đã thu tiền COD 465.000₫ và lưu PoD',
+        completed: true
+      }
+    ]
   }
 ];
 
@@ -1226,3 +1422,608 @@ export const INITIAL_DISPUTES: DisputeClaim[] = [
     resolutionNote: 'Admin đã duyệt hoàn 100% tiền về ví khách hàng'
   }
 ];
+
+export const INITIAL_REVIEWS: ProductReview[] = [
+  {
+    id: 'rev-101',
+    productId: 'prod-1',
+    userName: 'Nguyễn Tuấn Anh',
+    userAvatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80',
+    rating: 5,
+    createdAt: '16/09/2026',
+    variantText: 'Size 42 / Pure White',
+    content: 'Giày đi cực kỳ êm chân, đế foam đàn hồi rất nảy khi chạy bộ sáng sớm! Form ôm chân vừa vặn đúng size chuẩn thông thường. Đóng gói 2 lớp hộp cẩn thận không móp méo chút nào, có cả túi chống ẩm và thẻ bảo hành chính hãng. Giao hàng 2H siêu tốc cực kỳ ưng ý.',
+    images: [
+      'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=600&auto=format&fit=crop&q=80'
+    ],
+    likes: 34,
+    isVerifiedPurchase: true,
+    sellerResponse: {
+      content: 'Dạ TerraSweep Flagship chân thành cảm ơn bạn Tuấn Anh đã tin tưởng và dành tặng đánh giá 5 sao cho shop ạ! Chúc bạn luôn có những bước chạy thật êm ái và tràn đầy năng lượng cùng Terra Glide nhé ạ!',
+      createdAt: '16/09/2026'
+    },
+    replies: [
+      {
+        id: 'rep-1',
+        userName: 'Trần Văn Hùng',
+        userAvatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=120&auto=format&fit=crop&q=80',
+        content: 'Bác ơi chân bè mang có bị kích 2 bên hông không ạ?',
+        createdAt: '16/09/2026',
+        likes: 3,
+      },
+      {
+        id: 'rep-2',
+        userName: 'Nguyễn Tuấn Anh',
+        userAvatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80',
+        content: 'Không hề nha bạn ơi, mũi giày vải dệt co giãn nhẹ nên chân bè đi vẫn rất thoải mái nhé!',
+        createdAt: '16/09/2026',
+        likes: 5,
+      }
+    ]
+  },
+  {
+    id: 'rev-102',
+    productId: 'prod-1',
+    userName: 'Lê Thị Thu Trang',
+    userAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80',
+    rating: 5,
+    createdAt: '14/09/2026',
+    variantText: 'Size 39 / Pure White',
+    content: 'Chất lượng giày vượt xa mong đợi trong tầm giá này luôn. Màu trắng ngà rất sang và dễ phối đồ từ quần jean đến váy thể thao. Đế chống trượt tốt, đi cả ngày ở văn phòng không bị mỏi gót. Mọi người nên mua đúng size nha!',
+    images: [
+      'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?w=600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&auto=format&fit=crop&q=80'
+    ],
+    likes: 21,
+    isVerifiedPurchase: true,
+    replies: [
+      {
+        id: 'rep-3',
+        userName: 'Hoàng Minh Châu',
+        content: 'Đế có bị trơn khi đi trời mưa gạch hoa không chị ơi?',
+        createdAt: '15/09/2026',
+        likes: 1,
+      },
+      {
+        id: 'rep-4',
+        userName: 'Lê Thị Thu Trang',
+        userAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80',
+        content: 'Đế cao su rãnh gai sâu bám đường tốt lắm em, chị đi mưa mấy bận rồi yên tâm nha!',
+        createdAt: '15/09/2026',
+        likes: 4,
+      }
+    ]
+  },
+  {
+    id: 'rev-103',
+    productId: 'prod-1',
+    userName: 'Trần Hoàng Long',
+    userAvatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=120&auto=format&fit=crop&q=80',
+    rating: 4,
+    createdAt: '10/09/2026',
+    variantText: 'Size 41 / Pure White',
+    content: 'Giày rất nhẹ và thoáng khí, đường may chỉn chu không có chỉ thừa. Trừ 1 sao vì hộp bên ngoài bị móp nhẹ góc do shipper lúc trời mưa, nhưng bên trong giày bọc xốp chống sốc nên không bị ảnh hưởng gì. Vẫn cho shop 4 sao khích lệ.',
+    images: [
+      'https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=600&auto=format&fit=crop&q=80'
+    ],
+    likes: 12,
+    isVerifiedPurchase: true,
+    sellerResponse: {
+      content: 'Chào bạn Long, TerraSweep rất tiếc về sự cố hộp ngoài bị ảnh hưởng do thời tiết khi giao hàng. Shop đã ghi nhận và làm việc lại với đội ngũ vận chuyển để gia cố màng bọc chống nước tốt hơn. Cảm ơn phản hồi quý báu của bạn!',
+      createdAt: '11/09/2026'
+    }
+  },
+  {
+    id: 'rev-104',
+    productId: 'prod-1',
+    userName: 'Vũ Đức Minh',
+    rating: 5,
+    createdAt: '08/09/2026',
+    variantText: 'Size 43 / Pure White',
+    content: 'Đã mua đôi thứ 2 của hãng này. Đệm lót rất dày dặn, hỗ trợ vòm bàn chân tốt. Ai hay bị đau gót chân khi đi bộ nhiều thì nên sắm một đôi này, rất đáng tiền!',
+    likes: 8,
+    isVerifiedPurchase: true
+  },
+  {
+    id: 'rev-105',
+    productId: 'prod-2',
+    userName: 'Phạm Thanh Hà',
+    userAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80',
+    rating: 5,
+    createdAt: '15/09/2026',
+    variantText: 'Titanium Grey / 45mm',
+    content: 'Đồng hồ thiết kế khung titanium cực kỳ đầm tay và nam tính. Màn hình AMOLED siêu sáng, ra nắng gắt vẫn nhìn rõ mồn một. Pin dùng được gần 10 ngày mới phải sạc lại. Rất hài lòng!',
+    images: [
+      'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=600&auto=format&fit=crop&q=80'
+    ],
+    likes: 27,
+    isVerifiedPurchase: true,
+    sellerResponse: {
+      content: 'Nexus Tech cảm ơn bạn Hà đã tin tưởng sản phẩm ạ! Bộ phận CSKH luôn sẵn sàng hỗ trợ bạn kích hoạt bảo hành điện tử 24 tháng nhé ạ.',
+      createdAt: '15/09/2026'
+    }
+  },
+  {
+    id: 'rev-106',
+    productId: 'prod-3',
+    userName: 'Đặng Quốc Huy',
+    userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80',
+    rating: 5,
+    createdAt: '12/09/2026',
+    variantText: 'Ice Crystal Switch / White',
+    content: 'Bàn phím gõ êm như nhung, cấu trúc gasket mount triệt tiêu tiếng vang rỗng hoàn toàn. Led RGB có nhiều chế độ đẹp mắt. Keycap PBT dầy dặn không bị bóng mờ theo thời gian.',
+    images: [
+      'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&auto=format&fit=crop&q=80'
+    ],
+    likes: 19,
+    isVerifiedPurchase: true
+  }
+];
+
+export const INITIAL_VOUCHERS: ShopVoucher[] = [
+  {
+    id: 'vouch-1',
+    code: 'TERRA50K',
+    title: 'Giảm 50.000₫ cho đơn hàng từ 500.000₫',
+    discountType: 'fixed',
+    discountValue: 50000,
+    minOrderValue: 500000,
+    maxUsage: 200,
+    usedCount: 78,
+    startDate: '01/09/2026',
+    endDate: '30/09/2026',
+    status: 'active',
+  },
+  {
+    id: 'vouch-2',
+    code: 'VIPRUNNER15',
+    title: 'Ưu đãi 15% cho dòng giày chạy bộ Terra Glide',
+    discountType: 'percentage',
+    discountValue: 15,
+    minOrderValue: 800000,
+    maxUsage: 100,
+    usedCount: 42,
+    startDate: '10/09/2026',
+    endDate: '25/09/2026',
+    status: 'active',
+  },
+  {
+    id: 'vouch-3',
+    code: 'FREESHIPMAX',
+    title: 'Miễn phí vận chuyển toàn quốc đơn từ 300.000₫',
+    discountType: 'shipping',
+    discountValue: 30000,
+    minOrderValue: 300000,
+    maxUsage: 500,
+    usedCount: 231,
+    startDate: '01/09/2026',
+    endDate: '15/10/2026',
+    status: 'active',
+  },
+  {
+    id: 'vouch-4',
+    code: 'FLASHWELCOME',
+    title: 'Chào mừng khách hàng mới giảm 100.000₫',
+    discountType: 'fixed',
+    discountValue: 100000,
+    minOrderValue: 1000000,
+    maxUsage: 50,
+    usedCount: 50,
+    startDate: '01/08/2026',
+    endDate: '31/08/2026',
+    status: 'expired',
+  },
+];
+
+export interface SellerConversation {
+  id: string;
+  customerName: string;
+  customerAvatar: string;
+  lastMessage: string;
+  lastTime: string;
+  unreadCount: number;
+  productContext?: {
+    name: string;
+    image: string;
+    price: number;
+  };
+  orderContext?: {
+    id: string;
+    total: number;
+    status: string;
+  };
+  messages: {
+    id: string;
+    sender: 'customer' | 'seller';
+    text: string;
+    time: string;
+    image?: string;
+  }[];
+}
+
+export const INITIAL_SELLER_CONVERSATIONS: SellerConversation[] = [
+  {
+    id: 'conv-1',
+    customerName: 'Nguyễn Thành Nam',
+    customerAvatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80',
+    lastMessage: 'Dạ shop ơi, em muốn hỏi size 42 còn hàng không ạ?',
+    lastTime: '10:45',
+    unreadCount: 1,
+    productContext: {
+      name: 'TerraRunner X1 Ultralight',
+      image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80',
+      price: 1250000,
+    },
+    orderContext: {
+      id: 'FC-98421',
+      total: 392000,
+      status: 'shipping',
+    },
+    messages: [
+      {
+        id: 'm1',
+        sender: 'customer',
+        text: 'Chào shop, mẫu TerraRunner X1 này form giày chuẩn hay form nhỏ vậy ạ?',
+        time: '10:40',
+      },
+      {
+        id: 'm2',
+        sender: 'seller',
+        text: 'Chào bạn! Mẫu này form chuẩn xuất khẩu nhé bạn ơi, bạn cứ đặt đúng size giày bình thường hay đi là vừa vặn êm chân nha!',
+        time: '10:42',
+      },
+      {
+        id: 'm3',
+        sender: 'customer',
+        text: 'Dạ shop ơi, em muốn hỏi size 42 còn hàng không ạ?',
+        time: '10:45',
+      },
+    ],
+  },
+  {
+    id: 'conv-2',
+    customerName: 'Lê Hoàng Yến',
+    customerAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80',
+    lastMessage: 'Cảm ơn shop nhiều, mình vừa đặt đơn xong rồi!',
+    lastTime: '09:15',
+    unreadCount: 0,
+    productContext: {
+      name: 'VoidWalk Low Carbon Edition',
+      image: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&auto=format&fit=crop&q=80',
+      price: 1450000,
+    },
+    messages: [
+      {
+        id: 'm4',
+        sender: 'customer',
+        text: 'Shop có áp dụng mã FREESHIPMAX cho đơn này được không?',
+        time: '09:05',
+      },
+      {
+        id: 'm5',
+        sender: 'seller',
+        text: 'Được bạn nhé, đơn từ 300k là áp mã FREESHIPMAX giảm 30k cước vận chuyển thoải mái ạ!',
+        time: '09:10',
+      },
+      {
+        id: 'm6',
+        sender: 'customer',
+        text: 'Cảm ơn shop nhiều, mình vừa đặt đơn xong rồi!',
+        time: '09:15',
+      },
+    ],
+  },
+  {
+    id: 'conv-3',
+    customerName: 'Trần Thảo My',
+    customerAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&auto=format&fit=crop&q=80',
+    lastMessage: 'Em muốn đổi giờ nhận sang buổi tối được không shop?',
+    lastTime: 'Hôm qua',
+    unreadCount: 0,
+    orderContext: {
+      id: 'TS-98428',
+      total: 608000,
+      status: 'failed',
+    },
+    messages: [
+      {
+        id: 'm7',
+        sender: 'customer',
+        text: 'Em muốn đổi giờ nhận sang buổi tối được không shop?',
+        time: 'Hôm qua, 17:30',
+      },
+      {
+        id: 'm8',
+        sender: 'seller',
+        text: 'Dạ được ạ, shop đã liên hệ bưu tá đổi lịch sang ca sáng mai hoặc tối mai giao lại cho bạn rồi nhé!',
+        time: 'Hôm qua, 17:40',
+      },
+    ],
+  },
+];
+
+export const INITIAL_SELLERS: SellerAccount[] = [
+  {
+    id: 'shp-1',
+    shopName: 'TerraSweep Flagship Official',
+    ownerName: 'Võ Hoàng Quân',
+    email: 'merchant.official@flashcart.ai',
+    phone: '0903 888 999',
+    category: 'Running & High-Performance Footwear',
+    productCount: 18,
+    totalRevenue: 2840000000,
+    rating: 4.9,
+    penaltyPoints: 0,
+    commissionRate: 5.0,
+    status: 'active',
+    settlementBalance: 58240000,
+    joinedAt: '01/10/2025',
+    verifiedBadge: true,
+    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'shp-2',
+    shopName: 'Nike Heritage Hub VN',
+    ownerName: 'Lê Minh Tuấn',
+    email: 'nike.heritage@vietretail.vn',
+    phone: '0918 223 344',
+    category: 'Lifestyle & Court Sneakers',
+    productCount: 42,
+    totalRevenue: 1650000000,
+    rating: 4.8,
+    penaltyPoints: 2,
+    commissionRate: 6.5,
+    status: 'active',
+    settlementBalance: 34100000,
+    joinedAt: '15/11/2025',
+    verifiedBadge: true,
+    avatar: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=150&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'shp-3',
+    shopName: 'Streetwear Matrix Lab',
+    ownerName: 'Đặng Quốc Bảo',
+    email: 'contact@streetwearmatrix.io',
+    phone: '0977 445 566',
+    category: 'Cyber Streetwear & Accessories',
+    productCount: 29,
+    totalRevenue: 890000000,
+    rating: 4.6,
+    penaltyPoints: 4,
+    commissionRate: 7.0,
+    status: 'restricted',
+    settlementBalance: 12500000,
+    joinedAt: '20/12/2025',
+    verifiedBadge: false,
+    avatar: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=150&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'shp-4',
+    shopName: 'Apex Speed Athletics',
+    ownerName: 'Nguyễn Thị Hương',
+    email: 'huong.apex@gmail.com',
+    phone: '0934 112 233',
+    category: 'Trail Running & Carbon Shoes',
+    productCount: 15,
+    totalRevenue: 540000000,
+    rating: 4.9,
+    penaltyPoints: 0,
+    commissionRate: 5.0,
+    status: 'active',
+    settlementBalance: 19800000,
+    joinedAt: '05/01/2026',
+    verifiedBadge: true,
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'shp-5',
+    shopName: 'Fake Sneaker Clearance (Vi Phạm)',
+    ownerName: 'Trần Gia Hưng',
+    email: 'sneaker.giare@yahoo.com',
+    phone: '0981 999 111',
+    category: 'Giày thể thao',
+    productCount: 6,
+    totalRevenue: 48000000,
+    rating: 2.3,
+    penaltyPoints: 15,
+    commissionRate: 10.0,
+    status: 'suspended',
+    settlementBalance: 0,
+    joinedAt: '10/02/2026',
+    verifiedBadge: false,
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+  },
+];
+
+export const INITIAL_PLATFORM_VOUCHERS: PlatformVoucher[] = [
+  {
+    id: 'pv-1',
+    code: 'TERRASHIPFREE',
+    title: 'Miễn Phí Vận Chuyển Toàn Sàn TerraSweep',
+    discountType: 'shipping',
+    discountValue: 35000,
+    minOrderValue: 250000,
+    platformBudget: 150000000,
+    disbursedBudget: 68500000,
+    maxUsage: 5000,
+    usedCount: 2280,
+    sponsorType: 'platform_100',
+    startDate: '01/03/2026',
+    endDate: '31/03/2026',
+    status: 'active',
+  },
+  {
+    id: 'pv-2',
+    code: 'CYBERMEGA100K',
+    title: 'Đại Tiệc Flash Sale - Giảm 100K Đơn Từ 800K',
+    discountType: 'fixed',
+    discountValue: 100000,
+    minOrderValue: 800000,
+    platformBudget: 200000000,
+    disbursedBudget: 84000000,
+    maxUsage: 2000,
+    usedCount: 840,
+    sponsorType: 'platform_100',
+    startDate: '10/03/2026',
+    endDate: '25/03/2026',
+    status: 'active',
+  },
+  {
+    id: 'pv-3',
+    code: 'WELCOME2026',
+    title: 'Ưu Đãi Khách Hàng Mới - Giảm 15% Đơn Đầu Tiên',
+    discountType: 'percentage',
+    discountValue: 15,
+    minOrderValue: 300000,
+    maxDiscount: 150000,
+    platformBudget: 100000000,
+    disbursedBudget: 29900000,
+    maxUsage: 3000,
+    usedCount: 890,
+    sponsorType: 'platform_100',
+    startDate: '01/01/2026',
+    endDate: '30/06/2026',
+    status: 'active',
+  },
+  {
+    id: 'pv-4',
+    code: 'FLASHVIP50K',
+    title: 'Đồng Tài Trợ Seller - Giảm 50K Hàng Hiệu',
+    discountType: 'fixed',
+    discountValue: 50000,
+    minOrderValue: 500000,
+    platformBudget: 50000000,
+    disbursedBudget: 50000000,
+    maxUsage: 1000,
+    usedCount: 1000,
+    sponsorType: 'co_funded',
+    startDate: '01/02/2026',
+    endDate: '28/02/2026',
+    status: 'expired',
+  },
+];
+
+export const INITIAL_AUDIT_LOGS: AdminAuditLog[] = [
+  {
+    id: 'log-101',
+    timestamp: '18/03/2026 13:12:45',
+    adminName: 'Master Administrator',
+    adminEmail: 'root.admin@flashcart.ai',
+    action: 'LOCK_USER',
+    actionLabel: 'Khóa tài khoản người dùng',
+    targetEntity: 'Shop Fake Sneaker Clearance (#shp-5)',
+    targetId: 'shp-5',
+    details: 'Áp dụng lệnh khóa vĩnh viễn do tích lũy 15 điểm Sao Quả Tạ và phát hiện bán hàng giả.',
+    ipAddress: '14.161.42.112 (TP. Hồ Chí Minh)',
+    device: 'Chrome 128 / macOS Sequoia',
+    severity: 'critical',
+    diffSnapshot: '{"status": "active" ➔ "suspended", "penaltyPoints": 15, "banDuration": "permanent"}',
+  },
+  {
+    id: 'log-102',
+    timestamp: '18/03/2026 11:35:10',
+    adminName: 'Master Administrator',
+    adminEmail: 'root.admin@flashcart.ai',
+    action: 'APPROVE_SELLER',
+    actionLabel: 'Phê duyệt hồ sơ mở shop (KYC)',
+    targetEntity: 'Apex Speed Athletics (#kyc-02)',
+    targetId: 'kyc-02',
+    details: 'Đã xác minh GPKD 0317894561 và tài khoản Techcombank chính chủ. Cấp quyền kinh doanh.',
+    ipAddress: '14.161.42.112 (TP. Hồ Chí Minh)',
+    device: 'Chrome 128 / macOS Sequoia',
+    severity: 'info',
+    diffSnapshot: '{"kycStatus": "pending" ➔ "approved", "role": "customer" ➔ "seller"}',
+  },
+  {
+    id: 'log-103',
+    timestamp: '17/03/2026 16:40:22',
+    adminName: 'Master Administrator',
+    adminEmail: 'root.admin@flashcart.ai',
+    action: 'CREATE_VOUCHER',
+    actionLabel: 'Phát hành Voucher sàn mới',
+    targetEntity: 'TERRASHIPFREE (Ngân sách 150.000.000₫)',
+    targetId: 'pv-1',
+    details: 'Khởi tạo chiến dịch Freeship toàn sàn tháng 03/2026, hỗ trợ tối đa 35k cho đơn từ 250k.',
+    ipAddress: '118.69.182.50 (Hà Nội)',
+    device: 'Safari 18 / macOS Sonoma',
+    severity: 'info',
+    diffSnapshot: '{"budget": 150000000, "code": "TERRASHIPFREE", "discount": 35000}',
+  },
+  {
+    id: 'log-104',
+    timestamp: '16/03/2026 09:15:00',
+    adminName: 'Master Administrator',
+    adminEmail: 'root.admin@flashcart.ai',
+    action: 'UPDATE_COMMISSION',
+    actionLabel: 'Điều chỉnh phí hoa hồng sàn',
+    targetEntity: 'Streetwear Matrix Lab (#shp-3)',
+    targetId: 'shp-3',
+    details: 'Tăng mức phí hoa hồng sàn từ 5.0% lên 7.0% do có tỷ lệ khiếu nại phát sinh 4.2%.',
+    ipAddress: '14.161.42.112 (TP. Hồ Chí Minh)',
+    device: 'Chrome 128 / macOS Sequoia',
+    severity: 'warning',
+    diffSnapshot: '{"commissionRate": 5.0 ➔ 7.0, "reason": "High complaint ratio"}',
+  },
+  {
+    id: 'log-105',
+    timestamp: '15/03/2026 14:28:19',
+    adminName: 'Master Administrator',
+    adminEmail: 'root.admin@flashcart.ai',
+    action: 'UNLOCK_USER',
+    actionLabel: 'Mở khóa khôi phục tài khoản',
+    targetEntity: 'User Nguyễn Văn An (usr-9)',
+    targetId: 'usr-9',
+    details: 'Khách hàng hoàn tất xác thực sinh trắc học CCCD gắn chip sau nghi vấn đăng nhập bất thường.',
+    ipAddress: '14.161.42.112 (TP. Hồ Chí Minh)',
+    device: 'Chrome 128 / macOS Sequoia',
+    severity: 'info',
+    diffSnapshot: '{"status": "suspended" ➔ "active", "restoredReason": "KYC biometric verified"}',
+  },
+];
+
+export const INITIAL_SUSPENSIONS: AccountSuspensionRecord[] = [
+  {
+    id: 'ban-01',
+    targetId: 'shp-5',
+    targetName: 'Fake Sneaker Clearance (Shop Bị Cấm)',
+    targetEmail: 'sneaker.giare@yahoo.com',
+    targetRole: 'seller',
+    reason: 'Kinh doanh hàng giả, hàng nhái nhãn hiệu Nike & adidas; tích lũy 15 điểm Sao Quả Tạ.',
+    duration: 'permanent',
+    suspendedAt: '18/03/2026 13:12',
+    suspendedBy: 'Master Administrator',
+    status: 'active_ban',
+    notes: 'Đã niêm phong gian hàng và chuyển hồ sơ sang bộ phận pháp chế.',
+  },
+  {
+    id: 'ban-02',
+    targetId: 'usr-buyer-88',
+    targetName: 'Vũ Đức Thịnh',
+    targetEmail: 'thinh.vuduc.spam@gmail.com',
+    targetRole: 'customer',
+    reason: 'Lạm dụng công cụ tự động hóa (Bot script) để cày mã giảm giá Freeship và gom hàng.',
+    duration: '30_days',
+    suspendedAt: '14/03/2026 08:30',
+    suspendedBy: 'Master Administrator',
+    status: 'active_ban',
+    notes: 'Tạm khóa 30 ngày để hủy các đơn hàng ảo và thu hồi voucher bất chính.',
+  },
+  {
+    id: 'ban-03',
+    targetId: 'usr-shipper-41',
+    targetName: 'Hoàng Văn Lực (Tài xế vi phạm)',
+    targetEmail: 'luc.hoang@express-courier.vn',
+    targetRole: 'shipper',
+    reason: 'Chậm nộp đối soát tiền mặt COD quá hạn định mức trên 10 triệu đồng liên tiếp 3 ngày.',
+    duration: '7_days',
+    suspendedAt: '16/03/2026 19:45',
+    suspendedBy: 'Master Administrator',
+    status: 'appealing',
+    notes: 'Đang xem xét đơn kháng cáo do gặp sự cố kỹ thuật ứng dụng ngân hàng khi chuyển VietQR.',
+  },
+];
+
+
+

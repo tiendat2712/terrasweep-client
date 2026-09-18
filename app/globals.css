@@ -1,24 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --primary: #0ea5e9;
-  --primary-hover: #0284c7;
-  --primary-light: #e0f2fe;
-  --primary-subtle: #f0f9ff;
+  --background: #f2f9fb;
+  --foreground: #193b49;
+  --primary: #bce6ee;
+  --primary-hover: #a4dce7;
+  --primary-light: #dff2f6;
+  --primary-subtle: #f0f9fb;
   --card-bg: #ffffff;
-  --card-border: #e2e8f0;
-  --surface-subtle: #f1f5f9;
-  --surface-muted: #cbd5e1;
-  --accent-blue: #0284c7;
-  --accent-sky: #0ea5e9;
+  --card-border: #d4e6eb;
+  --surface-subtle: #eaf4f7;
+  --surface-muted: #bfd6df;
+  --on-primary: #164555;
+  --focus-ring: #24748b;
+  --shadow-ocean: 0 4px 20px -8px rgb(35 88 105 / 12%);
+  --accent-blue: #206d85;
+  --accent-sky: #29839d;
   --accent-amber: #d97706;
-  --accent-cyan: #0891b2;
+  --accent-cyan: #24748b;
   --accent-emerald: #059669;
 }
 
 @theme inline {
+  --color-sky-50: #f0f9fb;
+  --color-sky-100: #dff2f6;
+  --color-sky-200: #bce6ee;
+  --color-sky-300: #91d1df;
+  --color-sky-400: #53a8bf;
+  --color-sky-500: #29839d;
+  --color-sky-600: #206d85;
+  --color-sky-700: #1c5a70;
+  --color-sky-800: #194b5d;
+  --color-sky-900: #193b49;
+  --color-sky-950: #102b36;
+  --color-slate-50: #f4f9fa;
+  --color-slate-100: #eaf2f5;
+  --color-slate-200: #d4e3e9;
+  --color-slate-300: #b7ccd5;
+  --color-slate-400: #6b8794;
+  --color-slate-500: #526f7d;
+  --color-slate-600: #415e6c;
+  --color-slate-700: #304f5e;
+  --color-slate-800: #244251;
+  --color-slate-900: #193b49;
+  --color-slate-950: #102b36;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
@@ -35,14 +60,7 @@
 }
 
 body {
-  background-color: #f8fafc;
-  background-image:
-    radial-gradient(at 10% 10%, rgba(224, 242, 254, 0.45) 0px, transparent 50%),
-    radial-gradient(at 90% 15%, rgba(186, 230, 253, 0.35) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, rgba(240, 249, 255, 0.6) 0px, transparent 60%),
-    radial-gradient(at 85% 85%, rgba(224, 242, 254, 0.4) 0px, transparent 50%),
-    radial-gradient(at 15% 90%, rgba(186, 230, 253, 0.3) 0px, transparent 50%);
-  background-attachment: fixed;
+  background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: clip;
@@ -71,9 +89,9 @@ body {
 
 /* Clean Card Elevations */
 .card-luxury {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 20px -2px rgba(2, 132, 199, 0.04);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-ocean);
 }
 
 .card-hover {
@@ -151,11 +169,11 @@ body {
 .shimmer-progress {
   background: linear-gradient(
     90deg,
-    #0284c7 0%,
-    #38bdf8 25%,
-    #bae6fd 50%,
-    #38bdf8 75%,
-    #0284c7 100%
+    #206d85 0%,
+    #29839d 25%,
+    #91d1df 50%,
+    #29839d 75%,
+    #206d85 100%
   );
   background-size: 200% 100%;
   animation: shimmerFlow 2.5s linear infinite;
@@ -183,9 +201,9 @@ body {
 .ambient-glow-sky::before {
   content: "";
   position: absolute;
-  top: -20%;
-  right: -10%;
-  width: 320px;
+  top: 0;
+  right: 0;
+  width: min(320px, 100%);
   height: 320px;
   background: radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, transparent 70%);
   border-radius: 9999px;
@@ -193,77 +211,195 @@ body {
   filter: blur(40px);
 }
 
-/* Card Gloss Sweep on Hover */
+/* Card Hover with Soft Paper Lift (Vintage Anime Aesthetic) */
 .gloss-sweep-card {
   position: relative;
-  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
 }
 
-.gloss-sweep-card::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    115deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.35) 50%,
-    transparent 100%
-  );
-  transform: skewX(-20deg);
-  transition: all 0.75s ease;
-  pointer-events: none;
-}
-
-.gloss-sweep-card:hover::after {
-  left: 150%;
-}
-
-/* Atmospheric Soft Ocean Surface Container */
+/* Clean Atmospheric Surface Containers (Pure Crisp White, Maximum Contrast) */
 .atmospheric-surface {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.98) 0%,
-    rgba(240, 249, 255, 0.45) 50%,
-    rgba(255, 255, 255, 0.95) 100%
-  );
-  border: 1px solid rgba(186, 230, 253, 0.7);
-  box-shadow: 0 4px 20px -2px rgba(2, 132, 199, 0.04);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-ocean);
 }
 
 .atmospheric-card {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(240, 249, 255, 0.35) 60%,
-    rgba(255, 255, 255, 0.98) 100%
-  );
-  border: 1px solid rgba(224, 242, 254, 0.9);
-  box-shadow: 0 4px 16px -2px rgba(2, 132, 199, 0.04);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-ocean);
 }
 
-/* Luminous Soft Ocean Primary Button */
+/* Soft Light Sky Blue Porcelain Button - Harmonized with TerraSweep Project Identity */
 .btn-ocean-primary {
-  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 55%, #0284c7 100%);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 4px 14px -1px rgba(14, 165, 233, 0.35), 0 2px 6px -1px rgba(14, 165, 233, 0.2);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  text-shadow: 0 1px 2px rgba(2, 132, 199, 0.25);
+  background: var(--primary) !important;
+  color: var(--on-primary) !important;
+  border: 1px solid #91c7d5 !important;
+  box-shadow: 0 2px 5px rgb(35 88 105 / 7%) !important;
+  transition: background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  text-shadow: none !important;
 }
 
 .btn-ocean-primary:hover {
-  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 55%, #0ea5e9 100%);
-  box-shadow: 0 6px 20px -1px rgba(14, 165, 233, 0.45), 0 3px 8px -1px rgba(14, 165, 233, 0.25);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: var(--primary-hover) !important;
+  box-shadow: var(--shadow-ocean) !important;
   transform: translateY(-1px);
 }
 
 .btn-ocean-primary:active {
-  transform: scale(0.97);
+  transform: scale(0.985);
+  box-shadow: none !important;
 }
 
+.btn-ocean-primary :where(svg, span) { color: inherit; }
+button.btn-ocean-primary, a.btn-ocean-primary { min-height: 44px; }
+.btn-ocean-primary:disabled { opacity: .55; transform: none; cursor: not-allowed; }
 
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--focus-ring) !important;
+  outline-offset: 3px;
+}
 
+/* Shared light surfaces; status colors remain semantic. */
+.ocean-surface {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+  box-shadow: var(--shadow-ocean);
+}
+.ocean-feature {
+  background: linear-gradient(120deg, var(--primary-light), var(--primary-subtle));
+  color: var(--foreground);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-ocean);
+}
+.ocean-feature :where(.text-white, .text-sky-100, .text-sky-200, .text-sky-300, .text-indigo-300) {
+  color: var(--foreground);
+}
+.ocean-feature :where(.text-white\/60, .text-white\/70, .text-white\/80, .text-slate-300, .text-slate-400) {
+  color: var(--color-slate-600);
+}
+.ocean-feature :where(.bg-sky-500, .bg-sky-600) { color: white; }
+
+@layer base {
+  :where(button, a, input, select, textarea, [tabindex]):focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
+  :where(button, a) { touch-action: manipulation; }
+  :where(input, select, textarea) { accent-color: var(--focus-ring); }
+  :where(h1, h2, h3) { text-wrap: balance; }
+  :where(section[id], [tabindex]) { scroll-margin-top: 7rem; }
+  ::selection { background: var(--primary); color: var(--foreground); }
+}
+
+@media (max-width: 640px) {
+  input:not([type="checkbox"]):not([type="radio"]), select, textarea { font-size: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ========================================================================= */
+/* ATMOSPHERIC PRODUCT CARD MOTION SYSTEM (IMPECCABLE CRAFT STANDARD)        */
+/* ========================================================================= */
+@keyframes cardEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-card-entrance {
+  animation: cardEntrance 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-card-entrance {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ========================================================================= */
+/* FLY-TO-HEADER CELEBRATORY IMPACT MOTION SYSTEM                            */
+/* ========================================================================= */
+@keyframes headerButtonBounce {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.16); }
+  55% { transform: scale(0.96); }
+  75% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+@keyframes badgeNumberPop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.22); }
+  70% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+
+@keyframes floatPlusOne {
+  0% { opacity: 0; transform: translate(-50%, 4px) scale(0.7); }
+  25% { opacity: 1; transform: translate(-50%, -8px) scale(1.08); }
+  75% { opacity: 1; transform: translate(-50%, -20px) scale(1.0); }
+  100% { opacity: 0; transform: translate(-50%, -30px) scale(0.85); }
+}
+
+@keyframes arrivalBloom {
+  0% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(0.5);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.65);
+    filter: blur(8px);
+  }
+}
+
+@keyframes sparkleGlint {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.2) rotate(0deg);
+  }
+  30% {
+    opacity: 1;
+    transform: translate(calc(var(--sparkle-x) * 0.55), calc(var(--sparkle-y) * 0.55)) scale(1.15) rotate(25deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--sparkle-x), var(--sparkle-y)) scale(0.35) rotate(90deg);
+  }
+}
+
+.animate-header-bounce {
+  animation: headerButtonBounce 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-badge-pop {
+  animation: badgeNumberPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-float-plus-one {
+  animation: floatPlusOne 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-arrival-bloom {
+  animation: arrivalBloom 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-sparkle-glint {
+  animation: sparkleGlint 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

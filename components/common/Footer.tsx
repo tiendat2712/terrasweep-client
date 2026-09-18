@@ -67,7 +67,7 @@ export const Footer: React.FC = () => {
       <div id="why-us-section" className="w-full border-b border-sky-100/80 bg-gradient-to-b from-sky-50/40 via-sky-50/15 to-transparent backdrop-blur-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <div className="flex items-start gap-4 p-5 sm:p-6 rounded-[28px] bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 shadow-sm shadow-sky-500/5 hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 hover:-translate-y-1 transition-all duration-300 group">
+            <div className="flex items-start gap-4 p-5 sm:p-6 rounded-[28px] ocean-surface border border-sky-100/90 shadow-sm shadow-sky-500/5 hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 hover:-translate-y-1 transition-all duration-300 group">
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-50 to-sky-100 text-sky-600 border border-sky-200/80 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-110 group-hover:bg-sky-500 group-hover:text-white transition-all duration-300">
                 <Zap className="w-5 h-5" />
               </div>
@@ -77,7 +77,7 @@ export const Footer: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-5 sm:p-6 rounded-[28px] bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 shadow-sm shadow-sky-500/5 hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 hover:-translate-y-1 transition-all duration-300 group">
+            <div className="flex items-start gap-4 p-5 sm:p-6 rounded-[28px] ocean-surface border border-sky-100/90 shadow-sm shadow-sky-500/5 hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 hover:-translate-y-1 transition-all duration-300 group">
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-50 to-sky-100 text-sky-600 border border-sky-200/80 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-110 group-hover:bg-sky-500 group-hover:text-white transition-all duration-300">
                 <ShieldCheck className="w-5 h-5" />
               </div>
@@ -87,7 +87,7 @@ export const Footer: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-5 sm:p-6 rounded-[28px] bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 shadow-sm shadow-sky-500/5 hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 hover:-translate-y-1 transition-all duration-300 group">
+            <div className="flex items-start gap-4 p-5 sm:p-6 rounded-[28px] ocean-surface border border-sky-100/90 shadow-sm shadow-sky-500/5 hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 hover:-translate-y-1 transition-all duration-300 group">
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-50 to-sky-100 text-sky-600 border border-sky-200/80 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-110 group-hover:bg-sky-500 group-hover:text-white transition-all duration-300">
                 <RotateCcw className="w-5 h-5" />
               </div>
@@ -97,7 +97,7 @@ export const Footer: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-5 sm:p-6 rounded-[28px] bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 shadow-sm shadow-sky-500/5 hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 hover:-translate-y-1 transition-all duration-300 group">
+            <div className="flex items-start gap-4 p-5 sm:p-6 rounded-[28px] ocean-surface border border-sky-100/90 shadow-sm shadow-sky-500/5 hover:border-sky-300 hover:shadow-md hover:shadow-sky-500/10 hover:-translate-y-1 transition-all duration-300 group">
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-50 to-sky-100 text-sky-600 border border-sky-200/80 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-110 group-hover:bg-sky-500 group-hover:text-white transition-all duration-300">
                 <Headphones className="w-5 h-5" />
               </div>
@@ -120,17 +120,18 @@ export const Footer: React.FC = () => {
             {/* Col 1: Brand Philosophy & Concierge Contact (Oceanic Glass Alignment) */}
             <div className="space-y-4">
               <div className="space-y-2.5">
-                <div className="flex items-center gap-2.5 sm:gap-3">
-                  <div className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center shrink-0 overflow-hidden rounded-xl bg-gradient-to-br from-sky-50 to-sky-100/50 border border-sky-100/80 shadow-2xs">
+                <div className="flex items-center gap-2.5 sm:gap-3 cursor-default select-none caret-transparent">
+                  <div className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center shrink-0 overflow-hidden rounded-xl bg-gradient-to-br from-sky-50 to-sky-100/50 border border-sky-100/80 shadow-2xs pointer-events-none select-none">
                     <img
                       src="/images/brand-logo.webp"
                       alt="TerraSweep"
-                      className="w-full h-full object-contain mix-blend-multiply scale-140"
+                      draggable={false}
+                      className="w-full h-full object-contain mix-blend-multiply scale-140 pointer-events-none select-none"
                     />
                   </div>
-                  <h3 className="text-2xl sm:text-[26px] font-black tracking-[-0.03em] font-sans">
-                    <span className="text-slate-900">Terra</span>
-                    <span className="bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 bg-clip-text text-transparent">Sweep</span>
+                  <h3 className="text-2xl sm:text-[26px] font-black tracking-[-0.03em] font-sans select-none caret-transparent">
+                    <span className="text-slate-900 select-none">Terra</span>
+                    <span className="bg-gradient-to-r from-sky-500 via-sky-600 to-sky-700 bg-clip-text text-transparent select-none">Sweep</span>
                   </h3>
                 </div>
                 <p className="text-xs text-slate-500 leading-relaxed">
@@ -301,7 +302,7 @@ export const Footer: React.FC = () => {
                           <circle cx="12" cy="12" r="2" />
                         </svg>
                       </div>
-                      <span className="font-sans font-black text-xs text-[#0F172A] tracking-wider leading-none select-none">
+                      <span className="font-sans font-black text-xs text-foreground tracking-wider leading-none select-none">
                         COD
                       </span>
                     </div>
@@ -405,16 +406,16 @@ export const Footer: React.FC = () => {
               type="button"
               suppressHydrationWarning
               onClick={() => setIsChatOpen(true)}
-              className="btn-ocean-primary flex items-center gap-2.5 px-4 py-2.5 rounded-full font-bold text-xs shadow-2xl cursor-pointer"
+              className="btn-ocean-primary flex items-center gap-2.5 px-4.5 py-2.5 rounded-full font-bold text-xs shadow-[0_8px_24px_-4px_rgba(2,132,199,0.25)] hover:shadow-[0_12px_28px_-4px_rgba(2,132,199,0.32)] active:scale-95 transition-all cursor-pointer"
             >
-              <MessageSquare className="w-4 h-4 fill-white text-sky-600" />
+              <MessageSquare className="w-4 h-4 text-white" />
               <span>{t('footer.chatWidgetLabel')}</span>
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             </button>
           ) : (
-            <div className="w-80 sm:w-96 rounded-[28px] bg-gradient-to-b from-white via-sky-50/20 to-white/95 border border-sky-200/90 shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 ambient-glow-sky">
+            <div className="w-80 sm:w-96 max-w-[calc(100vw-3rem)] rounded-[28px] ocean-surface border border-sky-200/90 shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 ambient-glow-sky">
               {/* Chat Header */}
-              <div className="p-4 bg-gradient-to-r from-sky-500 via-sky-600 to-blue-700 text-white flex items-center justify-between">
+              <div className="p-4 bg-gradient-to-r from-sky-500 via-sky-600 to-sky-700 text-white flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
                   <div>

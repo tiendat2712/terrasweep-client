@@ -154,7 +154,7 @@ export const TopSearchesSection: React.FC<TopSearchesSectionProps> = ({
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
       }`}
     >
-      <div className="relative rounded-[32px] bg-gradient-to-b from-white via-cyan-50/20 to-sky-50/15 border border-cyan-100/80 p-6 sm:p-8 shadow-sm overflow-hidden ambient-glow-sky">
+      <div className="relative rounded-[32px] bg-white border border-cyan-100/80 p-6 sm:p-8 shadow-sm overflow-hidden ambient-glow-sky">
         {/* Subtle decorative background spots */}
         <div className="absolute -top-20 -left-20 w-72 h-72 bg-cyan-400/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-sky-300/15 rounded-full blur-3xl pointer-events-none" />
@@ -177,7 +177,7 @@ export const TopSearchesSection: React.FC<TopSearchesSectionProps> = ({
               <span className="bg-gradient-to-r from-slate-900 via-sky-950 to-sky-900 bg-clip-text text-transparent">
                 {language === 'vi' ? 'Tìm Kiếm ' : 'Most Coveted & '}
               </span>
-              <span className="font-serif italic font-normal bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
+              <span className="font-serif italic font-normal bg-gradient-to-r from-sky-600 to-sky-700 bg-clip-text text-transparent">
                 {language === 'vi' ? 'Hàng Đầu' : 'Top Trends'}
               </span>
             </h2>
@@ -284,7 +284,7 @@ export const TopSearchesSection: React.FC<TopSearchesSectionProps> = ({
                     transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
                     transitionDelay: isVisible ? `${staggerDelay}ms` : '0ms',
                   }}
-                  className={`w-[210px] sm:w-[230px] shrink-0 group gloss-sweep-card rounded-[28px] bg-white/95 backdrop-blur-md border border-cyan-100/90 p-4 hover:border-cyan-300 hover:shadow-2xl hover:shadow-cyan-500/15 hover:-translate-y-2.5 transition-all duration-400 flex flex-col justify-between cursor-pointer relative will-change-transform ${
+                  className={`w-[210px] sm:w-[230px] shrink-0 group gloss-sweep-card rounded-[24px] bg-white border border-cyan-100/90 p-4 hover:border-cyan-300 hover:shadow-[0_12px_28px_-6px_rgba(8,145,178,0.12)] hover:-translate-y-1.5 transition-all duration-400 flex flex-col justify-between cursor-pointer relative will-change-transform ${
                     isVisible
                       ? 'opacity-100 translate-y-0 scale-100'
                       : 'opacity-0 translate-y-8 scale-[0.96]'
@@ -292,7 +292,7 @@ export const TopSearchesSection: React.FC<TopSearchesSectionProps> = ({
                 >
                   <div>
                     {/* Image Container with Luxury Floating Rank & Integrated Sales Ribbon */}
-                    <div className="relative aspect-square w-full rounded-[24px] bg-gradient-to-b from-cyan-50/40 via-white to-sky-50/20 border border-cyan-100/60 p-4 mb-3.5 overflow-hidden flex items-center justify-center transition-all duration-500 group-hover:bg-cyan-50/50">
+                    <div className="relative aspect-square w-full rounded-[20px] bg-gradient-to-b from-cyan-50/25 via-white to-sky-50/15 border border-cyan-100/50 p-4 mb-3.5 overflow-hidden flex items-center justify-center transition-all duration-500 group-hover:bg-cyan-50/40">
                       <img
                         src={item.image}
                         alt={language === 'vi' ? item.nameVi : item.nameEn}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { CartItem } from '@/types';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { X, Trash2, ShoppingBag, ArrowRight, Tag, Truck, Loader2 } from 'lucide-react';
@@ -56,20 +57,15 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     }
   };
 
+  const router = useRouter();
+
   const handlePlaceOrder = () => {
     setIsCheckingOut(true);
     setTimeout(() => {
-      onCheckout({
-        customerName,
-        customerPhone,
-        shippingAddress,
-        paymentMethod,
-        shippingFee,
-        discount: appliedDiscount,
-      });
       setIsCheckingOut(false);
       onClose();
-    }, 600);
+      router.push('/checkout');
+    }, 250);
   };
 
   return (
@@ -77,7 +73,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
       <div className="absolute inset-0" onClick={onClose} />
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-gradient-to-b from-white via-sky-50/20 to-white/95 border-l border-sky-100 shadow-2xl flex flex-col justify-between relative overflow-hidden ambient-glow-sky">
+        <div className="w-screen max-w-md ocean-surface border-l border-sky-100 shadow-2xl flex flex-col justify-between relative overflow-hidden ambient-glow-sky">
           {/* Drawer Header */}
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -85,7 +81,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <ShoppingBag className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-[#0F172A]">{t('cart.title')}</h3>
+                <h3 className="text-sm font-bold text-foreground">{t('cart.title')}</h3>
                 <span className="text-[11px] text-slate-400 font-mono">
                   {t('cart.itemsCount', { count: cartItems.length })}
                 </span>
@@ -121,7 +117,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   />
 
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-xs font-bold text-[#0F172A] truncate">
+                    <h4 className="text-xs font-bold text-foreground truncate">
                       {item.product.name}
                     </h4>
                     <span className="text-[10px] text-slate-500 block mt-0.5">
@@ -149,7 +145,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       >
                         −
                       </button>
-                      <span className="px-2 font-bold text-[#0F172A]">{item.quantity}</span>
+                      <span className="px-2 font-bold text-foreground">{item.quantity}</span>
                       <button
                         onClick={() => onUpdateQuantity(item.product.id, item.quantity + 1)}
                         className="px-1.5 text-slate-600 hover:text-sky-600 font-bold cursor-pointer"
@@ -167,7 +163,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 {/* Minimal Voucher Box */}
                 <div className="p-4 rounded-2xl bg-sky-50/40 border border-sky-100 space-y-2.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-[#0F172A] flex items-center gap-1.5">
+                    <span className="font-bold text-foreground flex items-center gap-1.5">
                       <Tag className="w-3.5 h-3.5 text-sky-600" />
                       {t('cart.promoCode')}
                     </span>
@@ -195,7 +191,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                 {/* Shipping Method Pills */}
                 <div className="space-y-2 text-xs">
-                  <label className="font-bold text-[#0F172A] flex items-center gap-1.5">
+                  <label className="font-bold text-foreground flex items-center gap-1.5">
                     <Truck className="w-3.5 h-3.5 text-sky-600" />
                     {t('cart.deliveryOption')}
                   </label>
@@ -208,7 +204,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-sky-200'
                       }`}
                     >
-                      <div className="font-bold text-xs text-[#0F172A]">{t('cart.expressDelivery')}</div>
+                      <div className="font-bold text-xs text-foreground">{t('cart.expressDelivery')}</div>
                       <div className="text-[10px] text-sky-700 font-mono mt-0.5">25.000₫</div>
                     </button>
                     <button
@@ -219,7 +215,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-sky-200'
                       }`}
                     >
-                      <div className="font-bold text-xs text-[#0F172A]">{t('cart.standardDelivery')}</div>
+                      <div className="font-bold text-xs text-foreground">{t('cart.standardDelivery')}</div>
                       <div className="text-[10px] text-emerald-700 font-mono mt-0.5">{t('cart.standardFree')}</div>
                     </button>
                   </div>
@@ -227,7 +223,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                 {/* Shipping Details */}
                 <div className="space-y-2.5 pt-3 border-t border-slate-100 text-xs">
-                  <label className="font-bold text-[#0F172A] block">{t('cart.shippingInfoTitle')}</label>
+                  <label className="font-bold text-foreground block">{t('cart.shippingInfoTitle')}</label>
                   <input
                     type="text"
                     value={customerName}
@@ -253,19 +249,19 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="space-y-1.5 text-xs">
                 <div className="flex justify-between text-slate-500">
                   <span>{t('cart.subtotal')}</span>
-                  <span className="font-mono text-slate-800">{subtotal.toLocaleString('vi-VN')}₫</span>
+                  <span className="font-mono tabular-nums text-slate-800">{subtotal.toLocaleString('vi-VN')}₫</span>
                 </div>
                 <div className="flex justify-between text-slate-500">
                   <span>{t('cart.discount')}</span>
-                  <span className="font-mono text-emerald-700">-{appliedDiscount.toLocaleString('vi-VN')}₫</span>
+                  <span className="font-mono tabular-nums text-emerald-700">-{appliedDiscount.toLocaleString('vi-VN')}₫</span>
                 </div>
                 <div className="flex justify-between text-slate-500">
                   <span>{t('cart.shippingFee')}</span>
-                  <span className="font-mono text-slate-800">+{shippingFee.toLocaleString('vi-VN')}₫</span>
+                  <span className="font-mono tabular-nums text-slate-800">+{shippingFee.toLocaleString('vi-VN')}₫</span>
                 </div>
-                <div className="flex justify-between text-sm font-bold text-[#0F172A] pt-2 border-t border-slate-200">
+                <div className="flex justify-between text-sm font-bold text-foreground pt-2 border-t border-slate-200">
                   <span>{t('cart.total')}</span>
-                  <span className="text-lg font-mono font-black text-sky-600">
+                  <span className="text-lg font-mono font-black tabular-nums text-sky-600">
                     {total.toLocaleString('vi-VN')}₫
                   </span>
                 </div>
@@ -276,7 +272,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 onClick={handlePlaceOrder}
                 disabled={isCheckingOut}
                 aria-busy={isCheckingOut}
-                className="w-full py-3.5 rounded-full btn-ocean-primary font-bold text-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-sky-500/20"
+                className="w-full py-3.5 rounded-full btn-ocean-primary font-bold text-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all"
               >
                 {isCheckingOut ? (
                   <div className="flex items-center gap-2">

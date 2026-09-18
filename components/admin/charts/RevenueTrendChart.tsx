@@ -108,7 +108,7 @@ export const RevenueTrendChart: React.FC = () => {
   const totalPeriodOrders = activeData.reduce((sum, d) => sum + d.orders, 0);
 
   return (
-    <div className="rounded-[32px] bg-gradient-to-b from-white via-sky-50/20 to-white/95 border border-sky-100/90 p-6 sm:p-7 shadow-sm space-y-6 relative overflow-hidden ambient-glow-sky">
+    <div className="rounded-[32px] ocean-surface border border-sky-100/90 p-6 sm:p-7 shadow-sm space-y-6 relative overflow-hidden ambient-glow-sky">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
         <div className="space-y-1">
@@ -116,7 +116,7 @@ export const RevenueTrendChart: React.FC = () => {
             <div className="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
               <TrendingUp className="w-4 h-4" />
             </div>
-            <h3 className="text-base sm:text-lg font-black text-[#0F172A] tracking-tight font-sans">
+            <h3 className="text-base sm:text-lg font-black text-foreground tracking-tight font-sans">
               {language === 'vi' ? 'Biểu Đồ Doanh Thu & Đơn Hàng' : 'Revenue & Order Flow'}
             </h3>
           </div>
@@ -161,15 +161,15 @@ export const RevenueTrendChart: React.FC = () => {
               left: `${(points[hoveredIndex].x / svgWidth) * 100}%`,
               top: `${(points[hoveredIndex].y / svgHeight) * 100 - 15}%`,
             }}
-            className="absolute -translate-x-1/2 -translate-y-full z-20 pointer-events-none p-2.5 rounded-xl bg-slate-900 text-white shadow-xl shadow-sky-950/20 border border-slate-700/60 text-left font-sans whitespace-nowrap animate-in fade-in zoom-in-95"
+            className="absolute -translate-x-1/2 -translate-y-full z-20 pointer-events-none p-2.5 rounded-xl bg-slate-950/95 text-white shadow-xl shadow-sky-950/40 border border-sky-500/40 text-left font-sans whitespace-nowrap animate-in fade-in zoom-in-95 backdrop-blur-md"
           >
-            <div className="text-[10px] font-mono uppercase text-sky-400">
+            <div className="text-[10px] font-mono uppercase text-sky-400 font-bold">
               {points[hoveredIndex].item.label}
             </div>
-            <div className="text-xs font-black text-white font-mono mt-0.5">
+            <div className="text-xs font-black text-white font-mono tabular-nums mt-0.5">
               {formatVND(points[hoveredIndex].item.revenue)}
             </div>
-            <div className="text-[10px] text-slate-300 font-mono mt-0.5">
+            <div className="text-[10px] text-slate-300 font-mono tabular-nums mt-0.5">
               {points[hoveredIndex].item.orders} {language === 'vi' ? 'đơn hàng' : 'orders'}
             </div>
           </div>
@@ -281,7 +281,7 @@ export const RevenueTrendChart: React.FC = () => {
           <div className="text-[10px] font-mono uppercase text-sky-800 font-bold">
             {language === 'vi' ? 'TỔNG GMV GIAO DỊCH' : 'TOTAL GMV VOLUME'}
           </div>
-          <div className="text-base font-black text-[#0F172A] font-mono mt-1">
+          <div className="text-base font-black text-foreground font-mono mt-1">
             {formatVND(totalPeriodRevenue)}
           </div>
         </div>
@@ -290,7 +290,7 @@ export const RevenueTrendChart: React.FC = () => {
           <div className="text-[10px] font-mono uppercase text-sky-800 font-bold">
             {language === 'vi' ? 'LƯỢNG ĐƠN HOÀN TẤT' : 'TOTAL COMPLETED ORDERS'}
           </div>
-          <div className="text-base font-black text-[#0F172A] font-mono mt-1">
+          <div className="text-base font-black text-foreground font-mono mt-1">
             {totalPeriodOrders.toLocaleString()} {language === 'vi' ? 'đơn' : 'orders'}
           </div>
         </div>

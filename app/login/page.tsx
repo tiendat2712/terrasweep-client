@@ -158,24 +158,30 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen relative flex flex-col justify-between bg-[#FCFDFE] overflow-x-hidden selection:bg-sky-500 selection:text-white font-sans">
-      {/* ========================================================================= */}
-      {/* 1. PANORAMIC ATMOSPHERIC COASTAL BACKDROP (MATCHES REFERENCE LAYOUT)       */}
-      {/* ========================================================================= */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-[46vh] sm:h-[52vh] lg:h-[58vh] bg-bottom bg-no-repeat bg-cover pointer-events-none z-0 select-none opacity-90 sm:opacity-100 transition-opacity"
-        style={{
-          backgroundImage: `url('/images/login-coastal-bg.jpg')`,
-          maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 100%)',
-          WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 100%)',
-        }}
-      />
+    <div className="min-h-screen relative flex flex-col justify-between bg-transparent overflow-x-hidden selection:bg-sky-500 selection:text-white font-sans">
+      {/* 1. CRYSTAL-CLEAR PANORAMIC ARTWORK WITH 4-CORNER OCEAN BLUR & MIST */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
+        <div
+          className="absolute inset-0 bg-bottom bg-no-repeat bg-cover pointer-events-none select-none z-0"
+          style={{
+            backgroundImage: `url('/images/login-coastal-bg.jpg')`,
+          }}
+        />
+        <div
+          className="absolute inset-0 pointer-events-none z-1"
+          style={{
+            background: `
+              radial-gradient(ellipse 45% 35% at 0% 0%, rgba(56, 189, 248, 0.08) 0%, rgba(14, 165, 233, 0.02) 40%, transparent 80%),
+              radial-gradient(ellipse 45% 35% at 100% 0%, rgba(56, 189, 248, 0.06) 0%, rgba(14, 165, 233, 0.015) 40%, transparent 80%),
+              radial-gradient(ellipse 45% 35% at 0% 100%, rgba(14, 165, 233, 0.09) 0%, rgba(2, 132, 199, 0.02) 40%, transparent 80%),
+              radial-gradient(ellipse 45% 35% at 100% 100%, rgba(56, 189, 248, 0.06) 0%, rgba(14, 165, 233, 0.015) 40%, transparent 80%)
+            `,
+          }}
+        />
+      </div>
 
-      {/* Subtle Ambient Water Glow on Top Edge */}
-      <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-sky-50/40 via-transparent to-transparent pointer-events-none z-0" />
-
       {/* ========================================================================= */}
-      {/* 2. MINIMALIST TOP NAV BAR (STRICT MATCH WITH REFERENCE: BACK | LOGO | SUP)*/}
+      {/* MINIMALIST TOP NAV BAR (BACK | BRAND LOGO | SUPPORT & LANGUAGE)           */}
       {/* ========================================================================= */}
       <header className="w-full max-w-7xl mx-auto px-5 sm:px-8 py-6 flex items-center justify-between relative z-20">
         {/* Left: Back Link */}
@@ -190,18 +196,19 @@ export default function LoginPage() {
         {/* Center: Brand Logo Lockup */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 cursor-pointer select-none group focus:outline-none"
+          className="flex items-center gap-2.5 cursor-default select-none caret-transparent group focus:outline-none"
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-50 to-sky-100/70 border border-sky-200/80 flex items-center justify-center overflow-hidden shadow-2xs group-hover:border-sky-300 transition-all">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-50 to-sky-100/70 border border-sky-200/80 flex items-center justify-center overflow-hidden shadow-2xs group-hover:border-sky-300 transition-all pointer-events-none select-none">
             <img
               src="/images/brand-logo.webp"
               alt="TerraSweep"
-              className="w-full h-full object-contain mix-blend-multiply scale-140 group-hover:scale-150 transition-transform duration-300"
+              draggable={false}
+              className="w-full h-full object-contain mix-blend-multiply scale-140 group-hover:scale-150 transition-transform duration-300 pointer-events-none select-none"
             />
           </div>
-          <span className="text-xl sm:text-2xl font-black tracking-[-0.03em] font-sans">
-            <span className="text-slate-900">Terra</span>
-            <span className="bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 bg-clip-text text-transparent">
+          <span className="text-xl sm:text-2xl font-black tracking-[-0.03em] font-sans select-none caret-transparent">
+            <span className="text-slate-900 select-none">Terra</span>
+            <span className="bg-gradient-to-r from-sky-500 via-sky-600 to-sky-700 bg-clip-text text-transparent select-none">
               Sweep
             </span>
           </span>
@@ -210,7 +217,7 @@ export default function LoginPage() {
         {/* Right: Language Pill & Contact Support */}
         <div className="flex items-center gap-3">
           {/* [ VI | EN ] Switcher */}
-          <div className="flex items-center rounded-full bg-slate-100 p-0.5 text-[10px] font-mono font-bold border border-slate-200 select-none">
+          <div className="flex items-center rounded-full bg-white/80 backdrop-blur-xs p-0.5 text-[10px] font-mono font-bold border border-sky-100 shadow-2xs select-none">
             <button
               onClick={() => setLanguage('vi')}
               className={`px-2 py-0.5 rounded-full transition-all cursor-pointer ${
@@ -246,7 +253,7 @@ export default function LoginPage() {
       {/* 3. CENTERED FLOATING AUTH CARD (ELEGANT EDITORIAL FORM)                    */}
       {/* ========================================================================= */}
       <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-10 relative z-10">
-        <div className="w-full max-w-[430px] bg-white/95 backdrop-blur-xl border border-slate-200/90 shadow-2xl shadow-slate-900/8 rounded-[28px] p-7 sm:p-9 transition-all">
+        <div className="w-full max-w-[440px] bg-white/95 backdrop-blur-2xl border border-white/90 shadow-2xl shadow-slate-950/8 rounded-[32px] p-7 sm:p-9 transition-all relative z-10">
           {/* Headline & Subtitle (Serif luxury touch matching reference) */}
           <div className="text-left space-y-1">
             <h1 className="text-2xl sm:text-[28px] font-serif font-bold text-slate-900 tracking-tight leading-tight">
@@ -275,7 +282,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => handleSocialLogin('x')}
-              className="h-11 rounded-xl border border-slate-200/90 hover:border-slate-400 bg-white hover:bg-slate-50 flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 group focus-visible:ring-2 focus-visible:ring-sky-500"
+              className="h-11 rounded-xl border border-sky-100/90 hover:border-sky-300 bg-white/80 hover:bg-sky-50/50 flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 group focus-visible:ring-2 focus-visible:ring-sky-400"
               title="X (Twitter)"
               aria-label="Continue with X"
             >
@@ -292,7 +299,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => handleSocialLogin('apple')}
-              className="h-11 rounded-xl border border-slate-200/90 hover:border-slate-400 bg-white hover:bg-slate-50 flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 group focus-visible:ring-2 focus-visible:ring-sky-500"
+              className="h-11 rounded-xl border border-sky-100/90 hover:border-sky-300 bg-white/80 hover:bg-sky-50/50 flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 group focus-visible:ring-2 focus-visible:ring-sky-400"
               title="Apple ID"
               aria-label="Continue with Apple"
             >
@@ -308,7 +315,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => handleSocialLogin('google')}
-              className="h-11 rounded-xl border border-slate-200/90 hover:border-slate-400 bg-white hover:bg-slate-50 flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 group focus-visible:ring-2 focus-visible:ring-sky-500"
+              className="h-11 rounded-xl border border-sky-100/90 hover:border-sky-300 bg-white/80 hover:bg-sky-50/50 flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 group focus-visible:ring-2 focus-visible:ring-sky-400"
               title="Google Account"
               aria-label="Continue with Google"
             >
@@ -339,23 +346,23 @@ export default function LoginPage() {
           {/* Minimalist Divider */}
           <div className="relative my-5 text-center">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200/90" />
+              <div className="w-full border-t border-sky-100/90" />
             </div>
-            <span className="relative bg-white/95 px-3 text-xs text-slate-400 font-medium font-sans">
+            <span className="relative bg-white/90 px-3 text-xs text-slate-400 font-medium font-sans">
               {language === 'vi' ? 'hoặc' : 'or'}
             </span>
           </div>
 
           {/* Alerts */}
           {errorMessage && (
-            <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold animate-in fade-in flex items-center gap-2">
+            <div className="mb-4 p-3 rounded-xl bg-rose-50/90 border border-rose-200 text-rose-700 text-xs font-semibold animate-in fade-in flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
               <span>{errorMessage}</span>
             </div>
           )}
 
           {successMessage && (
-            <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold animate-in fade-in flex items-center gap-2">
+            <div className="mb-4 p-3 rounded-xl bg-emerald-50/90 border border-emerald-200 text-emerald-800 text-xs font-semibold animate-in fade-in flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>{successMessage}</span>
             </div>
@@ -374,7 +381,7 @@ export default function LoginPage() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder={language === 'vi' ? 'Nguyễn Văn A' : 'Alex Mercer'}
-                  className="w-full h-11 px-3.5 rounded-xl border border-slate-200/90 bg-white text-slate-900 text-sm placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition-all font-sans"
+                  className="w-full h-11 px-3.5 rounded-xl border border-sky-100/90 bg-white/95 text-slate-900 text-sm placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-400/20 transition-all font-sans"
                 />
               </div>
             )}
@@ -390,7 +397,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
-                className="w-full h-11 px-3.5 rounded-xl border border-slate-200/90 bg-white text-slate-900 text-sm placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition-all font-sans"
+                className="w-full h-11 px-3.5 rounded-xl border border-sky-100/90 bg-white/95 text-slate-900 text-sm placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-400/20 transition-all font-sans"
               />
             </div>
 
@@ -417,7 +424,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full h-11 px-3.5 pr-10 rounded-xl border border-slate-200/90 bg-white text-slate-900 text-sm placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition-all font-sans"
+                  className="w-full h-11 px-3.5 pr-10 rounded-xl border border-sky-100/90 bg-white/95 text-slate-900 text-sm placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-400/20 transition-all font-sans"
                 />
                 <button
                   type="button"
@@ -430,12 +437,12 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Primary Action Button: Continue with Email */}
+            {/* Primary Action Button: Studio Ghibli Soft Watercolor Button */}
             <button
               type="submit"
               disabled={isLoading}
               aria-busy={isLoading}
-              className="w-full h-11 sm:h-12 mt-5 rounded-xl bg-[#0F172A] hover:bg-sky-700 active:bg-sky-800 text-white font-semibold text-sm shadow-md hover:shadow-sky-500/20 active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed select-none focus-visible:ring-2 focus-visible:ring-sky-500"
+              className="w-full h-12 mt-5 rounded-full btn-ocean-primary font-bold text-sm tracking-wide active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed select-none focus-visible:ring-2 focus-visible:ring-sky-400"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
@@ -467,7 +474,7 @@ export default function LoginPage() {
                     setActiveTab('register');
                     setErrorMessage('');
                   }}
-                  className="font-bold text-slate-900 hover:text-sky-600 transition-colors cursor-pointer"
+                  className="font-bold text-sky-700 hover:text-sky-900 transition-colors cursor-pointer"
                 >
                   {language === 'vi' ? 'Đăng ký ngay' : 'Sign up'}
                 </button>
@@ -481,7 +488,7 @@ export default function LoginPage() {
                     setActiveTab('login');
                     setErrorMessage('');
                   }}
-                  className="font-bold text-slate-900 hover:text-sky-600 transition-colors cursor-pointer"
+                  className="font-bold text-sky-700 hover:text-sky-900 transition-colors cursor-pointer"
                 >
                   {language === 'vi' ? 'Đăng nhập' : 'Log in'}
                 </button>
@@ -490,8 +497,8 @@ export default function LoginPage() {
           </div>
 
           {/* Discreet 1-Click Role Presets for Demo Testing */}
-          <div className="mt-6 pt-5 border-t border-slate-100/90 text-center">
-            <span className="text-[10.5px] text-slate-400 font-mono uppercase tracking-wider block mb-2.5">
+          <div className="mt-6 pt-5 border-t border-sky-100/90 text-center">
+            <span className="text-[10.5px] text-sky-800/70 font-mono uppercase tracking-wider block mb-2.5 font-bold">
               {language === 'vi' ? '⚡ Tài khoản mẫu thử nghiệm (1-Click)' : '⚡ Instant Demo Role Access'}
             </span>
             <div className="grid grid-cols-4 gap-1.5">
@@ -505,10 +512,10 @@ export default function LoginPage() {
                     type="button"
                     onClick={() => handleSelectPreset(preset.user, preset.role)}
                     onDoubleClick={() => handleDirectDemoLogin(preset.user, preset.role)}
-                    className={`py-2 px-1.5 rounded-lg text-[10.5px] font-semibold border transition-all cursor-pointer flex flex-col items-center gap-1 ${
+                    className={`py-2 px-1.5 rounded-xl text-[10.5px] font-semibold border transition-all cursor-pointer flex flex-col items-center gap-1.5 ${
                       isCurrent
-                        ? 'border-sky-400 bg-sky-50 text-sky-900 font-bold shadow-2xs'
-                        : 'border-slate-200/80 bg-slate-50/70 hover:bg-white text-slate-600 hover:text-sky-700 hover:border-sky-200'
+                        ? 'border-sky-400 bg-sky-50 text-sky-950 font-bold shadow-xs'
+                        : 'border-sky-100/80 bg-white/80 hover:bg-sky-50/70 text-slate-700 hover:text-sky-800 hover:border-sky-300 shadow-2xs'
                     }`}
                     title={`${
                       language === 'vi'
@@ -516,7 +523,7 @@ export default function LoginPage() {
                         : 'Click to fill, double click to sign in as:'
                     } ${preset.user.name}`}
                   >
-                    <Icon className="w-3.5 h-3.5 text-slate-600 group-hover:text-sky-600" />
+                    <Icon className="w-3.5 h-3.5 text-sky-700 group-hover:text-sky-900" />
                     <span className="truncate w-full text-center">
                       {language === 'vi' ? preset.titleVi : preset.titleEn}
                     </span>

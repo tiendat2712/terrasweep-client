@@ -9,6 +9,7 @@ export interface OceanSelectOption {
   label: string;
   icon?: React.ReactNode;
   badge?: string;
+  group?: string;
 }
 
 export interface OceanSelectProps {
@@ -18,11 +19,12 @@ export interface OceanSelectProps {
   placeholder?: string;
   className?: string;
   menuClassName?: string;
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
   variant?: 'pill' | 'rounded';
   icon?: React.ReactNode;
   disabled?: boolean;
   align?: 'left' | 'right';
+  fullWidth?: boolean;
   id?: string;
   'aria-label'?: string;
 }
@@ -39,6 +41,7 @@ export const OceanSelect: React.FC<OceanSelectProps> = ({
   icon,
   disabled = false,
   align = 'left',
+  fullWidth = false,
   id,
   'aria-label': ariaLabel,
 }) => {
@@ -150,12 +153,18 @@ export const OceanSelect: React.FC<OceanSelectProps> = ({
     };
   }, [isOpen, updatePosition]);
 
-  const sizeClasses = size === 'sm' ? 'text-xs py-1.5 px-3' : 'text-xs py-2 px-3.5';
+  const isFullWidth = fullWidth || className.includes('w-full');
+  const sizeClasses =
+    size === 'sm'
+      ? 'text-xs py-1.5 px-3 min-h-[34px]'
+      : size === 'lg'
+      ? 'text-xs sm:text-sm py-2.5 px-4 min-h-[44px]'
+      : 'text-xs py-2 px-3.5 min-h-[38px]';
   const radiusClasses = variant === 'pill' ? 'rounded-full' : 'rounded-xl';
 
   return (
     <>
-      <div className="relative inline-block text-left" id={id}>
+      <div className={`relative text-left ${isFullWidth ? 'w-full block' : 'inline-block'}`} id={id}>
         <button
           ref={buttonRef}
           type="button"
@@ -164,7 +173,9 @@ export const OceanSelect: React.FC<OceanSelectProps> = ({
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-label={ariaLabel || selectedOption?.label || placeholder}
-          className={`flex items-center justify-between gap-2.5 bg-white/95 backdrop-blur-md border border-sky-100/90 hover:border-sky-300 text-slate-800 font-semibold shadow-2xs transition-all cursor-pointer select-none ${sizeClasses} ${radiusClasses} ${
+          className={`flex items-center justify-between gap-2.5 bg-white/95 backdrop-blur-md border border-sky-100/90 hover:border-sky-300 text-slate-800 font-semibold shadow-2xs transition-all cursor-pointer select-none ${
+            isFullWidth ? 'w-full' : ''
+          } ${sizeClasses} ${radiusClasses} ${
             isOpen ? 'border-sky-500 ring-2 ring-sky-200/70 shadow-xs' : ''
           } ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
         >
@@ -196,41 +207,50 @@ export const OceanSelect: React.FC<OceanSelectProps> = ({
                   : undefined,
               left: `${coords.left}px`,
               minWidth: `${coords.width}px`,
+              maxWidth: `${Math.max(coords.width, 360)}px`,
               zIndex: 99999,
             }}
-            className={`max-w-[320px] max-h-64 overflow-y-auto rounded-2xl bg-white/98 backdrop-blur-xl border border-sky-100/90 shadow-2xl shadow-sky-950/15 p-1.5 animate-in fade-in zoom-in-95 duration-150 ambient-glow-sky [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden select-none ${menuClassName}`}
+            className={`max-h-72 overflow-y-auto rounded-2xl bg-white/98 backdrop-blur-xl border border-sky-100/90 shadow-2xl shadow-sky-950/15 p-1.5 animate-in fade-in zoom-in-95 duration-150 ambient-glow-sky [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden select-none ${menuClassName}`}
           >
-            {options.map((option) => {
+            {options.map((option, idx) => {
               const isSelected = option.value === value;
+              const prevOption = idx > 0 ? options[idx - 1] : null;
+              const isNewGroup = option.group && (!prevOption || prevOption.group !== option.group);
               return (
-                <button
-                  key={option.value}
-                  type="button"
-                  role="option"
-                  aria-selected={isSelected}
-                  onClick={() => {
-                    onChange(option.value);
-                    setIsOpen(false);
-                  }}
-                  className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between gap-3 transition-colors cursor-pointer ${
-                    isSelected
-                      ? 'bg-sky-50 text-sky-700 font-bold'
-                      : 'text-slate-700 hover:bg-sky-50/60 hover:text-sky-600'
-                  }`}
-                >
-                  <div className="flex items-center gap-2 truncate">
-                    {option.icon}
-                    <span className="truncate">{option.label}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    {option.badge && (
-                      <span className="px-1.5 py-0.5 rounded text-[9.5px] font-mono font-bold bg-sky-100 text-sky-800">
-                        {option.badge}
-                      </span>
-                    )}
-                    {isSelected && <Check className="w-3.5 h-3.5 text-sky-600 shrink-0" />}
-                  </div>
-                </button>
+                <React.Fragment key={option.value || idx}>
+                  {isNewGroup && (
+                    <div className="px-3 pt-2 pb-1 text-[10px] font-bold font-mono tracking-wider text-slate-400 uppercase">
+                      {option.group}
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={isSelected}
+                    onClick={() => {
+                      onChange(option.value);
+                      setIsOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between gap-3 transition-colors cursor-pointer ${
+                      isSelected
+                        ? 'bg-sky-50 text-sky-700 font-bold'
+                        : 'text-slate-700 hover:bg-sky-50/60 hover:text-sky-600'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      {option.icon}
+                      <span className="truncate">{option.label}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      {option.badge && (
+                        <span className="px-1.5 py-0.5 rounded text-[9.5px] font-mono font-bold bg-sky-100 text-sky-800">
+                          {option.badge}
+                        </span>
+                      )}
+                      {isSelected && <Check className="w-3.5 h-3.5 text-sky-600 shrink-0" />}
+                    </div>
+                  </button>
+                </React.Fragment>
               );
             })}
           </div>,

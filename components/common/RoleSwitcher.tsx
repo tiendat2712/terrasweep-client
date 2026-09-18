@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Role, PlatformUser } from '@/types';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { ShoppingBag, Store, Truck, ShieldCheck, LogIn, ChevronUp, ChevronDown, Layers } from 'lucide-react';
@@ -20,6 +21,7 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
   onOpenAuthModal,
 }) => {
   const { t } = useLanguage();
+  const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -71,13 +73,14 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
     <aside suppressHydrationWarning aria-label="Role Switcher Dock" className="fixed bottom-6 left-6 z-50 select-none">
       {/* Expanded Dev Panel */}
       {isExpanded ? (
-        <div className="rounded-3xl bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 shadow-2xl p-4 w-80 text-zinc-900 space-y-3 animate-in slide-in-from-bottom-4 duration-200 ambient-glow-sky overflow-hidden relative">
+        <div className="rounded-3xl ocean-surface border border-sky-100/90 shadow-2xl p-4 w-80 max-w-[calc(100vw-3rem)] text-zinc-900 space-y-3 animate-in slide-in-from-bottom-4 duration-200 ambient-glow-sky overflow-hidden relative">
           <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
             <div className="flex items-center gap-2 text-xs font-bold text-slate-900 uppercase tracking-wider">
               <Layers className="w-4 h-4 text-sky-600" />
               <span>{t('roleSwitcher.title')}</span>
             </div>
             <button
+              aria-label="Collapse role switcher"
               onClick={() => setIsExpanded(false)}
               className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors cursor-pointer"
             >
@@ -95,7 +98,11 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({
               return (
                 <button
                   key={item.id}
-                  onClick={() => onRoleChange(item.id)}
+                  onClick={() => {
+                    onRoleChange(item.id);
+                    setIsExpanded(false);
+                    router.push(item.id === 'customer' ? '/' : `/${item.id}`);
+                  }}
                   className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
                     isActive
                       ? 'btn-ocean-primary border-sky-300'

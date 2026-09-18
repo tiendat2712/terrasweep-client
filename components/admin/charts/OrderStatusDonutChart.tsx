@@ -64,14 +64,14 @@ export const OrderStatusDonutChart: React.FC = () => {
   let accumulatedPercent = 0;
 
   return (
-    <div className="rounded-[32px] bg-gradient-to-b from-white via-sky-50/20 to-white/95 border border-sky-100/90 p-6 sm:p-7 shadow-sm space-y-6 relative overflow-hidden ambient-glow-sky flex flex-col justify-between">
+    <div className="rounded-[32px] ocean-surface border border-sky-100/90 p-6 sm:p-7 shadow-sm space-y-6 relative overflow-hidden ambient-glow-sky flex flex-col justify-between">
       {/* Header */}
       <div className="space-y-1 pb-4 border-b border-slate-100">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
             <PieChart className="w-4 h-4" />
           </div>
-          <h3 className="text-base sm:text-lg font-black text-[#0F172A] tracking-tight font-sans">
+          <h3 className="text-base sm:text-lg font-black text-foreground tracking-tight font-sans">
             {language === 'vi' ? 'Trạng Thái Đơn Hàng' : 'Fulfillment Status'}
           </h3>
         </div>
@@ -124,7 +124,7 @@ export const OrderStatusDonutChart: React.FC = () => {
 
         {/* Center Typography Label */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center select-none">
-          <span className="text-2xl font-black text-[#0F172A] font-mono tracking-tight">
+          <span className="text-2xl font-black text-foreground font-mono tracking-tight">
             96.8%
           </span>
           <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-700">
@@ -151,13 +151,13 @@ export const OrderStatusDonutChart: React.FC = () => {
                   className="w-2.5 h-2.5 rounded-full shrink-0"
                   style={{ backgroundColor: seg.color }}
                 />
-                <span className={`text-slate-700 ${isHovered ? 'font-bold text-[#0F172A]' : 'font-medium'}`}>
+                <span className={`text-slate-700 ${isHovered ? 'font-bold text-foreground' : 'font-medium'}`}>
                   {language === 'vi' ? seg.labelVi : seg.labelEn}
                 </span>
               </div>
 
               <div className="flex items-center gap-2 font-mono text-[11px]">
-                <span className="font-bold text-[#0F172A]">{seg.percentage}%</span>
+                <span className="font-bold text-foreground">{seg.percentage}%</span>
                 <span className="text-slate-500 font-medium">({seg.count.toLocaleString()})</span>
               </div>
             </div>

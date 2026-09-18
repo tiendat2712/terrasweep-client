@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Geist_Mono, Playfair_Display } from "next/font/googl
 import "./globals.css";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import { CartProvider } from "@/context/CartContext";
+import { SellerLiveChatModal } from "@/components/buyer/SellerLiveChatModal";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -22,7 +23,7 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#0284C7",
+  themeColor: "#dff2f6",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -116,12 +117,13 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className="min-h-full flex flex-col bg-transparent text-[#0F172A] selection:bg-sky-500 selection:text-white"
+        className="min-h-full flex flex-col bg-background text-foreground selection:bg-sky-500 selection:text-white"
         suppressHydrationWarning
       >
         <LanguageProvider>
           <CartProvider>
             {children}
+            <SellerLiveChatModal />
           </CartProvider>
         </LanguageProvider>
       </body>

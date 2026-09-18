@@ -116,7 +116,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
       }`}
     >
-      <div className="relative rounded-[32px] bg-gradient-to-b from-white via-sky-50/20 to-white/95 border border-sky-100/90 p-6 sm:p-8 shadow-sm overflow-hidden ambient-glow-sky">
+      <div className="relative rounded-[32px] bg-white border border-sky-100/90 p-6 sm:p-8 shadow-sm overflow-hidden ambient-glow-sky">
         {/* Subtle decorative background blur spot */}
         <div className="absolute -right-16 -bottom-16 w-60 h-60 bg-sky-200/25 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -left-16 -top-16 w-52 h-52 bg-sky-100/30 rounded-full blur-2xl pointer-events-none" />
@@ -135,7 +135,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
               <span className="bg-gradient-to-r from-slate-900 via-sky-950 to-sky-900 bg-clip-text text-transparent">
                 {language === 'vi' ? 'Danh Mục ' : 'Curated '}
               </span>
-              <span className="font-serif italic font-normal bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
+              <span className="font-serif italic font-normal bg-gradient-to-r from-sky-600 to-sky-700 bg-clip-text text-transparent">
                 {language === 'vi' ? 'Tuyển Chọn' : 'Collections'}
               </span>
             </h2>
@@ -257,7 +257,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                         className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center overflow-hidden transition-all duration-300 p-2.5 ${
                           isActive
                             ? 'bg-sky-50 ring-4 ring-sky-500/40 border-2 border-sky-500 shadow-md shadow-sky-500/25 scale-105'
-                            : 'bg-gradient-to-br from-white via-sky-50/40 to-white/90 border border-sky-100/90 group-hover:border-sky-300 group-hover:ring-4 group-hover:ring-sky-100/70 group-hover:shadow-lg group-hover:shadow-sky-500/15 group-hover:scale-108'
+                            : 'bg-white/90 backdrop-blur-md border border-white/80 group-hover:border-sky-300 group-hover:ring-4 group-hover:ring-sky-100/70 group-hover:shadow-lg group-hover:shadow-sky-500/15 group-hover:scale-108'
                         }`}
                       >
                         <img
@@ -330,7 +330,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                         className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center overflow-hidden transition-all duration-300 p-2.5 ${
                           isActive
                             ? 'bg-sky-50 ring-4 ring-sky-500/40 border-2 border-sky-500 shadow-md shadow-sky-500/25 scale-105'
-                            : 'bg-gradient-to-br from-white via-sky-50/40 to-white/90 border border-sky-100/90 group-hover:border-sky-300 group-hover:ring-4 group-hover:ring-sky-100/70 group-hover:shadow-lg group-hover:shadow-sky-500/15 group-hover:scale-108'
+                            : 'bg-white/90 backdrop-blur-md border border-white/80 group-hover:border-sky-300 group-hover:ring-4 group-hover:ring-sky-100/70 group-hover:shadow-lg group-hover:shadow-sky-500/15 group-hover:scale-108'
                         }`}
                       >
                         <img

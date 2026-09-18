@@ -294,6 +294,7 @@ flowchart TB
 
 | Hạng mục | Mức độ ưu tiên | Độ phức tạp | Ước tính thời gian | Phụ thuộc (Prerequisites) |
 | :--- | :---: | :---: | :---: | :--- |
+| **P2.0**: Chuẩn hóa Animation & Motion toàn bộ Project (Đặc biệt Product Cards/Cart) | 🔴 P0 (Tối quan trọng) | Trung bình | 0.5 Sprint | Đã tạo [ANIMATION_STANDARDS.md](file:///d:/flashcart-client/ANIMATION_STANDARDS.md) |
 | **P2.1**: Đánh giá sản phẩm & Chấm sao | 🔴 P0 (Rất cao) | Trung bình | 1 Sprint | Đã có P1 Orders |
 | **P2.2**: Kho Voucher & Mã giảm giá | 🔴 P0 (Rất cao) | Trung bình | 1 Sprint | Đã có CartContext |
 | **P2.3**: Ví Seller & Yêu cầu rút tiền | 🟡 P1 (Cao) | Trung bình | 1 Sprint | Đã có SellerDashboard |
@@ -309,4 +310,4 @@ flowchart TB
 ## 📌 Hướng Dẫn Kích Hoạt Khi Bắt Đầu Triển Khai
 Khi bạn sẵn sàng triển khai Giai đoạn 2 hoặc Giai đoạn 3, bạn chỉ cần gửi yêu cầu kèm mã hạng mục:
 - *Ví dụ*: `tiến hành triển khai P2.1 và P2.2` hoặc `bắt đầu toàn bộ giai đoạn P2`.
-- Hệ thống sẽ đọc trực tiếp từ tài liệu [`ROADMAP_P2_P3.md`](file:///d:/flashcart-client/ROADMAP_P2_P3.md) này để lập Implementation Plan chi tiết trước khi sinh mã nguồn.
+- Hệ thống sẽ đọc trực tiếp từ tài liệu [`ROADMAP_P2_P3.md`](file:///d:/flashcart-client/ROADMAP_P2_P3.md) và các tài liệu tiêu chuẩn thiết kế ([`ECOMMERCE_DESIGN_STANDARDS.md`](file:///d:/flashcart-client/ECOMMERCE_DESIGN_STANDARDS.md), [`ANIMATION_STANDARDS.md`](file:///d:/flashcart-client/ANIMATION_STANDARDS.md)) này để lập Implementation Plan chi tiết trước khi sinh mã nguồn.

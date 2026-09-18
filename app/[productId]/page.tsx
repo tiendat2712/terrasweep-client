@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { INITIAL_PRODUCTS, TOP_SEARCH_ITEMS, INITIAL_USERS } from '@/data/mockData';
@@ -10,6 +10,8 @@ import { useCart } from '@/context/CartContext';
 import { BuyerHeader } from '@/components/buyer/BuyerHeader';
 import { AuthModal } from '@/components/common/AuthModal';
 import { Footer } from '@/components/common/Footer';
+import { ProductReviewsSection } from '@/components/buyer/ProductReviewsSection';
+import { ProductCard } from '@/components/common/ProductCard';
 import {
   Star,
   Zap,
@@ -25,7 +27,29 @@ import {
   Flame,
   ChevronRight,
   Loader2,
+  MessageSquare,
+  Store,
 } from 'lucide-react';
+
+
+function RelatedProductCard({
+  rel,
+  relIndex,
+}: {
+  rel: Product;
+  relIndex: number;
+  formatVND?: (val: number) => string;
+}) {
+  const router = useRouter();
+  return (
+    <ProductCard
+      product={rel}
+      index={relIndex}
+      onSelect={(p) => router.push(`/${p.id}`)}
+      showWishlist={false}
+    />
+  );
+}
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -45,6 +69,9 @@ export default function ProductDetailPage() {
     activeRole,
     setActiveRole,
     triggerToast,
+    wishlistIds,
+    toggleWishlist,
+    openSellerChat,
   } = useCart();
 
   // Find product from mock catalog
@@ -90,7 +117,7 @@ export default function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState<string>('M');
   const [selectedColor, setSelectedColor] = useState<string>('Pure White');
   const [quantity, setQuantity] = useState<number>(1);
-  const [isWishlisted, setIsWishlisted] = useState<boolean>(false);
+  const isWishlisted = product ? wishlistIds.includes(product.id) : false;
   const [activeImage, setActiveImage] = useState<string>(product?.image || '');
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [justAddedToCart, setJustAddedToCart] = useState(false);
@@ -133,27 +160,28 @@ export default function ProductDetailPage() {
   }, [product]);
 
   // Handle Add to Cart with backend simulation & visual success micro-interaction
-  const handleAddToCart = () => {
+  const handleAddToCart = (e?: React.MouseEvent) => {
     if (!product || isAddingToCart) return;
+    const origin = e ? { x: e.clientX, y: e.clientY } : undefined;
     setIsAddingToCart(true);
     setTimeout(() => {
-      addToCart(product, quantity, `${selectedSize} / ${selectedColor}`);
+      addToCart(product, quantity, `${selectedSize} / ${selectedColor}`, origin);
       setIsAddingToCart(false);
       setJustAddedToCart(true);
       setTimeout(() => {
         setJustAddedToCart(false);
       }, 1500);
-    }, 450);
+    }, 250);
   };
 
-  // Handle direct Buy Now action with async session initiation
+  // Handle direct Buy Now action with instant checkout transition
   const handleBuyNow = () => {
     if (!product || isBuyingNow) return;
     setIsBuyingNow(true);
     setTimeout(() => {
       addToCart(product, quantity, `${selectedSize} / ${selectedColor}`);
-      router.push('/cart');
-    }, 550);
+      router.push(`/checkout?productId=${product.id}&quantity=${quantity}&variant=${encodeURIComponent(`${selectedSize} / ${selectedColor}`)}`);
+    }, 450);
   };
 
   if (!product) {
@@ -217,7 +245,7 @@ export default function ProductDetailPage() {
           {/* ========================================================================= */}
           <div className="lg:col-span-6 flex flex-col gap-5">
             {/* Primary Image Showcase Container */}
-            <div className="relative rounded-[32px] sm:rounded-[36px] bg-gradient-to-b from-white via-sky-50/20 to-white/95 border border-sky-100/90 p-8 sm:p-12 shadow-sm ambient-glow-sky flex items-center justify-center overflow-hidden aspect-4/3 sm:aspect-square group">
+            <div className="relative rounded-[32px] sm:rounded-[36px] bg-white border border-sky-100/90 p-8 sm:p-12 shadow-sm ambient-glow-sky flex items-center justify-center overflow-hidden aspect-4/3 sm:aspect-square group">
               {/* Dynamic Water Ambient Glow Spotlight */}
               <div className="absolute -top-16 -left-16 w-64 h-64 bg-sky-400/15 rounded-full blur-3xl pointer-events-none" />
               <div className="absolute -bottom-16 -right-16 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
@@ -231,18 +259,8 @@ export default function ProductDetailPage() {
 
               {/* Wishlist Button (Top Right) */}
               <button
-                onClick={() => {
-                  setIsWishlisted(!isWishlisted);
-                  triggerToast(
-                    !isWishlisted
-                      ? language === 'vi'
-                        ? 'Đã thêm vào danh sách yêu thích'
-                        : 'Added to wishlist'
-                      : language === 'vi'
-                      ? 'Đã bỏ khỏi danh sách yêu thích'
-                      : 'Removed from wishlist',
-                    'info'
-                  );
+                onClick={(e) => {
+                  if (product) toggleWishlist(product.id, e);
                 }}
                 aria-label={
                   isWishlisted
@@ -480,7 +498,7 @@ export default function ProductDetailPage() {
                       <span
                         className={`w-1.5 h-1.5 rounded-full ${
                           c.hex === '#FFFFFF' || c.hex === '#E2E8F0'
-                            ? 'bg-slate-900'
+                            ? 'bg-sky-900'
                             : 'bg-white'
                         }`}
                       />
@@ -516,7 +534,7 @@ export default function ProductDetailPage() {
 
                 {/* Secondary CTA: Add to Cart */}
                 <button
-                  onClick={handleAddToCart}
+                  onClick={(e) => handleAddToCart(e)}
                   disabled={isAddingToCart}
                   aria-busy={isAddingToCart}
                   aria-label={language === 'vi' ? 'Thêm sản phẩm vào giỏ hàng' : 'Add product to cart'}
@@ -551,7 +569,7 @@ export default function ProductDetailPage() {
                 disabled={isBuyingNow}
                 aria-busy={isBuyingNow}
                 aria-label={language === 'vi' ? 'Thanh toán ngay sản phẩm này' : 'Buy it now with instant checkout'}
-                className="w-full py-3.5 px-6 rounded-full btn-ocean-primary hover:brightness-105 text-white font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-lg shadow-sky-500/25 hover:shadow-sky-500/35 active:scale-95 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+                className="w-full py-3.5 px-6 rounded-full btn-ocean-primary text-white font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2.5 active:scale-95 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
               >
                 {isBuyingNow ? (
                   <div className="flex items-center gap-2">
@@ -604,27 +622,51 @@ export default function ProductDetailPage() {
               </div>
             )}
 
-            {/* MERCHANT BADGE */}
-            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-sky-50/80 to-transparent border border-sky-100/80 flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-xs">
-                  ✓
+            {/* MERCHANT BADGE & LIVE CHAT ACTION */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-50/80 via-white to-sky-50/40 border border-sky-100/90 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-sky-600 text-white flex items-center justify-center font-bold text-sm shadow-sm shadow-sky-500/20">
+                  <Store className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-slate-900">{product.sellerName}</h4>
-                  <p className="text-[10.5px] text-slate-500">
-                    {language === 'vi' ? 'Nhà bán hàng chứng thực' : 'Verified Flagship Merchant'}
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-900">{product.sellerName}</h4>
+                    <span className="text-[10px] font-bold text-sky-700 bg-sky-100/80 px-2 py-0.5 rounded-full border border-sky-200">
+                      Mall Official
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                    <span>{language === 'vi' ? 'Đang online • Phản hồi trong 5 phút' : 'Online now • Responds within 5 mins'}</span>
                   </p>
                 </div>
               </div>
-              <span className="text-[10.5px] font-bold text-sky-700 bg-white px-2.5 py-1 rounded-full border border-sky-200">
-                Mall Official
-              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  openSellerChat(product.sellerName, {
+                    product: {
+                      name: product.name,
+                      image: product.image,
+                      price: product.flashPrice,
+                    },
+                  });
+                }}
+                className="btn-ocean-secondary px-3.5 py-2 rounded-xl text-xs font-bold text-sky-700 hover:text-sky-800 flex items-center gap-2 shadow-xs transition-all active:scale-95 cursor-pointer"
+              >
+                <MessageSquare className="w-3.5 h-3.5 text-sky-600" />
+                <span>{language === 'vi' ? 'Chat Với Shop' : 'Chat with Seller'}</span>
+              </button>
             </div>
 
           </div>
 
         </div>
+
+        {/* ========================================================================= */}
+        {/* CUSTOMER REVIEWS & RATINGS (UI/UX PRO MAX)                                */}
+        {/* ========================================================================= */}
+        <ProductReviewsSection product={product} />
 
         {/* ========================================================================= */}
         {/* RELATED CURATED PRODUCTS                                                  */}
@@ -644,40 +686,13 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
-            {relatedProducts.map((rel) => (
-              <Link
+            {relatedProducts.map((rel, relIndex) => (
+              <RelatedProductCard
                 key={rel.id}
-                href={`/${rel.id}`}
-                className="group rounded-[24px] bg-white border border-sky-100/90 p-4 hover:border-sky-300 hover:shadow-xl hover:shadow-sky-500/10 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between cursor-pointer relative overflow-hidden"
-              >
-                <div>
-                  <div className="aspect-square rounded-2xl bg-gradient-to-b from-slate-50/80 to-sky-50/20 border border-sky-50 overflow-hidden flex items-center justify-center p-3 mb-3 relative group-hover:bg-sky-50/40 transition-colors">
-                    <img
-                      src={rel.image}
-                      alt={rel.name}
-                      className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
-                    />
-                    {rel.discountPercent > 0 && (
-                      <span className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full btn-ocean-primary text-white font-bold text-[9.5px] shadow-xs">
-                        -{rel.discountPercent}%
-                      </span>
-                    )}
-                  </div>
-                  <h4 className="text-xs font-bold text-slate-900 line-clamp-2 leading-snug group-hover:text-sky-600 transition-colors">
-                    {rel.name}
-                  </h4>
-                </div>
-                <div className="mt-3 flex items-baseline justify-between pt-2.5 border-t border-sky-50">
-                  <span className="font-extrabold text-sm text-sky-700 font-sans">
-                    {formatVND(rel.flashPrice)}
-                  </span>
-                  {rel.originalPrice > rel.flashPrice && (
-                    <span className="text-[11px] text-slate-400 line-through font-sans">
-                      {formatVND(rel.originalPrice)}
-                    </span>
-                  )}
-                </div>
-              </Link>
+                rel={rel}
+                relIndex={relIndex}
+                formatVND={formatVND}
+              />
             ))}
           </div>
         </section>

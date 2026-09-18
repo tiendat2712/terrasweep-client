@@ -1,16 +1,16 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { INITIAL_PRODUCTS, INITIAL_USERS } from '@/data/mockData';
-import { CartItem } from '@/types';
+import { CartItem, Product } from '@/types';
 import { BuyerHeader } from '@/components/buyer/BuyerHeader';
 import { AuthModal } from '@/components/common/AuthModal';
-import { OrderTrackingView } from '@/components/buyer/OrderTrackingView';
 import { Footer } from '@/components/common/Footer';
+import { ProductCard } from '@/components/common/ProductCard';
 import {
   Trash2,
   ShoppingBag,
@@ -32,6 +32,25 @@ import {
   Loader2,
 } from 'lucide-react';
 
+function CartRecommendedProductCard({
+  product,
+  index,
+}: {
+  product: Product;
+  index: number;
+  formatVND?: (val: number) => string;
+}) {
+  const router = useRouter();
+  return (
+    <ProductCard
+      product={product}
+      index={index}
+      onSelect={(p) => router.push(`/${p.id}`)}
+      showWishlist={false}
+    />
+  );
+}
+
 export default function CartPage() {
   const router = useRouter();
   const { language } = useLanguage();
@@ -41,8 +60,6 @@ export default function CartPage() {
     updateQuantity,
     createOrder,
     orders,
-    isTrackingOpen,
-    setIsTrackingOpen,
     currentUser,
     activeRole,
     setActiveRole,
@@ -51,6 +68,13 @@ export default function CartPage() {
     handleLogin,
     triggerToast,
   } = useCart();
+
+  // Cascade entrance animation for cart items
+  const [itemsMounted, setItemsMounted] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setItemsMounted(true), 40);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Selection state: Set of selected product IDs
   const [selectedItemIds, setSelectedItemIds] = useState<Set<string>>(() => {
@@ -221,7 +245,7 @@ export default function CartPage() {
     return new Intl.NumberFormat('vi-VN').format(amount) + '₫';
   };
 
-  // Place Order Handler
+  // Proceed to Checkout Handler
   const handlePlaceOrder = () => {
     if (selectedItems.length === 0) {
       triggerToast(
@@ -235,20 +259,11 @@ export default function CartPage() {
 
     setIsSubmittingOrder(true);
     setTimeout(() => {
-      const orderId = createOrder({
-        customerName,
-        customerPhone,
-        shippingAddress,
-        paymentMethod,
-        shippingFee,
-        discount: totalDiscount,
-        items: selectedItems,
-      });
-
       setIsSubmittingOrder(false);
-      setOrderSuccessId(orderId);
-    }, 800);
+      router.push('/checkout');
+    }, 300);
   };
+
 
   // Recommended products: Combine mock data for "CÓ THỂ BẠN CŨNG THÍCH"
   const recommendedProducts = useMemo(() => {
@@ -261,7 +276,7 @@ export default function CartPage() {
       <BuyerHeader
         cartItemCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
         onOpenCart={() => {}}
-        onOpenTracking={() => setIsTrackingOpen(true)}
+        onOpenTracking={() => router.push('/orders')}
         onSearch={() => router.push('/#collection-section')}
         searchQuery=""
         currentUser={currentUser}
@@ -288,16 +303,6 @@ export default function CartPage() {
           )}
         </nav>
 
-        {/* Live Order Tracking Timeline Modal/Drawer if opened */}
-        {isTrackingOpen && (
-          <div className="mb-8">
-            <OrderTrackingView
-              orders={orders}
-              onClose={() => setIsTrackingOpen(false)}
-            />
-          </div>
-        )}
-
         {/* ORDER SUCCESS STATE */}
         {orderSuccessId && (
           <div className="mb-8 rounded-3xl bg-white border border-emerald-200/80 p-8 shadow-sm text-center animate-in zoom-in-95 duration-300">
@@ -315,10 +320,11 @@ export default function CartPage() {
             <div className="flex items-center justify-center gap-3 flex-wrap">
               <button
                 onClick={() => {
+                  const targetId = orderSuccessId;
                   setOrderSuccessId(null);
-                  setIsTrackingOpen(true);
+                  router.push(`/orders?orderId=${targetId}`);
                 }}
-                className="px-6 py-2.5 rounded-xl btn-ocean-primary text-xs font-bold flex items-center gap-2 cursor-pointer shadow-sm"
+                className="px-6 py-2.5 rounded-xl btn-ocean-primary text-xs font-bold flex items-center gap-2 cursor-pointer shadow-sm hover:scale-105 active:scale-95 transition-all"
               >
                 <Truck className="w-4 h-4" />
                 <span>{language === 'vi' ? 'Theo Dõi Đơn Hàng' : 'Track Order'}</span>
@@ -337,7 +343,7 @@ export default function CartPage() {
         {/* CASE 1: EMPTY CART                                                        */}
         {/* ========================================================================= */}
         {cartItems.length === 0 && !orderSuccessId && (
-          <div className="rounded-[36px] bg-gradient-to-b from-white via-sky-50/25 to-white/95 border border-sky-100/90 p-8 sm:p-14 text-center shadow-sm my-6 max-w-2xl mx-auto relative overflow-hidden ambient-glow-sky">
+          <div className="rounded-[36px] ocean-surface border border-sky-100/90 p-8 sm:p-14 text-center shadow-sm my-6 max-w-2xl mx-auto relative overflow-hidden ambient-glow-sky">
             {/* Ambient water glow spotlight */}
             <div className="absolute -top-16 -left-16 w-56 h-56 bg-sky-400/12 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-16 -right-16 w-56 h-56 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
@@ -461,16 +467,24 @@ export default function CartPage() {
 
               {/* Product Rows */}
               <div className="divide-y divide-slate-100">
-                {cartItems.map((item) => {
+                {cartItems.map((item, index) => {
                   const isSelected = selectedItemIds.has(item.product.id);
                   const itemSubtotal = item.product.flashPrice * item.quantity;
+                  const staggerDelay = Math.min(index * 75, 360);
 
                   return (
                     <div
                       key={item.product.id}
-                      className={`p-4 sm:p-6 transition-colors ${
-                        isSelected ? 'bg-sky-50/15' : 'bg-white'
-                      }`}
+                      style={{
+                        transitionDuration: '550ms',
+                        transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                        transitionDelay: itemsMounted ? `${staggerDelay}ms` : '0ms',
+                      }}
+                      className={`p-4 sm:p-6 transition-all duration-500 will-change-transform ${
+                        itemsMounted
+                          ? 'opacity-100 translate-y-0'
+                          : 'opacity-0 translate-y-8'
+                      } ${isSelected ? 'bg-sky-50/15' : 'bg-white'}`}
                     >
                       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                         {/* Checkbox + Image + Title + Variant */}
@@ -506,9 +520,9 @@ export default function CartPage() {
 
                             {/* Flash Sale Countdown Notice */}
                             {item.product.isFlashSale && (
-                              <div className="flex items-center gap-1 text-[11px] text-red-600 font-medium mt-1">
-                                <Flame className="w-3 h-3 fill-red-500 text-red-500" />
-                                <span>{language === 'vi' ? 'Flash Sale kết thúc lúc 21:00:00' : 'Flash Sale ends at 21:00:00'}</span>
+                              <div className="flex items-center gap-1 text-[11px] text-sky-700 font-medium mt-1">
+                                <Zap className="w-3 h-3 fill-sky-500 text-sky-500" />
+                                <span className="font-mono tabular-nums">{language === 'vi' ? 'Flash Sale kết thúc lúc 21:00:00' : 'Flash Sale ends at 21:00:00'}</span>
                               </div>
                             )}
 
@@ -892,7 +906,7 @@ export default function CartPage() {
                     disabled={selectedCount === 0 || isSubmittingOrder}
                     aria-busy={isSubmittingOrder}
                     aria-label={language === 'vi' ? 'Mua hàng thanh toán đơn hàng' : 'Proceed to checkout'}
-                    className="w-full sm:w-auto px-9 py-3.5 rounded-full btn-ocean-primary font-extrabold text-xs uppercase tracking-wider shadow-lg shadow-sky-500/25 hover:shadow-sky-500/35 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2.5 text-white disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+                    className="w-full sm:w-auto px-9 py-3.5 rounded-full btn-ocean-primary font-extrabold text-xs uppercase tracking-wider active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2.5 text-white disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
                   >
                     {isSubmittingOrder ? (
                       <div className="flex items-center gap-2">
@@ -944,46 +958,13 @@ export default function CartPage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4">
-            {recommendedProducts.map((rec) => (
-              <Link
+            {recommendedProducts.map((rec, recIndex) => (
+              <CartRecommendedProductCard
                 key={rec.id}
-                href={`/${rec.id}`}
-                className="group rounded-[24px] bg-white border border-sky-100/90 p-3.5 hover:border-sky-300 hover:shadow-xl hover:shadow-sky-500/10 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between cursor-pointer relative overflow-hidden"
-              >
-                <div>
-                  <div className="aspect-square rounded-2xl bg-gradient-to-b from-slate-50/80 to-sky-50/20 border border-sky-50 overflow-hidden flex items-center justify-center p-3 mb-2.5 relative group-hover:bg-sky-50/40 transition-colors">
-                    <img
-                      src={rec.image}
-                      alt={rec.name}
-                      className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
-                    />
-                    {rec.discountPercent > 0 && (
-                      <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full btn-ocean-primary text-white font-bold text-[9.5px] shadow-xs">
-                        -{rec.discountPercent}%
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <span className="px-2 py-0.5 rounded-full text-[9.5px] font-bold bg-sky-50 text-sky-700 border border-sky-200/70">
-                      TerraVerified
-                    </span>
-                  </div>
-
-                  <h4 className="text-xs font-bold text-slate-900 line-clamp-2 leading-snug group-hover:text-sky-600 transition-colors">
-                    {rec.name}
-                  </h4>
-                </div>
-
-                <div className="mt-3 pt-2.5 border-t border-sky-50 flex items-baseline justify-between">
-                  <span className="font-extrabold text-sm text-sky-700 font-sans">
-                    {formatVND(rec.flashPrice)}
-                  </span>
-                  <span className="text-[10px] text-slate-500 font-sans font-medium">
-                    {rec.salesCount || '1.2k đã bán'}
-                  </span>
-                </div>
-              </Link>
+                product={rec}
+                index={recIndex}
+                formatVND={formatVND}
+              />
             ))}
           </div>
         </section>

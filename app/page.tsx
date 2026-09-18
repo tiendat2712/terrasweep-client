@@ -20,7 +20,6 @@ import { CategorySection } from '@/components/buyer/CategorySection';
 import { FlashSaleSection } from '@/components/buyer/FlashSaleSection';
 import { TopSearchesSection } from '@/components/buyer/TopSearchesSection';
 import { ProductCatalog } from '@/components/buyer/ProductCatalog';
-import { OrderTrackingView } from '@/components/buyer/OrderTrackingView';
 
 // Role Dashboards
 import { SellerDashboard } from '@/components/seller/SellerDashboard';
@@ -42,8 +41,6 @@ export default function FlashCartHome() {
     orders,
     setOrders,
     createOrder,
-    isTrackingOpen,
-    setIsTrackingOpen,
     toastMessage,
     setToastMessage,
     triggerToast,
@@ -192,7 +189,7 @@ export default function FlashCartHome() {
         const customerUser = users.find((u) => u.role === 'customer') || users[0];
         setCurrentUser(customerUser);
         setActiveRole('customer');
-        setIsTrackingOpen(true);
+        router.push(`/orders?orderId=${orderId}`);
       }
     );
   };
@@ -234,7 +231,7 @@ export default function FlashCartHome() {
   ).length;
 
   return (
-    <div className="min-h-screen flex flex-col bg-transparent text-[#0F172A] selection:bg-sky-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-transparent text-foreground selection:bg-sky-500 selection:text-white">
       {/* 1. DISCREET COLLAPSIBLE DEV ROLE SWITCHER */}
       <RoleSwitcher
         currentRole={activeRole}
@@ -251,13 +248,13 @@ export default function FlashCartHome() {
 
       {/* Reactive Notification Toast */}
       {toastMessage && (
-        <div className="fixed bottom-24 right-6 z-50 max-w-md animate-in slide-in-from-bottom-5">
-          <div className="p-4 rounded-full bg-slate-900 text-white shadow-2xl shadow-sky-950/20 border border-slate-700/60 flex items-center justify-between gap-4 text-xs">
+        <div className="fixed bottom-24 right-6 z-50 max-w-md animate-in slide-in-from-bottom-5 fade-in duration-300">
+          <div className="p-3.5 px-4 rounded-full ocean-feature shadow-sky-950/40 border border-sky-500/30 backdrop-blur-md flex items-center justify-between gap-4 text-xs">
             <div className="flex items-center gap-3 pl-2">
-              <div className="w-6 h-6 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
+              <div className="w-6 h-6 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0 border border-sky-400/30">
                 <Check className="w-3.5 h-3.5" />
               </div>
-              <p className="font-semibold text-white truncate max-w-xs">{toastMessage.text}</p>
+              <p className="font-semibold text-slate-900 truncate max-w-xs">{toastMessage.text}</p>
             </div>
 
             {toastMessage.actionText && toastMessage.onAction && (
@@ -266,7 +263,7 @@ export default function FlashCartHome() {
                   toastMessage.onAction?.();
                   setToastMessage(null);
                 }}
-                className="px-4 py-1.5 rounded-full bg-sky-600 text-white font-bold text-[11px] hover:bg-sky-500 transition-all flex items-center gap-1 shrink-0 cursor-pointer shadow-xs shadow-sky-500/25"
+                className="px-4 py-1.5 rounded-full btn-ocean-primary text-white font-bold text-[11px] hover:brightness-105 transition-all flex items-center gap-1 shrink-0 cursor-pointer shadow-sm shadow-sky-500/25 active:scale-95"
               >
                 {toastMessage.actionText}
                 <ArrowRight className="w-3 h-3" />
@@ -285,7 +282,7 @@ export default function FlashCartHome() {
           <BuyerHeader
             cartItemCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
             onOpenCart={() => router.push('/cart')}
-            onOpenTracking={() => setIsTrackingOpen(true)}
+            onOpenTracking={() => router.push('/orders')}
             onSearch={setSearchQuery}
             searchQuery={searchQuery}
             currentUser={currentUser}
@@ -298,13 +295,6 @@ export default function FlashCartHome() {
           />
 
           <div className="max-w-7xl mx-auto px-6 w-full flex-1">
-            {/* Live Order Tracking Timeline */}
-            {isTrackingOpen && (
-              <OrderTrackingView
-                orders={orders}
-                onClose={() => setIsTrackingOpen(false)}
-              />
-            )}
 
             {/* Editorial Services & Curated Drops Hero */}
             <FlashSaleBanner
